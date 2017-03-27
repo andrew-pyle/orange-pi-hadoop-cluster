@@ -1,0 +1,7 @@
+#OS junk files
+[Tt]humbs.db
+*.DS_Store
+
+# Armbian OS Image Files
+Armbian_5.25_Orangepione_Debian_jessie_default_3.4.113.7z
+Armbian_5.25_Orangepione_Debian_jessie_default_3.4.113/
