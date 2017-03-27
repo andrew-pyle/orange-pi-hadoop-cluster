@@ -1,5 +1,6 @@
 # Single-Board Computer Hadoop Cluster
 ##### _Andrew Pyle | IFSC 7370 | April 2017_
+
 ![Orange Pi One](./images/orange-cover.JPG)
 
 Let's set up a physical Hadoop 2 cluster with single-board Linux Debian computers! I will be using 1 [Raspberry Pi 1 (Model B)](https://www.raspberrypi.org/products/model-b/) and two [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of three single-board computers. This will demonstrate a simple implementation of the Hadoop 2 ecosystem.
