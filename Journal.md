@@ -1,6 +1,6 @@
 # Single-Board Computer Hadoop Cluster
-![alt-text](./images/orange-cover.jpg)
 ##### _Andrew Pyle | IFSC 7370 | April 2017_
+![alt-text](./images/orange-cover.jpg)
 
 Let's set up a physical Hadoop 2 cluster with single-board Linux Debian computers! I will be using 1 [Raspberry Pi 1 (Model B)](https://www.raspberrypi.org/products/model-b/) and two [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of three single-board computers. This will demonstrate a simple implementation of the Hadoop 2 ecosystem.
 
@@ -31,7 +31,7 @@ I purchased 2 boards from [AliExpress.com](https://www.aliexpress.com/item/Orang
 
 
 
-Each Orange Pi One requires a 5V 2A power supply with a DC barrel plug (4.0mm/1.7mm - center positive). I used a [USB-DC barrel plug cable from Amazon](http://a.co/dzPdzaR) so I could use a USB power supply that I had lying around the house.
+Each Orange Pi One requires a 5V 2A power supply with a DC barrel plug ([4.0mm/1.7mm - center positive](http://linux-sunxi.org/Orange_Pi_One)). I used a [USB-DC barrel plug cable from Amazon](http://a.co/dzPdzaR) so I could use a USB power supply that I had lying around the house.
 
 ![alt-text](./images/orange-cable.jpg)
 
@@ -165,7 +165,4 @@ After measuring some voltages with a multimeter, It seems that the issue is the 
 
 # TODO:
 * Pics:
-  * Orange Pi
-  * SD Card
-  * R Pi
-  * power cord & DC jack stats & link
+  * Raspbery Pi
