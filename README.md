@@ -1,6 +1,6 @@
 # Single-Board Computer Hadoop Cluster
 ##### _Andrew Pyle | IFSC 7370 | April 2017_
-![alt-text](./images/orange-cover.jpg)
+![Orange Pi One](./images/orange-cover.JPG)
 
 Let's set up a physical Hadoop 2 cluster with single-board Linux Debian computers! I will be using 1 [Raspberry Pi 1 (Model B)](https://www.raspberrypi.org/products/model-b/) and two [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of three single-board computers. This will demonstrate a simple implementation of the Hadoop 2 ecosystem.
 
@@ -27,13 +27,13 @@ I am using the Raspberry Pi for another project currently, so I will start this 
 
 I purchased 2 boards from [AliExpress.com](https://www.aliexpress.com/item/Orange-Pi-One-H3-Quad-core-Support-ubuntu-linux-and-android-mini-PC-Beyond-Raspberry-Pi/32603308880.html), along with a Sandisk Ultra 16 GB Class 10 micro SD card from [Amazon](https://www.amazon.com/gp/product/B010Q57SEE/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1) for each.
 
-![alt-text](./images/orange-top.jpg)
+![Orange Pi One](./images/orange-top.JPG)
 
 
 
 Each Orange Pi One requires a 5V 2A power supply with a DC barrel plug ([4.0mm/1.7mm - center positive](http://linux-sunxi.org/Orange_Pi_One)). I used a [USB-DC barrel plug cable from Amazon](http://a.co/dzPdzaR) so I could use a USB power supply that I had lying around the house.
 
-![alt-text](./images/orange-cable.jpg)
+![USB-DC Barrel Plug Cable](./images/orange-cable.JPG)
 
 ###### SD Card Integrity
 
@@ -141,7 +141,7 @@ Armbian offers a [GPG signature](https://docs.armbian.com/User-Guide_Getting-Sta
 ##### 26 March 2017
 We are will be using [Etcher](https://etcher.io) to flash the microSD card. It is a simple interface available for many OSes.
 
-![alt-text](./images/etcher.png)
+![Etcher Screenshot](./images/etcher.png)
 
 Just choose the Armbian image and the microSD card. The card was auto selected for me. My Armbian image was named as follows. Ensure that you have the correct filename.
 ```
@@ -150,7 +150,7 @@ Armbian_5.25_Orangepione_Debian_jessie_default_3.4.113
 
 Etcher gave a success message, so we can now insert the microSD card into the Orange Pi and begin the first boot.
 
-![alt-text](./images/etcher-success.png)
+![Etcher Success Screenshot](./images/etcher-success.png)
 
 Now, just load the microSD into the Orange Pi board, connect a USB keyboard and display, and connect power. I'm using a HDMI-DVI connection.
 
