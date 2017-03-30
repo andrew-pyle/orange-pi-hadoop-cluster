@@ -3,7 +3,7 @@
 
 ![Orange Pi One](./images/orange-cover.JPG)
 
-Let's set up a physical Hadoop 2 cluster with single-board Linux computers! I will be using 1 [Raspberry Pi 1 (Model B)](https://www.raspberrypi.org/products/model-b/) and two [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of three single-board computers. This will demonstrate a simple implementation of the Hadoop 2 ecosystem.
+Let's set up a physical Hadoop 2 cluster with single-board Linux computers! I will be using 1 [Raspberry Pi 1 (Model B)](https://www.raspberrypi.org/products/model-b/) and two [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of three single-board computers. This setup will not be powerful enough for production use, but it will demonstrate a simple implementation of the Hadoop 2 ecosystem for learning purposes.
 
 ##### Materials
 
@@ -24,13 +24,11 @@ I am using the following items to create the cluster:
 ##### Boot up the Orange Pis
 ###### 24 March 2017
 
-I am using the Raspberry Pi for another project currently, so I will start this project setup with the Orange Pi One boards.
+My Raspberry Pi is currently in use for another project, so I will start this project setup with the Orange Pi One boards.
 
 I purchased 2 boards from [AliExpress.com](https://www.aliexpress.com/item/Orange-Pi-One-H3-Quad-core-Support-ubuntu-linux-and-android-mini-PC-Beyond-Raspberry-Pi/32603308880.html), along with a Sandisk Ultra 16 GB Class 10 micro SD card from [Amazon](https://www.amazon.com/gp/product/B010Q57SEE/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1) for each.
 
 ![Orange Pi One](./images/orange-top.JPG)
-
-
 
 Each Orange Pi One requires a 5V 2A power supply with a DC barrel plug ([4.0mm/1.7mm - center positive](http://linux-sunxi.org/Orange_Pi_One)). I used a [USB-DC barrel plug cable from Amazon](http://a.co/dzPdzaR) so I could use a USB power supply that I had lying around the house.
 
@@ -124,14 +122,14 @@ Data LOST: 0.00 Byte (0 sectors)
 	     Overwritten: 0.00 Byte (0 sectors)
 Average reading speed: 22.27 MB/s
 ```
-Great! no files are listed in the 'corrupted' column above, so we should be good.
+Great! no files are listed in the 'corrupted' column above, so the microSD cards should be good.
 
 If your disk shows files in the 'corrupted' category or a much smaller capacity than advertised, ask for your money back. See F3's website for more specifics on the program's use and functionality.
 
 ###### Flash the OS
 The next step is to write the operating system for the orange pi to a microSD card, called "flashing" the card.
 
-We will be installing the [Armbian distribution](https://www.armbian.com/orange-pi-one/) of Debian Jessie. They also host a Ubuntu Xenial image as well.
+We will be installing the [Armbian distribution](https://www.armbian.com/orange-pi-one/) of Debian Jessie. It is a solely CLI image, which means that it uses a text-based command-line interface. They host a Ubuntu Xenial image with CLI only and GUI desktop interface versions as well.
 
 >Shenzhen Xunlong CO., Limited, the makers of the Orange Pi, host their own [OS images](http://www.orangepi.org/downloadresources/) for the Orange Pi One, but they are the same images as for another model, the Orange Pi PC. I have read that the image is not fully supported by the hardware of the One, while Armbian's image is customized for the One. [See linux-sunxi](http://linux-sunxi.org/Xunlong_Orange_Pi_One_%26_Lite) for details.
 
@@ -158,12 +156,59 @@ Now, just load the microSD into the Orange Pi board, connect a USB keyboard and 
 ###### Error!
 At this point, we should see a red power light and the Pi should boot up. However, I see no lights at all. This is a problem!
 
-After measuring some voltages with a multimeter, It seems that the issue is the USB-DC power cable. I can measure 5V from the power supply, but no voltage from the cable connector. I will get another cable and try to boot from the Armbian image again.
+After measuring some voltages with a multimeter, it seems that the issue is the USB-DC power cable. I can measure 5V from the power supply, but no voltage from the cable connector. I will get another cable and try to boot from the Armbian image again.
 
-##### 27 March 2017
+##### 29 March 2017
+Two new cables from Amazon ([this one](http://a.co/gDyAZoq) and [this one](http://a.co/ftKETZe)) arrived today. I will try to boot the Armbian image again. I am skeptical that this will work, since it seems like a cable is the least likely piece of the computer system to fail. 
 
+Let's connect the Orange Pi as above, and try to boot!
 
+![Orange Pi Boot trial with new USB-DC power cable](../images/new-cable.JPG)
+
+LIGHTS! It does seem as if the cable was bad. (I'll try to get my money back.) I am getting a green light and blinking red light. The DVI monitor showed an error message and then a blank screen, so that means that the resolution coming from the Orange Pi was unusable by the monitor. That also means that I have no idea what is going on with the Orange Pi Boot process. A quick Google search didn't turn up anything specific, so I will try to boot with another power supply.
+
+>The Orange Pi is extremely picky about the power supply. Even a supply marked 5V 2A will fail frequently. It seems that the voltage must be extremely stable over all amperages, and the amperage must not fall far below 2A at any time during operation. It seems that the best solution for the Orange Pi power supply is to buy the  5V 3A power supply from [AliExpress](https://www.aliexpress.com/store/product/orange-pi-orange-pi-plus-Power-Adapter-5V-2A-Power-Supply-Micro-USB-Charger/1553371_32248555041.html). They have both US and European versions.
+
+I use the [Plugable 4-port USB Hub](http://plugable.com/products/USB2-HUB4BC) to power my Raspberry Pi with no issues, so I will give that a try as the power supply.
+
+![Orange Pi boot trial with Plugable USB Hub](../images/plugable-boot.JPG)
+
+It works! I got a brief look at the boot process before the monitor went blank due to resolution issues (probably), and the green light went solid with occasional flashes. The red light started solid and then went out. Thankfully SSH is enabled by default on the Orange Pi, or else I'd be unable to change the resolution to match the monitor therefore unable to enable SSH.
+
+Since the Orange Pi booted up with network connected, it received an IP Address by DHCP, and I can check that at my router's homepage. There are other options to ascertain the IP address of the devices on your home network, like [Fing](https://www.fing.io/) for iOS and Android). 
+
+SSH into the Orange Pi One. The default password for root on Armbian is '1234'.
+
+```bash
+$ ssh root@[ip_address]    # Replace [ip_address] with the ip address of your Orange Pi
+```
+A nice login screen is displayed:
+
+```bash
+$ **********************login screen
+```
+
+Follow the initial boot prompts from Armbian, like changing the root password, making a new user account, and setting the display settings. The h3disp program is provided to set the display settings. 
+
+```bash
+$ **********************h3disp
+```
+
+My monitor is 1280x1024 @ 60 hz with a DVI adapter. I am not sure why the DVI adapter makes a difference, but it has its own '-d' flag. I will use the following command:
+
+```bash
+$ h3disp -m 1280x1024 -d ***********Context
+```
+
+After rebooting, the monitor shows the correct image, but it still shows an error message. After trying several other formats (all worse outcome than the above setting), I found that if I push the menu button on the monitor before it goes blank, it will interrupt the sleep timeout process, and after closing the menu, the error is gone and the monitor works properly. I can't explain this one, but it seems to work!
+
+![Monitor menu trick](./images/monitor-trick.JPG)
+
+##### 30 March 2017
 
 # TODO:
 * Pics:
+  * Brighten Pics 
   * Raspbery Pi
+  * Monitor error & trick
+  * see above blanks
