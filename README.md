@@ -207,6 +207,7 @@ After rebooting, the monitor shows the correct image, but it still shows an erro
 ##### 30 March 2017
 
 # TODO:
+* Configure GitHub Pages: http://kbroman.org/simple_site/pages/overview.html
 * Pics:
   * Brighten Pics 
   * Raspbery Pi
