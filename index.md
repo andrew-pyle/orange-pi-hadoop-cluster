@@ -141,7 +141,7 @@ Download and unzip the OS image. I used [The Unarchiver](http://unarchiver.c3.cx
 Armbian offers a [GPG signature](https://docs.armbian.com/User-Guide_Getting-Started/) for authentication of the OS image download, if you want to check that out. The [process](http://notes.jerzygangi.com/the-best-pgp-tutorial-for-mac-os-x-ever/) is quite involved however.
 
 #### 26 March 2017
-We are will be using [Etcher](https://etcher.io) to flash the microSD card. It is a simple interface available for many OSes.
+We will be using [Etcher](https://etcher.io) to flash the microSD card. It is a simple interface available for many OSes.
 
 ![Etcher Screenshot](./images/etcher.png)
 
