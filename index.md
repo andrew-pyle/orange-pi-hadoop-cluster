@@ -1,12 +1,25 @@
----
----
-
 # Single-Board Computer Hadoop Cluster
 ###### Andrew Pyle | IFSC 7370 | April 2017
 
 ![Orange Pi One](./images/orange-cover.JPG)
 
 Let's set up a physical Hadoop 2 cluster with single-board Linux computers! I will be using 1 [Raspberry Pi 1 (Model B)](https://www.raspberrypi.org/products/model-b/) and two [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of three single-board computers. This setup will not be powerful enough for production use, but it will demonstrate a simple implementation of the Hadoop 2 ecosystem for learning purposes.
+
+## Table of Contents
+1. [Materials](#materials)
+1. [Orange Pi](#orange-pi)
+    1. [Install the Operating System](#install-the-operating-system)
+        1. [SD Card Integrity](#sd-card-integrity)
+	1. [Flash the OS](#flash-the-os)
+	1. [Error!](#error!)
+	1. [New Power Cables](#new-power-cables)
+	1. [Boot Up](#boot-up)
+	1. [Login with Secure Shell (SSH)](#login-with-secure-shell-(ssh))
+	1. [Configure System](#configure-system)
+	1. [Filesystem Resizing](#filesystem-resizing)
+	1. [More Configuration](#more-configuration)
+	
+	
 
 ## Materials
 
@@ -24,7 +37,8 @@ I am using the following items to create the cluster:
   _Note: USB WiFi Dongles could work, but are less reliable_
 * Display and HDMI-DVI cable
 
-## Boot up the Orange Pis
+## Orange Pi
+### Install the Operating System
 #### 24 March 2017
 
 My Raspberry Pi is currently in use for another project, so I will start this project setup with the Orange Pi One boards.
@@ -180,7 +194,11 @@ I use the [Plugable 4-port USB Hub](http://plugable.com/products/USB2-HUB4BC) to
 
 ![Orange Pi boot trial with Plugable USB Hub](images/orange-power.JPG)
 
-It works! I got a brief look at the boot process before the monitor went blank due to resolution issues (probably), and the green light went solid with occasional flashes (the light is on the lower right corner of the board, by the GPIO pins). The red light started solid and then went out. Thankfully SSH is enabled by default on the Orange Pi, or else I'd be unable to change the resolution to match the monitor therefore unable to enable SSH.
+It works! I got a brief look at the boot process before the monitor went blank due to resolution issues (probably), and the green light went solid with occasional flashes (the light is on the lower right corner of the board, by the GPIO pins). The red light started solid and then went out.
+
+##### Login with Secure Shell (SSH)
+
+Since the monitor is blank, it's not helping us complete the initial boot process. Thankfully SSH is enabled by default on the Orange Pi! SSH is a method of remotely logging in to a Unix-based (e.g. Linux) operating system. INSERT SSH REFERENCE.
 
 Since the Orange Pi booted up while connected to the network, it received an IP Address by DHCP. I can check that at my router's homepage.
 >(There are other methods to ascertain the IP address of the devices on your home network, like [Fing](https://www.fing.io/) for iOS and Android).
@@ -289,12 +307,11 @@ After rebooting, the monitor shows the correct image, but it still shows a resol
 
 
 #### 30 March 2017
-##### Continue the Configuration
 Let's check out some OS parameters before we attempt to begin the Hadoop 2 setup phase.
 
 > I am switching to the non-root user account I created in the installation process. It is always better to operate a CLI OS as a non-root user. It is too easy to unintentionally make a mistake as root, since root has so much power in the OS.
 
-###### Filesystem Resizing
+##### Filesystem Resizing
 
 When we flashed the Armbian OS image onto the microSD card, the image wasn't nearly as large as the whole card's storage capacity. If it were, we'd have a problem actually running the OS! But we do want the Orange Pi's file system to have access to all the storage capacity on the microSD card once we've booted into the OS. Luckily, Armbian automatically resizes the filesystem to use the entire capacity of the card it's installed on, leaving ~1% as free space.
 
@@ -328,6 +345,8 @@ log2ram          50M  748K   50M   2% /var/log
 tmpfs            50M     0   50M   0% /run/user/1000
 ```
 This output says that the filesystem (/dev/mmcblk0p1) has a size of 15 GB.
+
+##### More Configuration
 
 Next let's set the timezone.
 >I am switching back to root user here because the dpkg-reconfigure commands aren't in the $PATH of my created user account, and I didn't want to take the time to add them.
@@ -381,10 +400,12 @@ root@orangepione:$ apt-get upgrade
 
 After a successful upgrade, we are ready to begin the Hadoop 2 installation! Let's pat ourselves on the back for a successful Orange Pi installation!
 
-#### 31 March 2017
+
 
 
 # TODO:
+* Make Headings Consistent
+* Complete Table of Contents
 * Pics:
   * Brighten Pics
   * Raspbery Pi
