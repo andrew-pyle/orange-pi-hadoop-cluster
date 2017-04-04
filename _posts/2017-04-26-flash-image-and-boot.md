@@ -1,3 +1,9 @@
+---
+layout: post
+title:  "Flash Image and Boot"
+date:   2017-04-26
+---
+
 #### 26 March 2017
 We will be using [Etcher](https://etcher.io) to flash the microSD card. It is a simple interface available for many OSes.
 
