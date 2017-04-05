@@ -18,8 +18,8 @@ Let's set up a physical Hadoop 2 cluster with single-board Linux computers! I wi
 	1. [Configure System](#configure-system)
 	1. [Filesystem Resizing](#filesystem-resizing)
 	1. [More Configuration](#more-configuration)
-	
-	
+
+
 
 ## Materials
 
@@ -153,6 +153,17 @@ We will be installing the [Armbian distribution](https://www.armbian.com/orange-
 Download and unzip the OS image. I used [The Unarchiver](http://unarchiver.c3.cx/unarchiver) for mac to unzip the .7z file. The OS image file is highlighted.
 ![alt text](./images/armbian-unzip.png "Unzipped Armbian Orange Pi One OS image")
 Armbian offers a [GPG signature](https://docs.armbian.com/User-Guide_Getting-Started/) for authentication of the OS image download, if you want to check that out. The [process](http://notes.jerzygangi.com/the-best-pgp-tutorial-for-mac-os-x-ever/) is quite involved however.
+
+##### References
+###### Tutorials
+* [ORANGE PI ONE – QUICK START GUIDE by Travis Straub](https://tdstraub.wordpress.com/2016/04/05/orange-pi-one-quick-start-guide/)
+* [Orange Pi One Board Quick Start Guide with Armbian Debian based Linux Distribution](http://www.cnx-software.com/2016/03/16/orange-pi-one-board-quick-start-guide-with-armbian-debian-based-linux-distribution/)
+
+###### Technical
+* [Sunxi - Orange Pi One Hardware Information](https://linux-sunxi.org/Orange_Pi_Lite)
+* [Armbian - Orange Pi One Page](https://www.armbian.com/orange-pi-one/)
+* [Armbian Docs - Getting Started Guide](https://docs.armbian.com/User-Guide_Getting-Started/)
+
 
 #### 26 March 2017
 We will be using [Etcher](https://etcher.io) to flash the microSD card. It is a simple interface available for many OSes.
@@ -404,6 +415,7 @@ After a successful upgrade, we are ready to begin the Hadoop 2 installation! Let
 
 
 # TODO:
+* Include References
 * Make Headings Consistent
 * Complete Table of Contents
 * Pics:
