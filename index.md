@@ -225,9 +225,21 @@ $ ssh root@[ip_address]   # Replace [ip_address] with the IP
 root@192.168.0.108 password:    #1234
 ```
 A nice login screen is displayed upon SSH connection.
+```
+  ___                               ____  _    ___             
+ / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___
+| | | | '__/ _` | '_ \ / _` |/ _ \ | |_) | | | | | | '_ \ / _ \
+| |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
+ \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
+                       |___/                                   
 
-![Orange Pi One Login Screen](./images/orange-login.png)
+Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
+System load:   0.01            	Up time:       11 min		
+Memory usage:  10 % of 494Mb  	IP:            192.168.0.108
+CPU temp:      39°C           	
+Usage of /:    13% of 15G    	
 
+```
 
 ##### Configure System
 
@@ -237,7 +249,7 @@ Follow the initial boot prompts from Armbian, like changing the root password, m
 
 The h3disp program is provided to set the display settings.
 
-```bash
+```
 root@orangepione:$ sudo h3disp
 Usage: h3disp [-h/-H] -m [video mode] [-d] [-c [0-2]]
 
@@ -251,7 +263,7 @@ Usage: h3disp [-h/-H] -m [video mode] [-d] [-c [0-2]]
  The resolution can be set using the -m switch. The following resolutions
  are currently supported:
 
-    480i	use "-m 480i" or "-m 0"
+    480i    use "-m 480i" or "-m 0"
     576i	use "-m 576i" or "-m 1"
     480p	use "-m 480p" or "-m 2"
     576p	use "-m 576p" or "-m 3"
@@ -283,28 +295,24 @@ Usage: h3disp [-h/-H] -m [video mode] [-d] [-c [0-2]]
 
  Two examples:
 
-    'h3disp -m 1080p60 -d' (1920x1080@60Hz DVI)
+'h3disp -m 1080p60 -d' (1920x1080@60Hz DVI)
     'h3disp -m 720i' (1280x720@30Hz HDMI)
 
  You can also specify the colour-range for your HDMI-display with the -c switch.
 
  The following values for -c are currently supported:
 
-    0 -- RGB range 16-255 (Default, use "-c 0")
+0 -- RGB range 16-255 (Default, use "-c 0")
     1 -- RGB range 0-255 (Full range, use "-c 1")
     2 -- RGB range 16-235 (Limited video, "-c 2")
 
 ############################################################################
 ```
-
 My monitor is 1280x1024 @ 60 hz with a DVI adapter. I am not sure why the DVI adapter makes a difference, but it has its own '-d' flag. I will use the following command:
-
 ```bash
 root@orangepione:$ h3disp -m 1280x1024 -d
 ```
-
 After rebooting, the monitor shows the correct image, but it still shows a resoloution error message. After trying several other formats (all worse outcome than the above setting), I found that if I push the menu button on the monitor before it goes blank, it will interrupt the sleep timeout process, and after closing the menu, the error is gone and the monitor works properly. I can't explain this one, but it seems to work!
-
 
 #### 30 March 2017
 Let's check out some OS parameters before we attempt to begin the Hadoop 2 setup phase.
@@ -354,20 +362,21 @@ Next let's set the timezone.
 root@orangepione:$ dpkg-reconfigure tzdata
 ```
 ![dpkg-reconfigure tzdata](images/tzdata-america.png) ![dpkg-reconfigure tzdata](images/tzdata-chicago.png)
-```bash
+```
 Current default time zone: 'America/Chicago'
 Local time is now:      Fri Mar 31 00:25:30 CDT 2017.
 Universal Time is now:  Fri Mar 31 05:25:30 UTC 2017.
 ```
 
 And lastly, I am getting a notification below the login screen that there are updates to install.
-```bash
+
+```
   ___                               ____  _    ___             
  / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___
-| | | |  __/ _  |  _ \ / _  |/ _ \ | |_) | | | | | |  _ \ / _ \
+| | | | '__/ _` | '_ \ / _` |/ _ \ | |_) | | | | | | '_ \ / _ \
 | |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
  \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
-                     |___/                                   
+                       |___/                                   
 
 Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
 System load:   0.03            	Up time:       3 min		
@@ -378,11 +387,13 @@ Usage of /:    7% of 15G
 
 [ 3 updates to install: apt-get upgrade ]
 ```
-> Linux Debian Note: apt-get is a package manager for the Debian OS. It handles installing programs on the CLI (which is a good thing, because I'd have trouble installing programs from the Internet without it!)
-> Run this command for more information. Or see a plain-english description  [here](http://askubuntu.com/questions/222348/what-does-sudo-apt-get-update-do).
+>Linux Debian Note: apt-get is a package manager for the Debian OS. It handles installing programs on the CLI (which is a good thing, because I'd have trouble installing programs from the Internet without it!)
+> Run this command for more information.
 >```bash
 >$ man apt-get
 >```
+>Or see a plain-english description  [here](http://askubuntu.com/questions/222348/what-does-sudo-apt-get-update-do).
+
 We will run two commands to install the updates. This one udpates the existing program information. **Be sure to run this one (update) before upgrade, or else you will be upgrading based on outdated package info.**
 ```bash
 root@orangepione:$ apt-get update
@@ -438,19 +449,122 @@ lrwxrwxrwx 1 root root   23 Apr 14 20:17 javac -> /etc/alternatives/javac
 ```
 
 ##### Install Hadoop
+###### Create Hadoop user
 First, we will create a user for hadoop's processes in the `sudo` group. This will allow the machines in the cluster to communicate with each other.
 ```bash
 $ sudo addgroup hadoop
 $ sudo adduser --ingroup hadoop hduser
 $ $ sudo adduser hduser sudo
 ```
-Now we will download Hadoop! Go to http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz and choose the suggested mirror for the download.
-I used:
+
+###### Download Hadoop-2.7.3
+Now we will download Hadoop!
+>In the interest of time and simplicity, we are not compiling the Hadoop source code on the Orange Pi. However, compiling Hadoop so that it runs natively would be best for a production system. See [Jonas Widriksson's Tutorial](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop) for instructions for compiling Hadoop from source on a Raspberry Pi. The Raspberry Pi OS, Raspbian Linux, is derived from Debian Linux so the instructions should match very well.
+
+Go to http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz and `wget` the Hadoop binary from the suggested mirror for the download.
 ```bash
 $ wget http://www.namesdir.com/mirrors/apache/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
 
 sudo tar xzvf hadoop-2.7.3.tar.gz -C /opt
 ```
+
+#### 15 April 2017
+
+Let's change the ownership of the Hadoop files to the `hduser` account. This will allow the Hadoop processes to make chages to these files without `root` or `sudo` permissions.
+
+Change to the `/opt` folder where the Hadoop files are located and change the ownership recursively (changes all files in the folder) to the hduser account and the hadoop group.
+```bash
+$ cd /opt
+$ sudo chown -R hduser:hadoop hadoop-2.7.3
+```
+
+###### Configure Hadoop environment
+Now we will configure the hduser account to run Hadoop services.
+
+>*In-depth info below. Skip for the next step in the journal.*
+>
+>If you try to run Hadoop now, you'll get an error:
+>```bash
+>$ hadoop
+>-su: hadoop: command not found
+>```
+>That's because of how Debian runs commands from the CLI. When you type a command, it looks in the `$PATH` environment variable for a link to an executable file. The `$PATH` variable is a list of directories where executable files are located on the filesystem, separated by a `:`. For example:
+>```bash
+>$ echo $PATH
+>/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:
+>```
+>That's how Debian (and Unix-like OSes) can magically execute programs without you typing the whole path to the executable.
+
+Change to the `hduser` account.
+```bash
+$ su hduser
+```
+Add Hadoop references to the `hduser` profile.
+```bash
+$ nano ~/.bashrc #Edit the hduser profile
+```
+Append the following lines to the end of the file to add the directories `$PATH`.
+```bash
+export JAVA_HOME=/opt/jdk1.8.0_121
+export HADOOP_HOME=/opt/hadoop-2.7.3
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
+export YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop
+export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$JAVA_HOME/bin
+```
+Press `Ctrl-o` to write-out (it's like save) and `Crtl-x` to exit `nano` after writing-out.
+
+Apply the new `.bashrc`.
+```bash
+$ source ~/.bashrc
+```
+We need to add `$JAVA_HOME` to the `hadoop-env.sh` file too.
+```bash
+cd $HADOOP_CONF_DIR
+nano hadoop-env.sh
+```
+Add the `JAVA_HOME` link from above. Change
+```bash
+# The java implementation to use.
+export JAVA_HOME=${JAVA_HOME}
+```
+to
+```bash
+# The java implementation to use.
+export JAVA_HOME=/opt/jdk1.8.0_121/
+```
+It seems that hard coding the link is helpful for a distributed cluster, as we are making. This excerpt is from the `hadoop-env.sh` file:
+>```bash
+># Set Hadoop-specific environment variables here.
+>
+># The only required environment variable is JAVA_HOME.  All others are
+># optional.  When running a distributed configuration it is best to
+># set JAVA_HOME in this file, so that it is correctly defined on
+># remote nodes.
+>
+># The java implementation to use.
+>export JAVA_HOME=${JAVA_HOME}
+>```
+
+Ensure the environment variables reference Hadoop properly
+```bash
+# "hadoop" is in the $PATH now,
+# so we can execute it from the CLI!
+
+$ hadoop version
+
+Hadoop 2.7.3
+Subversion https://git-wip-us.apache.org/repos/asf/hadoop.git -r baa91f7c6bc9cb92be5982de4719c1c8af91ccff
+Compiled by root on 2016-08-18T01:41Z
+Compiled with protoc 2.5.0
+From source with checksum 2e4ce5f957ea4db193bce3734ff29ff4
+This command was run using /opt/hadoop-2.7.3/share/hadoop/common/hadoop-common-2.7.3.jar
+```
+
+If you get an error, one of the environment variables is not properly set!
 
 
 
