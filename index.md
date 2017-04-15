@@ -9,15 +9,16 @@ Let's set up a physical Hadoop 2 cluster with single-board Linux computers! I wi
 1. [Materials](#materials)
 1. [Orange Pi](#orange-pi)
     1. [Install the Operating System](#install-the-operating-system)
-        1. [SD Card Integrity](#sd-card-integrity)
-	1. [Flash the OS](#flash-the-os)
-	1. [Error!](#error!)
-	1. [New Power Cables](#new-power-cables)
-	1. [Boot Up](#boot-up)
-	1. [Login with Secure Shell (SSH)](#login-with-secure-shell-(ssh))
-	1. [Configure System](#configure-system)
-	1. [Filesystem Resizing](#filesystem-resizing)
-	1. [More Configuration](#more-configuration)
+    1. [SD Card Integrity](#sd-card-integrity)
+    1. [Flash the OS](#flash-the-os)
+    1. [Error!](#error!)
+    1. [New Power Cables](#new-power-cables)
+    1. [Boot Up](#boot-up)
+    1. [Login with Secure Shell     (SSH)](#login-with-secure-shell-(ssh))
+    1. [Configure System](#configure-system)
+    1. [Filesystem Resizing](#filesystem-resizing)
+    1. [More Configuration](#more-configuration)
+
 
 
 
@@ -195,7 +196,7 @@ Let's connect the Orange Pi as above, and try to boot!
 ##### Boot Up
 
 LIGHTS! It does seem as if the cable was bad. (I'll try to get my money back.) I am getting a green light and blinking red light. The DVI monitor showed an error message and then a blank screen.
-> I wish I'd gotten a video here of the flashing red light, but I didn't have the camera ready. I don't know how to reproduce the error, except maybe to erase the microSD card and try an initial boot again, which would be wasting the work already done at this point.
+> I wish I'd gotten a video here of the light sequence during the boot process, but I didn't have the camera ready.
 
 This all means the resolution coming from the Orange Pi is unusable by the monitor. This also means that I currently have no idea what is going on with the Orange Pi Boot process. A quick Google search didn't turn up anything specific, so I will try to boot with another power supply.
 
@@ -225,20 +226,8 @@ root@192.168.0.108 password:    #1234
 ```
 A nice login screen is displayed upon SSH connection.
 
-```bash
-  ___                               ____  _    ___             
- / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___
-| | | |  __/ _  |  _ \ / _  |/ _ \ | |_) | | | | | |  _ \ / _ \
-| |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
- \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
-                       |___/                                   
+![Orange Pi One Login Screen](./images/orange-login.png)
 
-Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
-System load:   0.03            	Up time:       3 min		
-Memory usage:  10 % of 494Mb  	IP:            192.168.0.108
-CPU temp:      35°C           	
-Usage of /:    7% of 15G    	
-```
 
 ##### Configure System
 
@@ -394,7 +383,7 @@ Usage of /:    7% of 15G
 >```bash
 >$ man apt-get
 >```
-We will run two commands to install the updates. This one udpates the existing program information. **Be sure to run this one (update) before upgrade, or else you will be upgrading based on outdated info.**
+We will run two commands to install the updates. This one udpates the existing program information. **Be sure to run this one (update) before upgrade, or else you will be upgrading based on outdated package info.**
 ```bash
 root@orangepione:$ apt-get update
 ```
@@ -411,6 +400,57 @@ root@orangepione:$ apt-get upgrade
 
 After a successful upgrade, we are ready to begin the Hadoop 2 installation! Let's pat ourselves on the back for a successful Orange Pi installation!
 
+### Install Hadoop 2
+#### 14 April 2017
+
+##### Install Oracle Java
+>The install Hadoop part of the journal draws from a tutorial from [Pi Projects](http://www.piprojects.xyz/install-hadoop-java-orange-pi/). Check them out!
+
+We will be installing [Apache Hadoop 2.7.3](http://hadoop.apache.org/releases.html) (released 25 Aug 2016) on the Orange Pi. This is not the most up-to-date version, but there is more information on the Internet about Hadoop 2.7.x than either 2.8.x or 3.x.x.
+
+Java is required for Hadoop, as much of the functionality of the system is rooted in executing Java code. Let's install [Oracle Java JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html). From what I've read online Oracle's JDK is more performant for Hadoop clusters than Open JDK or other alternatives. See Apache info [here](https://wiki.apache.org/hadoop/HadoopJavaVersions).
+
+I could not find a download path from Oracle to `wget` the tar archive directly to the Orange Pi, so I downloaded Oracle JDK for Linux ARM 32-bit processor onto my MacBook and transferred the tar archive to the Orange Pi with `scp`:
+```bash
+$ scp filename username@destination_host:/path/to/file
+```
+On the Orange Pi, unpack the archive to the `/opt` directory with the `-C`flag:
+```bash
+sudo tar xzvf jdk-8u121-linux-arm32-vfp-hflt.tar.gz -C /opt
+```
+Next, we will setup the Java installation with the following commands from [Pi Projects](http://www.piprojects.xyz/install-hadoop-java-orange-pi/). I do not entirely understand this process, but these commands set up Oracle Java 8 JDK as the default `java` and `javac` for our environment by creating `symlinks` from our installation to `/usr/bin/java` and `/usr/bin/java`.
+```bash
+$ sudo update-alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_121/bin/javac 1
+
+$ sudo update-alternatives --install /usr/bin/java java /opt/jdk1.8.0_121/bin/java 1
+
+# Allows interactive selection of default java location
+$ sudo update-alternatives --config javac
+$ sudo update-alternatives --config java
+```
+We can see that the symlinks have been made.
+```bash
+$ ls /usr/bin/java
+/usr/bin/java
+asp@orangepione:~$ ls -l  /usr/bin/ | grep java
+lrwxrwxrwx 1 root root   22 Apr 14 20:17 java -> /etc/alternatives/java
+lrwxrwxrwx 1 root root   23 Apr 14 20:17 javac -> /etc/alternatives/javac
+```
+
+##### Install Hadoop
+First, we will create a user for hadoop's processes in the `sudo` group. This will allow the machines in the cluster to communicate with each other.
+```bash
+$ sudo addgroup hadoop
+$ sudo adduser --ingroup hadoop hduser
+$ $ sudo adduser hduser sudo
+```
+Now we will download Hadoop! Go to http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz and choose the suggested mirror for the download.
+I used:
+```bash
+$ wget http://www.namesdir.com/mirrors/apache/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
+
+sudo tar xzvf hadoop-2.7.3.tar.gz -C /opt
+```
 
 
 
