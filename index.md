@@ -411,11 +411,11 @@ root@orangepione:$ apt-get upgrade
 
 After a successful upgrade, we are ready to begin the Hadoop 2 installation! Let's pat ourselves on the back for a successful Orange Pi installation!
 
-### Install Hadoop 2
-#### 14 April 2017
+### Install Hadoop 2.7.3
+*This section of the journal draws from the [Install Hadoop on the Orange Pi](http://www.piprojects.xyz/install-hadoop-java-orange-pi/) tutorial from [Pi Projects](http://www.piprojects.xyz/). Check them out!*
 
-##### Install Oracle Java
->The install Hadoop part of the journal draws from a tutorial from [Pi Projects](http://www.piprojects.xyz/install-hadoop-java-orange-pi/). Check them out!
+###### 14 April 2017
+#### Install Oracle Java
 
 We will be installing [Apache Hadoop 2.7.3](http://hadoop.apache.org/releases.html) (released 25 Aug 2016) on the Orange Pi. This is not the most up-to-date version, but there is more information on the Internet about Hadoop 2.7.x than either 2.8.x or 3.x.x.
 
@@ -448,8 +448,12 @@ lrwxrwxrwx 1 root root   22 Apr 14 20:17 java -> /etc/alternatives/java
 lrwxrwxrwx 1 root root   23 Apr 14 20:17 javac -> /etc/alternatives/javac
 ```
 
-##### Install Hadoop
-###### Create Hadoop user
+##### References
+1. http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+1. http://www.rpiblog.com/2014/03/installing-oracle-jdk-8-on-raspberry-pi.html
+1. https://wiki.apache.org/hadoop/HadoopJavaVersions
+
+#### Create Hadoop user
 First, we will create a user for hadoop's processes in the `sudo` group. This will allow the machines in the cluster to communicate with each other.
 ```bash
 $ sudo addgroup hadoop
@@ -457,9 +461,9 @@ $ sudo adduser --ingroup hadoop hduser
 $ $ sudo adduser hduser sudo
 ```
 
-###### Download Hadoop-2.7.3
+#### Download Hadoop-2.7.3
 Now we will download Hadoop!
->In the interest of time and simplicity, we are not compiling the Hadoop source code on the Orange Pi. However, compiling Hadoop so that it runs natively would be best for a production system. See [Jonas Widriksson's Tutorial](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop) for instructions for compiling Hadoop from source on a Raspberry Pi. The Raspberry Pi OS, Raspbian Linux, is derived from Debian Linux so the instructions should match very well.
+>In the interest of time and simplicity, we will be installing the pre-compiled Hadoop binary rather than compiling Hadoop from the source code on the Orange Pi. However, compiling Hadoop so that it runs natively would be best for a production system. See [Jonas Widriksson's Tutorial](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop) for instructions for compiling Hadoop from source on a Raspberry Pi. The Raspberry Pi OS, Raspbian Linux, is derived from Debian Linux so the instructions should match very well.
 
 Go to http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz and `wget` the Hadoop binary from the suggested mirror for the download.
 ```bash
@@ -468,9 +472,9 @@ $ wget http://www.namesdir.com/mirrors/apache/hadoop/common/hadoop-2.7.3/hadoop-
 sudo tar xzvf hadoop-2.7.3.tar.gz -C /opt
 ```
 
-#### 15 April 2017
+###### 15 April 2017
 
-Let's change the ownership of the Hadoop files to the `hduser` account. This will allow the Hadoop processes to make chages to these files without `root` or `sudo` permissions.
+Let's change the ownership of the Hadoop files to the `hduser` account. This will allow the Hadoop processes to make chages to these files without being `root` or having `sudo` permissions.
 
 Change to the `/opt` folder where the Hadoop files are located and change the ownership recursively (changes all files in the folder) to the hduser account and the hadoop group.
 ```bash
@@ -478,7 +482,11 @@ $ cd /opt
 $ sudo chown -R hduser:hadoop hadoop-2.7.3
 ```
 
-###### Configure Hadoop environment
+##### References
+1. http://hadoop.apache.org/releases.html
+1. http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop
+
+#### Configure Hadoop environment
 Now we will configure the hduser account to run Hadoop services.
 
 >*In-depth info below. Skip for the next step in the journal.*
@@ -563,10 +571,203 @@ Compiled with protoc 2.5.0
 From source with checksum 2e4ce5f957ea4db193bce3734ff29ff4
 This command was run using /opt/hadoop-2.7.3/share/hadoop/common/hadoop-common-2.7.3.jar
 ```
+If you get an error, one of the environment variables is not properly set.
 
-If you get an error, one of the environment variables is not properly set!
+At this point Hadoop is installed. Yay! However, the services and configuration of Hadoop itself are not setup. So onto configuration!
 
+##### References
+1. http://www.piprojects.xyz/install-hadoop-java-orange-pi/
+1. http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop
 
+### Configure Hadoop
+*This section of the journal draws from two tutorials:*
+*1. [Install Hadoop on the Orange Pi](http://www.piprojects.xyz/install-hadoop-java-orange-pi/) tutorial from [Pi Projects](http://www.piprojects.xyz/)*
+*2. Multi-node cluster configuration: [Jonas Widriksson's Tutorial](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop) for setting up a Hadoop 2.7.2 cluster on Raspbery Pis.*
+
+#### Network Access
+Hadoop's services span multiple computers (called nodes) connected by a network to provide the big-data crunching ability it is known for. We have to set up each node to recognize the other nodes on the network.
+
+##### Hostname
+First, let's name each node. Debian uses the `/etc/hostname` file to establish any given machine's name on the network, called [hostname](https://debian-handbook.info/browse/stable/sect.hostname-name-service.html).
+```bash
+$ sudo nano /etc/hostname
+```
+Delete the name that's there, and give it a new one. For each node, I'm using `hadoopnode` and an incrementing integer.
+For example:
+```bash
+hadoopnode1
+```
+
+##### Static IP Addresses
+Next, give each node a static IP address on your router or network switch. For example:
+```bash
+192.168.0.110    hadoopnode1
+192.168.0.111    hadoopnode2
+...
+etc.
+```
+This means that every time the single-board computer requests and IP address with DHCP (read more [here](https://kb.iu.edu/d/adov)), the router gives it the same one. This makes it simple for the single-board computers to access one another over the network, and we don't have to set any network settings on each node.
+
+**To find the instructions**, it will be best just to Google search your router or switch and "static IP address", since each router/switch interface is different.
+
+##### Hosts
+We also need to tell each node what the names of the other nodes are. [Debian](https://debian-handbook.info/browse/stable/sect.hostname-name-service.html) uses the `/etc/hosts` file as a hostname table, which is a type of simple local DNS service.
+Create the hosts file with **every** hostname and static IP address:
+```bash
+192.168.0.110 hadoopnode1
+192.168.0.111 hadoopnode2
+```
+
+#### SSH Access
+
+Now we have names and IP addresses, each node will need to access data on the other nodes. We will allow this by creating a single SSH key pair to be shared among all nodes. Read more about SSH key pairs [here](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2).
+
+Create the SSH key pair with blank password:
+```bash
+$ mkdir ~/.ssh
+$ ssh-keygen -t rsa -P "" # -t rsa specifies key type
+                          # -P "" specifies blank password
+$ cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys # Copies public (.pub) key into the publicly
+                                                 # accessible directory for authorized login keys
+```
+Now login to this machine to add the machine's certificate to the `~/.ssh/known_hosts` directory.
+```bash
+$ ssh localhost
+```
+Answer 'yes' when asked to trust the host certificate. This allows Hadoop to login among the cluster later.
+```bash
+$ logout # closes the ssh session and returns
+         # you to your former session
+```
+Now your `~/.ssh` folder should look like this:
+```bash
+$ ls ~/.ssh
+authorized_keys  id_rsa  id_rsa.pub  known_hosts
+```
+
+#### Hadoop Settings
+Now we will setup the Hadoop system itself. There are 5 relevant setting files that we need to configure. We will leave the rest as default.
+
+1. `$HADOOP_CONF_DIR/slaves`
+Replace the contents with the names of the nodes in your cluster:
+```bash
+$ nano $HADOOP_CONF_DIR/slaves
+```
+>*Example*
+>```
+>hadoopnode1
+>hadoopnode2
+>```
+2. `$HADOOP_CONF_DIR/core-site.xml`
+```xml
+<configuration>
+  <property>
+    <name>hadoop.tmp.dir</name>
+    <value>/hdfs/tmp</value>
+  </property>
+  <property>
+    <name>fs.default.name</name>
+    <value>hdfs://hadoopnode1:54310</value>
+  </property>
+</configuration>
+```
+3. `$HADOOP_CONF_DIR/hdfs-site.xml`
+```xml
+<configuration>
+  <property>
+    <name>dfs.replication</name>
+    <value>2</value>
+  </property>
+</configuration>
+```
+4. `$HADOOP_CONF_DIR/mapred-site.xml`
+Don't panic if you can't find this one. It doesn't exist by default. We need to create it from the template provided.
+```bash
+# Creates the .xml file from the template by copying
+$ cp $HADOOP_CONF_DIR/mapred-site.xml.template $HADOOP_CONF_DIR/mapred-site.xml
+$ nano mapred-site.xml
+```
+```xml
+<property>
+  <name>mapreduce.framework.name</name>
+  <value>yarn</value>
+</property>
+```
+5. `$HADOOP_CONF_DIR/yarn-site.xml`
+```xml
+<configuration>
+  <property>
+    <name>yarn.resourcemanager.resource-tracker.address</name>
+    <value>hadoopnode1:8025</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.scheduler.address</name>
+    <value>hadoopnode1:8035</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.address</name>
+    <value>hadoopnode1:8050</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle</value>
+  </property>
+</configuration>
+```
+YARN is the resource negotiator for Hadoop. It allocates the memory and CPU resources for each Hadoop job. In addition to the basic settings below, we can also configure how YARN distributes the system resources in this file. Understanding and configuring all these settings is out of the scope of this journal, however. See the [Apache Hadoop 2.7.3 YARN Docs](https://hadoop.apache.org/docs/r2.7.3/hadoop-yarn/hadoop-yarn-site/YARN.html) for the complete details.
+
+#### Create HDFS
+The Hadoop distributed filesystem (hdfs) is one of the foundations of the Hadoop framework. It allows files to be saves across nodes in the cluster, and replicates data to safeguard against data loss. It is separate from the filesystem of each node, and files can be placed into the hdfs from the normal filesystem using commmands to the namenode.
+Create hdfs:
+```bash
+$ sudo mkdir -p /hdfs/tmp
+$ sudo chown hduser:hadoop /hdfs/tmp
+$ chmod 750 /hdfs/tmp # XxX
+```
+```bash
+$ hdfs namenode -format # XxX Explanation?
+```
+
+### Start Hadoop
+Now that we have configured Hadoop, let's start it up!
+Start the hdfs and YARN:
+```bash
+$ $HADOOP_HOME/sbin/start-dfs
+$ $HADOOP_HOME/sbin/start-yarn.sh
+```
+If you haven't logged into one or more of the nodes as we did above in [SSH Acess](#ssh-access), it will ask whether to trust the Host Key.
+```
+The authenticity of host 'namenode2 (192.168.0.110)' can't be established.
+ECDSA key fingerprint is xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx.
+Are you sure you want to continue connecting (yes/no)? yes
+```
+Enter yes.
+
+Now, verify that all services are running:
+```bash
+$ jps
+```
+If everything started correctly, you'll see these services on the **NameNode** (hadoopnode1 for us):
+```
+5233 DataNode
+5689 NodeManager
+5065 NameNode
+6011 Jps
+5515 ResourceManager
+XxX SecondaryNameNode
+```
+And these on the **Slave Nodes** (hadoopnode2 for us):
+```
+XxX DataNode
+XxX NodeManager
+XxX Jps
+```
+Let's take a moment to celebrate before we test out the hadoop cluster with the [Hadoop pi test program](http://www.informit.com/articles/article.aspx?p=2190194&seqNum=3) from informIT®!
+
+##### References
+1. Hadoop 2.7.2 Cluster Raspbery Pi http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop
+1. DCHP https://kb.iu.edu/d/adov
+1. Hostname https://debian-handbook.info/browse/stable/sect.hostname-name-service.html
 
 # TODO:
 * Include References
