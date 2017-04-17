@@ -594,9 +594,7 @@ $ sudo nano /etc/hostname
 ```
 Delete the name that's there, and give it a new one. For each node, I'm using `hadoopnode` and an incrementing integer.
 For example:
-```bash
-hadoopnode1
-```
+![nano /etc/hostname](images/nano-hostname-1.png)
 
 ##### Static IP Addresses
 Next, give each node a static IP address on your router or network switch. For example:
@@ -630,11 +628,12 @@ $ ssh-keygen -t rsa -P "" # -t rsa specifies key type
 $ cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys # Copies public (.pub) key into the publicly
                                                  # accessible directory for authorized login keys
 ```
-Now login to this machine to add the machine's certificate to the `~/.ssh/known_hosts` directory.
+Now login to this machine to add the machine's certificate to the `~/.ssh/known_hosts` directory:
+
+(Answer 'yes' when asked to trust the host certificate. This allows Hadoop to login among the cluster later.)
 ```bash
 $ ssh localhost
 ```
-Answer 'yes' when asked to trust the host certificate. This allows Hadoop to login among the cluster later.
 ```bash
 $ logout # closes the ssh session and returns
          # you to your former session
@@ -728,8 +727,90 @@ $ chmod 750 /hdfs/tmp # XxX
 $ hdfs namenode -format # XxX Explanation?
 ```
 
+#### Clone SD Card
+###### 16 April 2017
+
+At this point all the basic configuration is made. We only lack starting up the Hadoop cluster!
+
+>Up until this point, we have operated only on 1 physical single-board computer and 1 physical SD card. That allows us to have a single "source of truth" for all the installation and configuration. Now we will just clone the OS onto as many more SD cards as we have nodes in the cluster. We don't even have to install the OS on the other nodes! We will just copy the one we've already made.
+
+Let's clone the SD card. I am using macOS, so I will give the Unix-like CLI instructions. Windows users can use [Win32DiskImager](http://lifehacker.com/how-to-clone-your-raspberry-pi-sd-card-for-super-easy-r-1261113524). For a description of the process on multiple platforms, [see here](https://raspberrypi.stackexchange.com/questions/311/how-do-i-backup-my-raspberry-pi).
+
+Regardless of the tool you use to clone the OS image, we will use [Etcher](https://etcher.io) to flash each new microSD card for each new node in the cluster, just like we did for the first flash (see [Flash the OS](#flash-the-os) above).
+
+##### Clone the OS to a File
+First poweroff the node:
+```bash
+$ sudo poweroff
+```
+Eject the microSD card, and insert it into another computer (using the microSD adpater).
+
+Open a CLI (Terminal on macOS) and run the following commands:
+```bash
+$ diskutil list
+```
+Here is my output:
+```
+/dev/disk0 (internal, physical):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                        *250.1 GB   disk0
+   1:                        EFI EFI                     209.7 MB   disk0s1
+   2:          Apple_CoreStorage Macintosh SSD           249.2 GB   disk0s2
+   3:                 Apple_Boot Recovery HD             650.0 MB   disk0s3
+
+/dev/disk1 (internal, virtual):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:                            Macintosh SSD          +248.8 GB   disk1
+                                 Logical Volume on disk0s2
+                                 C36692BE-8110-4E9E-AC14-4C9F3E5B57F9
+                                 Unencrypted
+
+/dev/disk3 (internal, physical): (<<< Armbian OS SD Card Here)
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:     FDisk_partition_scheme                        *15.9 GB    disk3
+   1:                      Linux                         15.6 GB    disk3s1
+```
+Let's unmount the SD card file system:
+```bash
+$ diskutil unmountDisk /dev/disk3
+Unmount of all volumes on disk3 was successful
+```
+> Be sure to do this. I tried to clone the OS image without unmounting first and got an error. Oops!
+
+We'll use the `dd` command to clone the OS image:
+```
+$ sudo dd if=/dev/rdisk3 of=/path/to/new/imagefile.img bs=1m
+```
+Explanation:
+* `rdisk3`: This is the same as `disk3` above. `rdisk` uses a [different, much faster access protocol](https://superuser.com/questions/631592/why-is-dev-rdisk-about-20-times-faster-than-dev-disk-in-mac-os-x) than `disk`, however.
+* `if=`:`/file/to/SD_Card`
+* `of=`:`/file/to/.img/file`
+* `bs=1m`: Size of the transfer block
+
+It took about 6 min for me. Output:
+```
+15193+1 records in
+15193+1 records out
+15931539456 bytes transferred in 355.982354 secs (44753734 bytes/sec)
+```
+
+##### Flash the OS Image
+Now let's flash the OS image to every microSD for the cluster. We need one for each node. The process is the same one we used for the original Armbian OS image flash, without the extraction (`dd` outputs an uncompressed file the same size as the OS filesystem).
+
+Use [Etcher](https://etcher.io) from [Resin.io](https://resin.io/?ref=etcher). See section [Flash the OS](#flash-the-os) above.
+
+Once all the microSD cards have been flashed with the OS image which already has Hadoop installed and configured, let's boot them all up and set the final, individual settings!
+
+#### Set Node Hostnames
+Just like we set the hostname of the original node as `hadoopnode1`, we will need to set the `hostname` of each node in the cluster. I am using incrementing integers:
+```bash
+$ sudo nano /etc/hostname
+```
+
+![nano /etc/hostname](images/nano-hostname-2.png)
 ### Start Hadoop
-Now that we have configured Hadoop, let's start it up!
+Now that we have configured Hadoop, cloned the OS (with Hadoop configuration) to each node, and set the hostnames, let's start this Hadoop cluster up!
+
 Start the hdfs and YARN:
 ```bash
 $ $HADOOP_HOME/sbin/start-dfs
@@ -739,7 +820,7 @@ If you haven't logged into one or more of the nodes as we did above in [SSH Aces
 ```
 The authenticity of host 'namenode2 (192.168.0.110)' can't be established.
 ECDSA key fingerprint is xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx.
-Are you sure you want to continue connecting (yes/no)? yes
+Are you sure you want to continue connecting (yes/no)?
 ```
 Enter yes.
 
@@ -762,6 +843,9 @@ XxX DataNode
 XxX NodeManager
 XxX Jps
 ```
+
+
+
 Let's take a moment to celebrate before we test out the hadoop cluster with the [Hadoop pi test program](http://www.informit.com/articles/article.aspx?p=2190194&seqNum=3) from informIT®!
 
 ##### References
