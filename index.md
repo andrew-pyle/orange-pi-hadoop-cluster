@@ -3,7 +3,7 @@
 
 ![Orange Pi One](./images/orange-cover.JPG)
 
-Let's set up a physical Hadoop 2 cluster with single-board Linux computers! I will be using 1 [Raspberry Pi 1 (Model B)](https://www.raspberrypi.org/products/model-b/) and two [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of three single-board computers. This setup will not be powerful enough for production use, but it will demonstrate a simple implementation of the Hadoop 2 ecosystem for learning purposes.
+Let's set up a physical Hadoop 2 cluster with single-board Linux computers! I will be using two [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of two single-board computers. This setup will not be powerful enough for production use, but it will demonstrate a simple implementation of the Hadoop 2 ecosystem for learning purposes.
 
 ## Table of Contents
 1. [Materials](#materials)
@@ -26,7 +26,6 @@ Let's set up a physical Hadoop 2 cluster with single-board Linux computers! I wi
 
 I am using the following items to create the cluster:
 
-* 1 [Raspberry Pi Model B](https://www.raspberrypi.org/products/model-b/)
 * 2 [Orange Pi Ones](http://linux-sunxi.org/Orange_Pi_One)
 * For each single-board computer
   * Sandisk Ultra 16 GB Class 10 micro SD card ([Amazon](https://www.amazon.com/gp/product/B010Q57SEE/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1))
@@ -41,8 +40,6 @@ I am using the following items to create the cluster:
 ## Orange Pi
 ### Install the Operating System
 #### 24 March 2017
-
-My Raspberry Pi is currently in use for another project, so I will start this project setup with the Orange Pi One boards.
 
 I purchased 2 boards from [AliExpress.com](https://www.aliexpress.com/item/Orange-Pi-One-H3-Quad-core-Support-ubuntu-linux-and-android-mini-PC-Beyond-Raspberry-Pi/32603308880.html), along with a Sandisk Ultra 16 GB Class 10 micro SD card from [Amazon](https://www.amazon.com/gp/product/B010Q57SEE/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1) for each.
 
@@ -871,20 +868,23 @@ $ yarn jar hadoop-mapreduce-examples-2.7.3.jar pi 16 100
 ```
 The job fails. Hadoop reports that it **cannot find a certain block in the HDFS**.
 
-Suspecting that some of the blocks became corrupted after a previous power interruption, I ran the Hadoop filesystem check:
+Suspecting that some of the blocks became corrupted after a previous power interruption, I reformatted the HDFS, but to no avail:
 ```bash
-$ hdfs fsck / # Check the whole dfs, starting from /
+rm -rf /hdfs/tmp/*
+hdfs namenode -format
 ```
+I also reconfigured the YARN, MapReduce, core-site, and HDFS settings according to [Jonas Widriksson's Blog](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#YARN_and_MapReduce_memory_configuration_overview), only I divided all the memory values by 2, because his machines (Raspberry Pi 3s) have 2x the memory that mine do.
 
-...
+#### New Error
+At this point I started getting **Out-of-memory** errors, something like **"Container exceeded the virtual memory limit, and the container was killed."**
 
-Errors:
-* Hadoop could not find Block in HDFS
-* Container exceeded the virtual memory limit, and the container was killed.
-* Connection to the ResourceManager timed out.
+I'll shutdown the cluster and try again tomorrow.
 
+#### More Errors
+Now I get network-related errors. Something like **"Connection to the ResourceManager timed out."**
 
-> NOTE: The Hadoop logging protocol is very complicated, and after several hours of attempting to find the cause of the job failure, I decided that it is not worth spending even more time to discover the root cause of the failure. I'll just troubleshoot "from the ground up"
+At this point, I think I will just start over from scratch.
+
 
 
 

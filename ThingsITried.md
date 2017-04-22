@@ -3,6 +3,8 @@ At this point, I have no idea what is malfunctioning with this cluster. The repo
 
 I'll try to collect all the logs I can for analysis, gather some more tutorials, and troubleshoot the namenode. Then I'll clone the OS and restart the cluster.
 
+> NOTE: The Hadoop logging protocol is very complicated, and after several hours of attempting to find the cause of the job failure, I decided that it is not worth spending even more time to discover the root cause of the failure. I'll just troubleshoot "from the ground up"
+
 Here's what I tried:
 
 ### Ensure Hostnames Working Properly
@@ -70,6 +72,11 @@ $ cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
 ```
 Copying the `id_rsa.pub` (public key) into the `authorized_keys` file allows any machine with the `id_rsa` (private key) to login without a password.
 
+[Rsync](https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories-on-a-vps) is a great way to clone the folder to the home folder of the other nodes:
+```bash
+$ rsync -av ~/.ssh hduser@hadoopnode2:~ # sync the .ssh folder to the ~ directory of the other node.
+```
+
 Ensure the SSH key allows passwordless login:
 ```bash
 $ ssh hduser@hadoopnode1 # It works! (or not)
@@ -91,4 +98,31 @@ This command was run using /opt/hadoop-2.7.3/share/hadoop/common/hadoop-common-2
 ```
 Seems to be Hadoop 2.7.3, so that's right.
 
-### 
+### HDFS `fsck`
+
+I ran the Hadoop filesystem check:
+```bash
+$ hdfs fsck / # Check the whole dfs, starting from /
+
+..................Status: HEALTHY
+ Total size:	1508057 B
+ Total dirs:	11
+ Total files:	21
+ Total symlinks:		0
+ Total blocks (validated):	21 (avg. block size 71812 B)
+ Minimally replicated blocks:	21 (100.0 %)
+ Over-replicated blocks:	0 (0.0 %)
+ Under-replicated blocks:	2 (9.523809 %)
+ Mis-replicated blocks:		0 (0.0 %)
+ Default replication factor:	2
+ Average block replication:	2.0
+ Corrupt blocks:		0
+ Missing replicas:		16 (27.586206 %)
+ Number of data-nodes:		2
+ Number of racks:		1
+FSCK ended at Sat Apr 22 11:44:53 CDT 2017 in 126 milliseconds
+
+
+The filesystem under path '/' is HEALTHY
+```
+It looks like corrupted blocks is not the issue. I'm guessing the 2 `under-replicated blocks` are due to failed jobs.
