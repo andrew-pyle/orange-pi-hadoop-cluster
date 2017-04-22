@@ -1,4 +1,4 @@
-# Single-Board Computer Hadoop Cluster
+# Orange Pi Hadoop Cluster
 ###### Andrew Pyle | IFSC 7370 | April 2017
 
 ![Orange Pi One](./images/orange-cover.JPG)
@@ -830,23 +830,67 @@ $ jps
 ```
 If everything started correctly, you'll see these services on the **NameNode** (hadoopnode1 for us):
 ```
-5233 DataNode
-5689 NodeManager
-5065 NameNode
-6011 Jps
-5515 ResourceManager
-XxX SecondaryNameNode
+3218 NameNode
+3620 SecondaryNameNode
+3992 NodeManager
+3817 ResourceManager
+3387 DataNode
+4429 Jps
 ```
 And these on the **Slave Nodes** (hadoopnode2 for us):
 ```
-XxX DataNode
-XxX NodeManager
-XxX Jps
+3108 DataNode
+3434 Jps
+3290 NodeManager
 ```
 
-
+Additionally, a Hadoop cluster health report can be obtained on the CLI with:
+```bash
+$ hdfs -dfsadmin -reports
+```
+The `hdfs dfsadmin` command has lots of other administrative options besides `-report`.
 
 Let's take a moment to celebrate before we test out the hadoop cluster with the [Hadoop pi test program](http://www.informit.com/articles/article.aspx?p=2190194&seqNum=3) from informIT®!
+
+### Test Hadoop
+Hadoop ships with a .jar of example MapReduce applications, located at `$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.3.jar`
+
+You can run these with this command:
+```bash
+$ cd $HADOOP_HOME/share/hadoop/mapreduce
+$ yarn jar hadoop-mapreduce-examples-2.7.3.jar <APPLICATION_NAME> <OPTIONS>
+
+#Example
+$ yarn hadoop-mapreduce-examples-2.7.3.jar pi 16 100
+```
+Run the .jar with no parameters to see all the applications available.
+
+#### Error!
+```bash
+$ yarn jar hadoop-mapreduce-examples-2.7.3.jar pi 16 100
+```
+The job fails. Hadoop reports that it **cannot find a certain block in the HDFS**.
+
+Suspecting that some of the blocks became corrupted after a previous power interruption, I ran the Hadoop filesystem check:
+```bash
+$ hdfs fsck / # Check the whole dfs, starting from /
+```
+
+...
+
+Errors:
+* Hadoop could not find Block in HDFS
+* Container exceeded the virtual memory limit, and the container was killed.
+* Connection to the ResourceManager timed out.
+
+
+> NOTE: The Hadoop logging protocol is very complicated, and after several hours of attempting to find the cause of the job failure, I decided that it is not worth spending even more time to discover the root cause of the failure. I'll just troubleshoot "from the ground up"
+
+
+
+
+
+
 
 ##### References
 1. Hadoop 2.7.2 Cluster Raspbery Pi http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop
@@ -854,6 +898,10 @@ Let's take a moment to celebrate before we test out the hadoop cluster with the 
 1. Hostname https://debian-handbook.info/browse/stable/sect.hostname-name-service.html
 
 # TODO:
+* define cluster parts function (client, namenode, etc.)
+* export $HADOOP_EXAMPLES
+* New config files & descriptions of settings & attribution to Jonas
+* Secondary NameNode
 * Include References
 * Make Headings Consistent
 * Complete Table of Contents
