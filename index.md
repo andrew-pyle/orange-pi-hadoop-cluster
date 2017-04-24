@@ -5,22 +5,41 @@
 
 Let's set up a physical Hadoop 2 cluster with single-board Linux computers! I will be using two [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of two single-board computers. This setup will not be powerful enough for production use, but it will demonstrate a simple implementation of the Hadoop 2 ecosystem for learning purposes.
 
-## Table of Contents
-1. [Materials](#materials)
-1. [Orange Pi](#orange-pi)
-    1. [Install the Operating System](#install-the-operating-system)
-    1. [SD Card Integrity](#sd-card-integrity)
-    1. [Flash the OS](#flash-the-os)
-    1. [Error!](#error!)
-    1. [New Power Cables](#new-power-cables)
-    1. [Boot Up](#boot-up)
-    1. [Login with Secure Shell     (SSH)](#login-with-secure-shell-(ssh))
-    1. [Configure System](#configure-system)
-    1. [Filesystem Resizing](#filesystem-resizing)
-    1. [More Configuration](#more-configuration)
+# Contents
+<!-- MDTOC maxdepth:2 firsth1:0 numbering:1 flatten:0 bullets:0 updateOnSave:1 -->
 
+1. [Materials](#materials)   
+2. [Orange Pi Setup](#orange-pi-setup)   
+&emsp;2.1. [Install the Operating System](#install-the-operating-system)   
+&emsp;2.2. [Operate the Operating System](#operate-the-operating-system)   
+3. [Hadoop 2.7.3](#hadoop-273)   
+&emsp;3.1. [Install Oracle Java](#install-oracle-java)   
+&emsp;3.2. [Create Hadoop user](#create-hadoop-user)   
+&emsp;3.3. [Install Hadoop 2.7.3](#install-hadoop-273)   
+&emsp;3.4. [Connect Hadoop Cluster](#connect-hadoop-cluster)   
+&emsp;3.5. [Hadoop Configuration](#hadoop-configuration)   
+&emsp;3.6. [Create Hadoop Nodes](#create-hadoop-nodes)   
+&emsp;3.7. [Start Hadoop](#start-hadoop)   
+&emsp;3.8. [Test Hadoop](#test-hadoop)   
+4. [Troubleshooting Hadoop](#troubleshooting-hadoop)   
+&emsp;4.1. [Ensure Hostnames Working Properly](#ensure-hostnames-working-properly)   
+&emsp;4.2. [Check the Java version](#check-the-java-version)   
+&emsp;4.3. [Check Hostnames](#check-hostnames)   
+&emsp;4.4. [SSH Access](#ssh-access)   
+&emsp;4.5. [Hadoop Install Verification](#hadoop-install-verification)   
+&emsp;4.6. [HDFS `fsck`](#hdfs-fsck)   
+&emsp;4.7. [Reformat HDFS](#reformat-hdfs)   
+&emsp;4.8. [Hadoop Configuration](#hadoop-configuration)   
+&emsp;4.9. [Word Count Test](#word-count-test)   
+&emsp;4.10. [Calculate π Test](#calculate-π-test)   
+&emsp;4.11. [Optimize Configuration](#optimize-configuration)   
+&emsp;4.12. [Test Again](#test-again)   
+5. [Project Discussion](#project-discussion)   
+&emsp;5.1. [Hadoop Application Failure Analysis](#hadoop-application-failure-analysis)   
+&emsp;5.2. [Future Work](#future-work)   
+&emsp;5.3. [Conclusion](#conclusion)   
 
-
+<!-- /MDTOC -->
 
 ## Materials
 I am using the following items to create the cluster:
@@ -36,7 +55,7 @@ I am using the following items to create the cluster:
   _Note: USB WiFi Dongles could work, but are less reliable_
 * Display and HDMI-DVI cable
 
-## Orange Pi
+## Orange Pi Setup
 
 ### Install the Operating System
 I purchased 2 boards from [AliExpress.com](https://www.aliexpress.com/item/Orange-Pi-One-H3-Quad-core-Support-ubuntu-linux-and-android-mini-PC-Beyond-Raspberry-Pi/32603308880.html), along with a Sandisk Ultra 16 GB Class 10 micro SD card from [Amazon](https://www.amazon.com/gp/product/B010Q57SEE/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1) for each.
