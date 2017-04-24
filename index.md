@@ -344,6 +344,7 @@ This output says that the filesystem (/dev/mmcblk0p1) has a size of 15 GB.
 #### Set Timezone
 Next let's set the timezone.
 >I am switching back to root user here because the dpkg-reconfigure commands aren't in the $PATH of my created user account, and I didn't want to take the time to add them.
+
 ```bash
 root@orangepione:$ dpkg-reconfigure tzdata
 ```
