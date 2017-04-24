@@ -1,5 +1,11 @@
+# TODO:
+* export $HADOOP_EXAMPLES
+* New config files & descriptions of settings
+* Secondary NameNode
+* Include References
+
 # Orange Pi Hadoop Cluster
-###### Andrew Pyle | IFSC 7370 | April 2017
+##### Andrew Pyle | IFSC 7370 | April 2017
 
 ![Orange Pi One](./images/orange-cover.JPG)
 
@@ -13,14 +19,15 @@ Let's set up a physical Hadoop 2 cluster with single-board Linux computers! I wi
 &emsp;2.1. [Install the Operating System](#install-the-operating-system)   
 &emsp;2.2. [Operate the Operating System](#operate-the-operating-system)   
 3. [Hadoop 2.7.3](#hadoop-273)   
-&emsp;3.1. [Install Oracle Java](#install-oracle-java)   
-&emsp;3.2. [Create Hadoop user](#create-hadoop-user)   
-&emsp;3.3. [Install Hadoop 2.7.3](#install-hadoop-273)   
-&emsp;3.4. [Connect Hadoop Cluster](#connect-hadoop-cluster)   
-&emsp;3.5. [Hadoop Configuration](#hadoop-configuration)   
-&emsp;3.6. [Create Hadoop Nodes](#create-hadoop-nodes)   
-&emsp;3.7. [Start Hadoop](#start-hadoop)   
-&emsp;3.8. [Test Hadoop](#test-hadoop)   
+&emsp;3.1. [Hadoop 2 Architecture](#hadoop-2-architecture)   
+&emsp;3.2. [Install Oracle Java](#install-oracle-java)   
+&emsp;3.3. [Create Hadoop user](#create-hadoop-user)   
+&emsp;3.4. [Install Hadoop 2.7.3](#install-hadoop-273)   
+&emsp;3.5. [Connect Hadoop Cluster](#connect-hadoop-cluster)   
+&emsp;3.6. [Hadoop Configuration](#hadoop-configuration)   
+&emsp;3.7. [Create Hadoop Nodes](#create-hadoop-nodes)   
+&emsp;3.8. [Start Hadoop](#start-hadoop)   
+&emsp;3.9. [Test Hadoop](#test-hadoop)   
 4. [Troubleshooting Hadoop](#troubleshooting-hadoop)   
 &emsp;4.1. [Ensure Hostnames Working Properly](#ensure-hostnames-working-properly)   
 &emsp;4.2. [Check the Java version](#check-the-java-version)   
@@ -418,7 +425,49 @@ root@orangepione:$ apt-get upgrade
 After a successful upgrade, we are ready to begin the Hadoop 2 installation! Let's pat ourselves on the back for a successful Orange Pi installation!
 
 ## Hadoop 2.7.3
-*This section of the journal draws from the [Install Hadoop on the Orange Pi](http://www.piprojects.xyz/install-hadoop-java-orange-pi/) tutorial from [Pi Projects](http://www.piprojects.xyz/). Check them out!*
+### Hadoop 2 Architecture
+I didn't know this starting out, but knowledge of the Hadoop architecture is really essential for understanding the configuration of a Hadoop cluster. It also really helps with troubleshooting your cluster, once Hadoop is installed and supposed to be working, but isn't!
+
+So let's gain a quick overview of Hadoop 2 now. Read [this article](http://ercoppa.github.io/HadoopInternals/HadoopArchitectureOverview.html) for a more lengthy explanation.
+
+![Hadoop Cluster](images/yarn-architecture.gif)
+Image from [Apache Hadoop Documentation](https://hadoop.apache.org/docs/r2.7.2/hadoop-yarn/hadoop-yarn-site/YARN.html) © 2008-2017 Apache Software
+
+#### Cluster Architecture
+The Hadoop 2 architecture relies on pooling the resources of a group of computers linked by a network. Several programs work together to distribute programs and data among all the computers so that processing may be done in parallel.
+
+This is a large improvement over the traditional data-processing paradigm, where a single machine stores all the data and does all the processing. Or that machine ships the data elsewhere for processing and ships the results back.
+
+The Hadoop 2 architecture is composed of two types of computers:
+* Client
+* Nodes
+
+Clients submit data to be stored in the cluster and programs to be run by cluster. Nodes are part of the cluster and are controlled by the Hadoop services. These services have access to the pooled memory, storage and processing power across the cluster.
+
+#### Hadoop Services
+Hadoop manages the pooled resources of the nodes with the following services under the YARN framework in Hadoop 2:
+* `NameNode`: Manages all the resources of the cluster
+* `SecondaryNameNode`: Creates snapshots of the cluster in case the NameNode crashes.
+* `ResourceManager`: Allocates resources for a container
+* `DataNode`: Stores and processes data
+* `NodeManager`: Reports each node's resources to the `ResourceManager`
+
+#### Job Execution
+When Hadoop cluster receives a job, it allocates a block of resources on each of several DataNodes. The job is called an Application, and receives an ID number. Each Application has multiple AppAttempts, in case one fails. AppAttempts can be restarted as well. The ApplicationMaster creates a container of the amount of resources dictated by the ResourceManager. Each AppAttempt is assigned to a container running on a DataNode. Each AppAttempt is made up of a number of Map and Reduce tasks, which are defined in the program submitted by the client. Hadoop clusters can only directly run programs written in a MapReduce paradigm.
+
+Here are the important parts of a running Hadoop job:
+* Application
+* ApplicationMaster
+* Container
+* AppAttempt
+* Map Task
+* Reduce Task
+
+The above information will become very relevant as we dive into the installation and configuration of the cluster! Let's move on!
+
+------------------
+
+*The rest of this section of the journal draws from the [Install Hadoop on the Orange Pi](http://www.piprojects.xyz/install-hadoop-java-orange-pi/) tutorial from [Pi Projects](http://www.piprojects.xyz/) for creating a single-node cluster. Check them out!*
 
 ### Install Oracle Java
 We will be installing [Apache Hadoop 2.7.3](http://hadoop.apache.org/releases.html) (released 25 Aug 2016) on the Orange Pi. This is not the most up-to-date version, but there is more information on the Internet about Hadoop 2.7.x than either 2.8.x or 3.x.x.
@@ -1628,22 +1677,7 @@ With detailed analysis and tweaking of the YARN, MapReduce, and Operating system
 ### Conclusion
 Adding more nodes (and therefore more memory) would be the best and most direct approach to stabilizing the performance of my Orange Pi One cluster. However, if directly increasing the cluster's memory resources is not possible, optimization of Hadoop's usage of existing resources is the best strategy. [Hadoop documentation](https://hadoop.apache.org/docs/r2.7.3/), here I come!
 
-
-
-
-
-
-
-
 ##### References
 1. Hadoop 2.7.2 Cluster Raspbery Pi http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop
 1. DCHP https://kb.iu.edu/d/adov
 1. Hostname https://debian-handbook.info/browse/stable/sect.hostname-name-service.html
-
-# TODO:
-* define cluster parts function (client, namenode, etc.)
-* export $HADOOP_EXAMPLES
-* New config files & descriptions of settings
-* Secondary NameNode
-* Include References
-* Complete Table of Contents
