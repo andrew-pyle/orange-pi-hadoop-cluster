@@ -23,7 +23,6 @@ Let's set up a physical Hadoop 2 cluster with single-board Linux computers! I wi
 
 
 ## Materials
-
 I am using the following items to create the cluster:
 
 * 2 [Orange Pi Ones](http://linux-sunxi.org/Orange_Pi_One)
@@ -38,9 +37,8 @@ I am using the following items to create the cluster:
 * Display and HDMI-DVI cable
 
 ## Orange Pi
-### Install the Operating System
-#### 24 March 2017
 
+### Install the Operating System
 I purchased 2 boards from [AliExpress.com](https://www.aliexpress.com/item/Orange-Pi-One-H3-Quad-core-Support-ubuntu-linux-and-android-mini-PC-Beyond-Raspberry-Pi/32603308880.html), along with a Sandisk Ultra 16 GB Class 10 micro SD card from [Amazon](https://www.amazon.com/gp/product/B010Q57SEE/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1) for each.
 
 ![Orange Pi One](./images/orange-top.JPG)
@@ -49,8 +47,7 @@ Each Orange Pi One requires a 5V 2A power supply with a DC barrel plug ([4.0mm/1
 
 ![USB-DC Barrel Plug Cable](./images/orange-cable.JPG)
 
-##### SD Card Integrity
-
+#### SD Card Integrity
 First, we need to ensure the integrity of the SD cards.
 > Many scam artists try to market small flash disks as large ones by changing the appearance of the disk. We will use a software test to verify the size of the disk we have. I am using [F3 by Digirati](http://oss.digirati.com.br/f3/) (GPL v3). It runs on Windows, OS X, Linux, and other operating systems. The website includes a very straightforward instructions regarding it's use.
 
@@ -141,7 +138,7 @@ Great! no files are listed in the 'corrupted' column above, so the microSD cards
 
 If your disk shows files in the 'corrupted' category or a much smaller capacity than advertised, ask for your money back. See F3's website for more specifics on the program's use and functionality.
 
-##### Flash the OS
+#### Flash the OS
 The next step is to write the operating system for the orange pi to a microSD card, called "flashing" the card.
 
 We will be installing the [Armbian distribution](https://www.armbian.com/orange-pi-one/) of Debian Jessie. It is a solely CLI image, which means that it uses a text-based command-line interface. They host a Ubuntu Xenial image with CLI only and GUI desktop interface versions as well.
@@ -162,8 +159,6 @@ Armbian offers a [GPG signature](https://docs.armbian.com/User-Guide_Getting-Sta
 * [Armbian - Orange Pi One Page](https://www.armbian.com/orange-pi-one/)
 * [Armbian Docs - Getting Started Guide](https://docs.armbian.com/User-Guide_Getting-Started/)
 
-
-#### 26 March 2017
 We will be using [Etcher](https://etcher.io) to flash the microSD card. It is a simple interface available for many OSes.
 
 ![Etcher Screenshot](./images/etcher.png)
@@ -179,19 +174,17 @@ Etcher gave a success message, so we can now insert the microSD card into the Or
 
 Now, just load the microSD into the Orange Pi board, connect a USB keyboard and display, and connect power. I'm using a HDMI-DVI connection.
 
-##### Error!
+#### Problem!
 At this point, we should see a red power light and the Pi should boot up. However, I see no lights at all. This is a problem!
 
 After measuring some voltages with a multimeter, it seems that the issue is the USB-DC power cable. I can measure 5V from the power supply, but no voltage from the cable connector. I will get another cable and try to boot from the Armbian image again.
 
-#### 29 March 2017
-##### New Power Cables
+#### New Power Cables
 Two new cables from Amazon ([this one](http://a.co/gDyAZoq) and [this one](http://a.co/ftKETZe)) arrived today. I will try to boot the Armbian image again. I am skeptical that this will work, since it seems like a cable is the least likely piece of the computer system to fail.
 
 Let's connect the Orange Pi as above, and try to boot!
 
-##### Boot Up
-
+#### Boot Up
 LIGHTS! It does seem as if the cable was bad. (I'll try to get my money back.) I am getting a green light and blinking red light. The DVI monitor showed an error message and then a blank screen.
 > I wish I'd gotten a video here of the light sequence during the boot process, but I didn't have the camera ready.
 
@@ -205,8 +198,10 @@ I use the [Plugable 4-port USB Hub](http://plugable.com/products/USB2-HUB4BC) to
 
 It works! I got a brief look at the boot process before the monitor went blank due to resolution issues (probably), and the green light went solid with occasional flashes (the light is on the lower right corner of the board, by the GPIO pins). The red light started solid and then went out.
 
-##### Login with Secure Shell (SSH)
+### Operate the Operating System
+Now that the boot process has begun successfully, let's login and configure the opartating system.
 
+#### Login with Secure Shell (SSH)
 Since the monitor is blank, it's not helping us complete the initial boot process. Thankfully SSH is enabled by default on the Orange Pi! SSH is a method of remotely logging in to a Unix-based (e.g. Linux) operating system. INSERT SSH REFERENCE.
 
 Since the Orange Pi booted up while connected to the network, it received an IP Address by DHCP. I can check that at my router's homepage.
@@ -238,8 +233,7 @@ Usage of /:    13% of 15G
 
 ```
 
-##### Configure System
-
+#### Configure System
 Now that we can boot the Orange Pi up, lets get the system configured for use.
 
 Follow the initial boot prompts from Armbian, like changing the root password, making a new user account, and setting the display settings.
@@ -311,12 +305,8 @@ root@orangepione:$ h3disp -m 1280x1024 -d
 ```
 After rebooting, the monitor shows the correct image, but it still shows a resoloution error message. After trying several other formats (all worse outcome than the above setting), I found that if I push the menu button on the monitor before it goes blank, it will interrupt the sleep timeout process, and after closing the menu, the error is gone and the monitor works properly. I can't explain this one, but it seems to work!
 
-#### 30 March 2017
-Let's check out some OS parameters before we attempt to begin the Hadoop 2 setup phase.
-
+#### Filesystem Resizing
 > I am switching to the non-root user account I created in the installation process. It is always better to operate a CLI OS as a non-root user. It is too easy to unintentionally make a mistake as root, since root has so much power in the OS.
-
-##### Filesystem Resizing
 
 When we flashed the Armbian OS image onto the microSD card, the image wasn't nearly as large as the whole card's storage capacity. If it were, we'd have a problem actually running the OS! But we do want the Orange Pi's file system to have access to all the storage capacity on the microSD card once we've booted into the OS. Luckily, Armbian automatically resizes the filesystem to use the entire capacity of the card it's installed on, leaving ~1% as free space.
 
@@ -351,8 +341,7 @@ tmpfs            50M     0   50M   0% /run/user/1000
 ```
 This output says that the filesystem (/dev/mmcblk0p1) has a size of 15 GB.
 
-##### More Configuration
-
+#### Set Timezone
 Next let's set the timezone.
 >I am switching back to root user here because the dpkg-reconfigure commands aren't in the $PATH of my created user account, and I didn't want to take the time to add them.
 ```bash
@@ -364,7 +353,7 @@ Current default time zone: 'America/Chicago'
 Local time is now:      Fri Mar 31 00:25:30 CDT 2017.
 Universal Time is now:  Fri Mar 31 05:25:30 UTC 2017.
 ```
-
+#### Run `apt-get` Commands
 And lastly, I am getting a notification below the login screen that there are updates to install.
 
 ```
@@ -408,12 +397,10 @@ root@orangepione:$ apt-get upgrade
 
 After a successful upgrade, we are ready to begin the Hadoop 2 installation! Let's pat ourselves on the back for a successful Orange Pi installation!
 
-### Install Hadoop 2.7.3
+## Hadoop 2.7.3
 *This section of the journal draws from the [Install Hadoop on the Orange Pi](http://www.piprojects.xyz/install-hadoop-java-orange-pi/) tutorial from [Pi Projects](http://www.piprojects.xyz/). Check them out!*
 
-###### 14 April 2017
-#### Install Oracle Java
-
+### Install Oracle Java
 We will be installing [Apache Hadoop 2.7.3](http://hadoop.apache.org/releases.html) (released 25 Aug 2016) on the Orange Pi. This is not the most up-to-date version, but there is more information on the Internet about Hadoop 2.7.x than either 2.8.x or 3.x.x.
 
 Java is required for Hadoop, as much of the functionality of the system is rooted in executing Java code. Let's install [Oracle Java JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html). From what I've read online Oracle's JDK is more performant for Hadoop clusters than Open JDK or other alternatives. See Apache info [here](https://wiki.apache.org/hadoop/HadoopJavaVersions).
@@ -450,7 +437,7 @@ lrwxrwxrwx 1 root root   23 Apr 14 20:17 javac -> /etc/alternatives/javac
 1. http://www.rpiblog.com/2014/03/installing-oracle-jdk-8-on-raspberry-pi.html
 1. https://wiki.apache.org/hadoop/HadoopJavaVersions
 
-#### Create Hadoop user
+### Create Hadoop user
 First, we will create a user for hadoop's processes in the `sudo` group. This will allow the machines in the cluster to communicate with each other.
 ```bash
 $ sudo addgroup hadoop
@@ -458,7 +445,8 @@ $ sudo adduser --ingroup hadoop hduser
 $ $ sudo adduser hduser sudo
 ```
 
-#### Download Hadoop-2.7.3
+### Install Hadoop 2.7.3
+#### Download Hadoop 2.7.3
 Now we will download Hadoop!
 >In the interest of time and simplicity, we will be installing the pre-compiled Hadoop binary rather than compiling Hadoop from the source code on the Orange Pi. However, compiling Hadoop so that it runs natively would be best for a production system. See [Jonas Widriksson's Tutorial](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop) for instructions for compiling Hadoop from source on a Raspberry Pi. The Raspberry Pi OS, Raspbian Linux, is derived from Debian Linux so the instructions should match very well.
 
@@ -468,8 +456,6 @@ $ wget http://www.namesdir.com/mirrors/apache/hadoop/common/hadoop-2.7.3/hadoop-
 
 sudo tar xzvf hadoop-2.7.3.tar.gz -C /opt
 ```
-
-###### 15 April 2017
 
 Let's change the ownership of the Hadoop files to the `hduser` account. This will allow the Hadoop processes to make chages to these files without being `root` or having `sudo` permissions.
 
@@ -576,7 +562,7 @@ At this point Hadoop is installed. Yay! However, the services and configuration 
 1. http://www.piprojects.xyz/install-hadoop-java-orange-pi/
 1. http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop
 
-### Configure Hadoop
+### Connect Hadoop Cluster
 *This section of the journal draws from two tutorials:*
 *1. [Install Hadoop on the Orange Pi](http://www.piprojects.xyz/install-hadoop-java-orange-pi/) tutorial from [Pi Projects](http://www.piprojects.xyz/)*
 *2. Multi-node cluster configuration: [Jonas Widriksson's Tutorial](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop) for setting up a Hadoop 2.7.2 cluster on Raspbery Pis.*
@@ -641,7 +627,8 @@ $ ls ~/.ssh
 authorized_keys  id_rsa  id_rsa.pub  known_hosts
 ```
 
-#### Hadoop Settings
+### Hadoop Configuration
+#### Cluster Settings
 Now we will setup the Hadoop system itself. There are 5 relevant setting files that we need to configure. We will leave the rest as default.
 
 1. `$HADOOP_CONF_DIR/slaves`
@@ -724,9 +711,8 @@ $ chmod 750 /hdfs/tmp # XxX
 $ hdfs namenode -format # XxX Explanation?
 ```
 
+### Create Hadoop Nodes
 #### Clone SD Card
-###### 16 April 2017
-
 At this point all the basic configuration is made. We only lack starting up the Hadoop cluster!
 
 >Up until this point, we have operated only on 1 physical single-board computer and 1 physical SD card. That allows us to have a single "source of truth" for all the installation and configuration. Now we will just clone the OS onto as many more SD cards as we have nodes in the cluster. We don't even have to install the OS on the other nodes! We will just copy the one we've already made.
@@ -884,7 +870,7 @@ I'll shutdown the cluster and try again tomorrow.
 Now I get network-related errors. Something like **"Connection to the ResourceManager timed out."**
 
 At this point, I think I will just start over from scratch.
-## Troubleshooting the Cluster
+## Troubleshooting Hadoop
 At this point, I have no idea what is malfunctioning with this cluster. The reported cause of a MapReduce job failing seems to be different every time!
 
 I'll try to collect all the logs I can for analysis, gather some more tutorials, and troubleshoot the namenode. Then I'll clone the OS and restart the cluster.
@@ -1136,6 +1122,11 @@ Last contact: Sat Apr 22 13:18:50 CDT 2017
 Both `datanodes` up!
 
 ### Hadoop Configuration
+> A Hadoop cluster stands or falls with its configuration.
+
+This is by far the most complex and important part of a Hadoop cluster. It seems that a cluster's performance is entirely dependent on the efficiency of its configuration. I did not count on needing to understand the architecture of the Hadoop system to install and use a cluster. However, as it turns out, you must be familiar with it at a high-level before you can touch the first configuration file.
+
+#### Change Configuration Scheme
 I'm going to try the Hadoop configuration from [Jason Carter's blog](https://medium.com/@jasonicarter/how-to-hadoop-at-home-with-raspberry-pi-part-3-7d114d35fdf1) (parts 2 & 3 specifically), as we did above.
 1. `yarn-site.xml`
 ```xml
@@ -1223,7 +1214,7 @@ yarn-site.xml
 sent 2,369 bytes  received 182 bytes  1,020.40 bytes/sec
 total size is 78,384  speedup is 30.73
 ```
-Reformat HDFS:
+#### Reformat HDFS:
 ```bash
 $ $HADOOP_HOME/sbin/stop-dfs.sh
 $ $HADOOP_HOME/sbin/stop-yarn.sh
@@ -1262,7 +1253,7 @@ Load a `.txt` file from the client machine and put it into HDFS:
 ```bash
 $ hdfs dfs -put /path/to/local/file.txt /path/to/HDFS/file.txt
 ```
-Run a wordcount job from the Hadoop example MapReduce applications.
+Run a wordcount job from the Hadoop example MapReduce applications. We are using a 1.1 MB plain text book from [Project Gutenberg](http://www.gutenberg.org/):
 ```bash
 $ cd /opt/hadoop-2.7.3/share/hadoop/mapreduce
 $ ls
@@ -1405,11 +1396,16 @@ The job got stuck here for about 30 minutes.
 ```bash
 INFO mapreduce.Job: Running job: job_1492888277723_0002
 ```
-I think the resources of the Orange Pi are too small for the job  parameters. The touble is that I cannot find any description of the parameters for the pi program anywhere.
+I think the resources of the Orange Pi are too small for the job  parameters. The touble is that I cannot find any description of the parameters for the calculate pi program anywhere.
 
 I'll try to reconfigure Hadoop to understand the resource limitations of the Orange Pi One.
 
-### Re(RE)(RE)configure
+### Optimize Configuration
+Now I will try combining configurations:
+* General cluster settings from [Jason Carter's blog](https://medium.com/@jasonicarter/how-to-hadoop-at-home-with-raspberry-pi-part-3-7d114d35fdf1)
+* Specific memory-management settings used above in section [Error!](#error) (from [Jonas Widriksson's Blog](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#YARN_and_MapReduce_memory_configuration_overview))
+
+#### Configuration #3
 1. `yarn-site.xml`
 ```xml
 <configuration>
@@ -1468,8 +1464,8 @@ I'll try to reconfigure Hadoop to understand the resource limitations of the Ora
 Propagate the changes with `rsync` as above.
 > The $HADOOP_HOME/sbin/start-dfs.sh script has started failing to start the DataNode service. Maybe reformatting the HDFS as above will correct the error.
 
-#### Test
-##### Calculate Pi
+### Test Again
+#### Calculate Pi
 
 The application failed with the following messages:
 
@@ -1483,10 +1479,10 @@ ApplicationMaster for attempt appattempt_1492900593461_0001_000002 timed out
 ```
 It seems that removing the virtual memory limit enforcement setting was not properly synced to `hadoopnode2`, and the container was killed for exceeding the allotment, which is (2.1 *  physical memory allotment). It also seems that the retry attempt on `hadoopnode1` timed out because the ApplicationMaster could not start a container. This seems to indicate insufficient memory settings.
 
-##### Wordcount
-1.1 MB text file from [Project Gutenberg](http://www.gutenberg.org/)
+#### Wordcount
+1.1 MB text file from [Project Gutenberg](http://www.gutenberg.org/) again.
 
-###### Test Job 1:
+##### Test Job 1:
 `hadoopnode2`
 ```
 YarnException: Unauthorized request to start container
@@ -1497,8 +1493,8 @@ ApplicationMaster for attempt appattempt_1492900593461_0002_000001 timed out
 ```
 Once again, it seems that insufficient resources are to blame. The container could not start properly.
 
-###### Test Job 2:
-Success!
+##### Test Job 2:
+Success! The job only took 1 min 30 sec.
 ```
 17/04/23 07:38:31 INFO client.RMProxy: Connecting to ResourceManager at hadoopnode1/192.168.0.110:8032
 17/04/23 07:38:35 INFO input.FileInputFormat: Total input paths to process : 1
@@ -1570,23 +1566,26 @@ Success!
 	File Output Format Counters
 		Bytes Written=257189
 ```
-This time, it seems like the job stayed within the memory allocation limits. The job only took 1 min 30 sec.
+I am honestly not sure what caused the difference between this job's success and the previous one's failure. The only difference was the time of day (last night vs. this morning).
 
-### Discussion
+Whatever the cause, this time the job stayed within the memory allocation limits.
+
+## Project Discussion
 
 *DISCLAIMER: I do not understand everything about physical and virtual memory management in operating systems, especially under Hadoop, YARN and MapReduce. However, I know that Hadoop was designed for large-scale analytics on machines with many times the resources available in my cluster. In some ways this project was a lost cause before it began. This cluster of Orange Pi Ones is not the environment Hadoop was designed for, indeed, the jobs that I ran in this tutorial could have been run easily on my client machine alone, even with an application written in an interpreted language. But this does not prevent us from improving the setup as much as we can!*
 
 
-#### Hadoop Application Failure Analysis
+### Hadoop Application Failure Analysis
 Over the course of this project, Hadoop distributed applications failed for 2 main reasons:
 
 1. Application timed out while ApplicationMaster was allocating a container
 1. Containers ran beyond virtual memory limits
 1. Block could not be found in HDFS
 
->*I think the "Block could not be found in HDFS" error was due to file corruption after a hard poweroff. HDFS seems to corrupt very easily, so be sure not to pull the plug on a running Hadoop application!*
+I think the "Block could not be found in HDFS" error was due to file corruption after a hard poweroff, so we can discount reason #3 for root cause analysis. HDFS seems to corrupt very easily, so be sure not to pull the plug on a running Hadoop application!
 
-After doing some research, I think the first two errors are due to the same issue: limited memory resources of the Orange Pi One (512 MB). My thought is that a container was allocated to a given node, and a certain map or reduce task was assigned to that container. During the creation of the container or during the execution of the task, the memory required greatly exceeded the available physical memory, resulting in large virtual memory usage. For example, jobs which failed because of killed containers reported:
+#### Root Cause: memory shortage
+After doing some research, I think the first two errors are due to the same root cause: limited memory resources of the Orange Pi One (512 MB). My thought is that a container was allocated to a given node, and a certain map or reduce task was assigned to that container. During the creation of the container or during the execution of the task, the memory required greatly exceeded the available physical memory, resulting in large virtual memory usage. For example, jobs which failed because of killed containers reported:
 
 * **Physical:** 16.7 MB / 128 MB
 * **Virtual:** 1.1 GB / 268.8 MB
@@ -1595,16 +1594,18 @@ This heavy reliance on virtual memory usage caused nodes in use to become unresp
 
 The configuration resources I used as a guide were either designed for a [production system](https://hortonworks.com/blog/how-to-plan-and-configure-yarn-in-hdp-2-0/) with RAM on the order of 50 GB, or a [Raspberry Pi cluster](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#YARN_and_MapReduce_memory_configuration_overview) with about double the memory per machine. I attempted to scale down the YARN container allocation, JVM heap size, and Map & Reduce task allocations, but I now think that the extremely small allocations only contributed to the runaway virtual memory usage.
 
-#### Future Work
+### Future Work
 Future work should address the node resource bottleneck. One concern is distributing the workload among the nodes. On jobs which used only a single task at a time, only one node at a time was involved in the processing at a time. It would certainly seem that Hadoop should be able to allocate smaller map and reduce tasks so that they fit within the memory of the cluster node.
 
+#### HDFS Block Storage
 Trying to spread out the file over the HDFS in a more even manner would seem to be a helpful as well. Decreasing the block size from the default value as I have done here seems to be helpful, but not enough to prevent Hadoop from storing all blocks of a small file on one node. [Jonas Widriksson's original Hadoop v1 tutorial](http://www.widriksson.com/raspberry-pi-hadoop-cluster/) has some useful ideas in this regard.
 
-My conclusion is that a cluster of two Orange Pi Ones does not have the resources available to provide stable MapReduce performance. It seemed that as long as the container was successfully created by the ApplicationMaster, the job had a good chance of completing. But many map or reduce tasks just consumed more resources than a single node had available to give while still being responsive, crashing the job.
+#### Hadoop Memory Management Configuration
+A cluster of two Orange Pi Ones does not have the resources available to provide stable MapReduce performance. It seemed that as long as the container was successfully created by the ApplicationMaster, the job had a good chance of completing. But many map or reduce tasks just consumed more resources than a single node had available to give while still being responsive, crashing the job.
 
 With detailed analysis and tweaking of the YARN, MapReduce, and Operating system configuration, I believe that small jobs could run stably on my cluster. But the small pool of resources can only be stretched so thin before a node crashes and takes the cluster down with it.
 
-#### Conclusion
+### Conclusion
 Adding more nodes (and therefore more memory) would be the best and most direct approach to stabilizing the performance of my Orange Pi One cluster. However, if directly increasing the cluster's memory resources is not possible, optimization of Hadoop's usage of existing resources is the best strategy. [Hadoop documentation](https://hadoop.apache.org/docs/r2.7.3/), here I come!
 
 
@@ -1622,13 +1623,7 @@ Adding more nodes (and therefore more memory) would be the best and most direct 
 # TODO:
 * define cluster parts function (client, namenode, etc.)
 * export $HADOOP_EXAMPLES
-* New config files & descriptions of settings & attribution to Jonas
+* New config files & descriptions of settings
 * Secondary NameNode
 * Include References
-* Make Headings Consistent
 * Complete Table of Contents
-* Pics:
-  * Brighten Pics
-  * Raspbery Pi
-  * Monitor error & trick
-  * see above blanks
