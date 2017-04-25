@@ -1,15 +1,21 @@
+---
+layout: default
+title: Orange Pi Hadoop Cluster
+---
+
+
+![Orange Pi One](./images/orange-cover.JPG)
+
 # TODO:
 * export $HADOOP_EXAMPLES
 * New config files & descriptions of settings
 * Secondary NameNode
 * Include References
 
-# Orange Pi Hadoop Cluster
-##### Andrew Pyle | IFSC 7370 | April 2017
+# (Sort-Of) Big Data with Hadoop
+[Hadoop](http://hadoop.apache.org/) is an open-source distributed computing framework from the [Apache Software Foundation](http://www.apache.org/). It is primarily aimed at Big Data analytics and has become the de-facto standard for Distributed analytics. It runs on Linux, and (lucky for us students of data) the [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) is a very affordable machine, albeit with very limited resources to learn about distributed computing.
 
-![Orange Pi One](./images/orange-cover.JPG)
-
-Let's set up a physical Hadoop 2 cluster with single-board Linux computers! I will be using two [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of two single-board computers. This setup will not be powerful enough for production use, but it will demonstrate a simple implementation of the Hadoop 2 ecosystem for learning purposes.
+So let's set up a physical Hadoop 2 cluster with single-board Linux computers! I will be using two [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of two single-board computers. This setup will not be powerful enough for production use, but it will demonstrate a simple implementation of the Hadoop 2 ecosystem for learning purposes.
 
 # Contents
 <!-- MDTOC maxdepth:2 firsth1:0 numbering:1 flatten:0 bullets:0 updateOnSave:1 -->
@@ -1270,10 +1276,11 @@ Uncomment the following `export` line and define the HADOOP_HEAPSIZE parameter.
 export HADOOP_HEAPSIZE=128
 ```
 Sync to `hadoopnode2`:
+
 ```bash
 $ rsync -av $HADOOP_CONF_DIR/ hduser@hadoopnode2:$HADOOP_CONF_DIR
-
 # hdfs-site.xml won't be sent because we didn't make any new changes since the HDFS reformat ones.
+
 sending incremental file list
 core-site.xml
 hadoop-env.sh

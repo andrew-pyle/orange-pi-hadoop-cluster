@@ -1,0 +1,820 @@
+Last login: Thu Apr 20 14:04:50 on ttys000
+ASPs-MacBook-Pro:~ asp$ source ~/flask_tutorial/env/bin/activate
+(env) ASPs-MacBook-Pro:~ asp$ ssh hadoopnode1
+The authenticity of host 'hadoopnode1 (192.168.0.110)' can't be established.
+ECDSA key fingerprint is SHA256:zo2m+c/wBV6q9RiH3wOMy1/8Nh4AC7JbP7Q4b1NPI8Q.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'hadoopnode1' (ECDSA) to the list of known hosts.
+asp@hadoopnode1's password: 
+Permission denied, please try again.
+asp@hadoopnode1's password: 
+Permission denied, please try again.
+asp@hadoopnode1's password: 
+
+(env) ASPs-MacBook-Pro:~ asp$ ssh hduser@hadoopnode1
+hduser@hadoopnode1's password: 
+  ___                               ____  _    ___             
+ / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___ 
+| | | | '__/ _` | '_ \ / _` |/ _ \ | |_) | | | | | | '_ \ / _ \
+| |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
+ \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
+                       |___/                                   
+
+Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
+System load:   0.06            	Up time:       1 day		
+Memory usage:  11 % of 494Mb  	IP:            192.168.0.110
+CPU temp:      38°C           	
+Usage of /:    14% of 15G    	
+
+Last login: Tue Apr 18 23:10:34 2017 from 192.168.0.106
+hduser@hadoopnode1:~$ hostname
+hadoopnode1
+hduser@hadoopnode1:~$ hostname -I
+192.168.0.110 
+hduser@hadoopnode1:~$ man hostname
+\hduser@hadoopnode1:~$ man dig
+hduser@hadoopnode1:~$ java -version
+java version "1.8.0_121"
+Java(TM) SE Runtime Environment (build 1.8.0_121-b13)
+Java HotSpot(TM) Client VM (build 25.121-b13, mixed mode)
+hduser@hadoopnode1:~$ cat /etc/hosts
+127.0.0.1   localhost orangepione
+::1         localhost orangepione ip6-localhost ip6-loopback
+fe00::0     ip6-localnet
+ff00::0     ip6-mcastprefix
+ff02::1     ip6-allnodes
+ff02::2     ip6-allrouters
+192.168.0.110 hadoopnode1
+192.168.0.111 hadoopnode2
+hduser@hadoopnode1:~$ cat /etc/hostname
+hadoopnode1
+
+hduser@hadoopnode1:~$ sudo nano /etc/hostname
+[sudo] password for hduser: 
+hduser@hadoopnode1:~$ cat /etc/hostname
+hadoopnode1
+hduser@hadoopnode1:~$ cat .ssh/authorized_keys
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDijzB2SV13w2vQ6nI9i16HkMSaB4KaVKrwIZfxZgGSrfLFw5fXmvKGyxUjMWV+AeTCZDecOJ9WQFoypmvthVWasUOu8Lomoy9Rqkck61iMxOi1/wXMj/jWdWE2gvrTd6O8fhE84wGPemL4I8bGDq9uIgEUu3Jch1Qv87wuK2dKkWWSmKBklAM0H5LpophZ+uCvim50LmpgZL8vuhXzM2qYJXjk2O4l2aN94a249ri37IFdRBd7cKM0bz066r3wG+9nvP/7mFVFqK0rBw+yuOaXgY2eMuXY2y4WytN5iqg0i6ubdk/fVMDkhQeunlsGt8nYLD/HZXk6l/o2stASyhjT hduser@orangepione
+hduser@hadoopnode1:~$ ls .ssh
+authorized_keys  id_rsa  id_rsa.pub  known_hosts
+hduser@hadoopnode1:~$ cat .ssh/known_hosts
+|1|BwnFGWoj+5cI0Mo+GdsDFeRUjbk=|jKIsaLuzRjLuVF+rn4VFgFPL5vo= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCVZlVE/lWw7pd+V9m+0vIqCwgcQjop91y3utmVbgXhuVL+6ZYyHpFjvpGdmIpb+v2/9umq7BoL6MMLcPlgbKmE=
+|1|Z1Jaj3dQxqU/c1qh56rLUhFnffw=|D+/t+tGocoL26soqfNNC/jagOSo= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCVZlVE/lWw7pd+V9m+0vIqCwgcQjop91y3utmVbgXhuVL+6ZYyHpFjvpGdmIpb+v2/9umq7BoL6MMLcPlgbKmE=
+|1|5bQzwWHxWw4SBgUv9eoVgXLqK1I=|li9mCulJnEUuu10nVwrK0pFEa/Q= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCVZlVE/lWw7pd+V9m+0vIqCwgcQjop91y3utmVbgXhuVL+6ZYyHpFjvpGdmIpb+v2/9umq7BoL6MMLcPlgbKmE=
+|1|SS/OruRaIn7qjjkRMxzzFDKny+s=|NLBTRb6/WR4N6AmRXqMnjTz4hCg= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCVZlVE/lWw7pd+V9m+0vIqCwgcQjop91y3utmVbgXhuVL+6ZYyHpFjvpGdmIpb+v2/9umq7BoL6MMLcPlgbKmE=
+|1|2MKL/WVnkDo5iIcJiq/tPTGAvTY=|7Wrxf/qLKsk9ETVHDO9DEtvH1bQ= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCVZlVE/lWw7pd+V9m+0vIqCwgcQjop91y3utmVbgXhuVL+6ZYyHpFjvpGdmIpb+v2/9umq7BoL6MMLcPlgbKmE=
+|1|zWc3ppUZ7+euRLjZyc4UPjFvca4=|ISVI/Fw10Bu3WdhQ9zq78SJ3DBY= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCVZlVE/lWw7pd+V9m+0vIqCwgcQjop91y3utmVbgXhuVL+6ZYyHpFjvpGdmIpb+v2/9umq7BoL6MMLcPlgbKmE=
+|1|ofWGq1d1ZiJ07qD6K8hMIERI/b8=|x5a4A/CiUv3VusqvAJ+fzvM46io= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBIDmla8gbzd90U157sKIAEWpQ2PlWp2t3lBQIUF9UWaCKA/u0fSV5EfkPGqEjCf01FVilUXOUNqpv4hROVzo3OY=
+hduser@hadoopnode1:~$ ls
+HadoopData
+hduser@hadoopnode1:~$ ls -a
+.   .bash_history  .bashrc     .oracle_jre_usage  .ssh
+..  .bash_logout   HadoopData  .profile
+hduser@hadoopnode1:~$ ls -al
+total 44
+drwxr-xr-x 5 hduser hadoop 4096 Apr 16 10:21 .
+drwxr-xr-x 4 root   root   4096 Apr 14 20:29 ..
+-rw------- 1 hduser hadoop 8797 Apr 18 23:09 .bash_history
+-rw-r--r-- 1 hduser hadoop  220 Apr 14 20:29 .bash_logout
+-rw-r--r-- 1 hduser hadoop 3971 Apr 17 21:17 .bashrc
+drwxr-xr-x 2 hduser hadoop 4096 Apr 16 10:24 HadoopData
+drwxr-xr-x 2 hduser hadoop 4096 Apr 15 14:37 .oracle_jre_usage
+-rw-r--r-- 1 hduser hadoop  675 Apr 14 20:29 .profile
+drwxr-xr-x 2 hduser hadoop 4096 Apr 15 19:33 .ssh
+hduser@hadoopnode1:~$ rsync
+rsync  version 3.1.1  protocol version 31
+Copyright (C) 1996-2014 by Andrew Tridgell, Wayne Davison, and others.
+Web site: http://rsync.samba.org/
+Capabilities:
+    64-bit files, 64-bit inums, 32-bit timestamps, 64-bit long ints,
+    socketpairs, hardlinks, symlinks, IPv6, batchfiles, inplace,
+    append, ACLs, xattrs, iconv, symtimes, prealloc
+
+rsync comes with ABSOLUTELY NO WARRANTY.  This is free software, and you
+are welcome to redistribute it under certain conditions.  See the GNU
+General Public Licence for details.
+
+rsync is a file transfer program capable of efficient remote update
+via a fast differencing algorithm.
+
+Usage: rsync [OPTION]... SRC [SRC]... DEST
+  or   rsync [OPTION]... SRC [SRC]... [USER@]HOST:DEST
+  or   rsync [OPTION]... SRC [SRC]... [USER@]HOST::DEST
+  or   rsync [OPTION]... SRC [SRC]... rsync://[USER@]HOST[:PORT]/DEST
+  or   rsync [OPTION]... [USER@]HOST:SRC [DEST]
+  or   rsync [OPTION]... [USER@]HOST::SRC [DEST]
+  or   rsync [OPTION]... rsync://[USER@]HOST[:PORT]/SRC [DEST]
+The ':' usages connect via remote shell, while '::' & 'rsync://' usages connect
+to an rsync daemon, and require SRC or DEST to start with a module name.
+
+Options
+ -v, --verbose               increase verbosity
+     --info=FLAGS            fine-grained informational verbosity
+     --debug=FLAGS           fine-grained debug verbosity
+     --msgs2stderr           special output handling for debugging
+ -q, --quiet                 suppress non-error messages
+     --no-motd               suppress daemon-mode MOTD (see manpage caveat)
+ -c, --checksum              skip based on checksum, not mod-time & size
+ -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
+     --no-OPTION             turn off an implied OPTION (e.g. --no-D)
+ -r, --recursive             recurse into directories
+ -R, --relative              use relative path names
+     --no-implied-dirs       don't send implied dirs with --relative
+ -b, --backup                make backups (see --suffix & --backup-dir)
+     --backup-dir=DIR        make backups into hierarchy based in DIR
+     --suffix=SUFFIX         set backup suffix (default ~ w/o --backup-dir)
+ -u, --update                skip files that are newer on the receiver
+     --inplace               update destination files in-place (SEE MAN PAGE)
+     --append                append data onto shorter files
+     --append-verify         like --append, but with old data in file checksum
+ -d, --dirs                  transfer directories without recursing
+ -l, --links                 copy symlinks as symlinks
+ -L, --copy-links            transform symlink into referent file/dir
+     --copy-unsafe-links     only "unsafe" symlinks are transformed
+     --safe-links            ignore symlinks that point outside the source tree
+     --munge-links           munge symlinks to make them safer (but unusable)
+ -k, --copy-dirlinks         transform symlink to a dir into referent dir
+ -K, --keep-dirlinks         treat symlinked dir on receiver as dir
+ -H, --hard-links            preserve hard links
+ -p, --perms                 preserve permissions
+ -E, --executability         preserve the file's executability
+     --chmod=CHMOD           affect file and/or directory permissions
+ -A, --acls                  preserve ACLs (implies --perms)
+ -X, --xattrs                preserve extended attributes
+ -o, --owner                 preserve owner (super-user only)
+ -g, --group                 preserve group
+     --devices               preserve device files (super-user only)
+     --specials              preserve special files
+ -D                          same as --devices --specials
+ -t, --times                 preserve modification times
+ -O, --omit-dir-times        omit directories from --times
+ -J, --omit-link-times       omit symlinks from --times
+     --super                 receiver attempts super-user activities
+     --fake-super            store/recover privileged attrs using xattrs
+ -S, --sparse                handle sparse files efficiently
+     --preallocate           allocate dest files before writing them
+ -n, --dry-run               perform a trial run with no changes made
+ -W, --whole-file            copy files whole (without delta-xfer algorithm)
+ -x, --one-file-system       don't cross filesystem boundaries
+ -B, --block-size=SIZE       force a fixed checksum block-size
+ -e, --rsh=COMMAND           specify the remote shell to use
+     --rsync-path=PROGRAM    specify the rsync to run on the remote machine
+     --existing              skip creating new files on receiver
+     --ignore-existing       skip updating files that already exist on receiver
+     --remove-source-files   sender removes synchronized files (non-dirs)
+     --del                   an alias for --delete-during
+     --delete                delete extraneous files from destination dirs
+     --delete-before         receiver deletes before transfer, not during
+     --delete-during         receiver deletes during the transfer
+     --delete-delay          find deletions during, delete after
+     --delete-after          receiver deletes after transfer, not during
+     --delete-excluded       also delete excluded files from destination dirs
+     --ignore-missing-args   ignore missing source args without error
+     --delete-missing-args   delete missing source args from destination
+     --ignore-errors         delete even if there are I/O errors
+     --force                 force deletion of directories even if not empty
+     --max-delete=NUM        don't delete more than NUM files
+     --max-size=SIZE         don't transfer any file larger than SIZE
+     --min-size=SIZE         don't transfer any file smaller than SIZE
+     --partial               keep partially transferred files
+     --partial-dir=DIR       put a partially transferred file into DIR
+     --delay-updates         put all updated files into place at transfer's end
+ -m, --prune-empty-dirs      prune empty directory chains from the file-list
+     --numeric-ids           don't map uid/gid values by user/group name
+     --usermap=STRING        custom username mapping
+     --groupmap=STRING       custom groupname mapping
+     --chown=USER:GROUP      simple username/groupname mapping
+     --timeout=SECONDS       set I/O timeout in seconds
+     --contimeout=SECONDS    set daemon connection timeout in seconds
+ -I, --ignore-times          don't skip files that match in size and mod-time
+ -M, --remote-option=OPTION  send OPTION to the remote side only
+     --size-only             skip files that match in size
+     --modify-window=NUM     compare mod-times with reduced accuracy
+ -T, --temp-dir=DIR          create temporary files in directory DIR
+ -y, --fuzzy                 find similar file for basis if no dest file
+     --compare-dest=DIR      also compare destination files relative to DIR
+     --copy-dest=DIR         ... and include copies of unchanged files
+     --link-dest=DIR         hardlink to files in DIR when unchanged
+ -z, --compress              compress file data during the transfer
+     --compress-level=NUM    explicitly set compression level
+     --skip-compress=LIST    skip compressing files with a suffix in LIST
+ -C, --cvs-exclude           auto-ignore files the same way CVS does
+ -f, --filter=RULE           add a file-filtering RULE
+ -F                          same as --filter='dir-merge /.rsync-filter'
+                             repeated: --filter='- .rsync-filter'
+     --exclude=PATTERN       exclude files matching PATTERN
+     --exclude-from=FILE     read exclude patterns from FILE
+     --include=PATTERN       don't exclude files matching PATTERN
+     --include-from=FILE     read include patterns from FILE
+     --files-from=FILE       read list of source-file names from FILE
+ -0, --from0                 all *-from/filter files are delimited by 0s
+ -s, --protect-args          no space-splitting; only wildcard special-chars
+     --address=ADDRESS       bind address for outgoing socket to daemon
+     --port=PORT             specify double-colon alternate port number
+     --sockopts=OPTIONS      specify custom TCP options
+     --blocking-io           use blocking I/O for the remote shell
+     --stats                 give some file-transfer stats
+ -8, --8-bit-output          leave high-bit chars unescaped in output
+ -h, --human-readable        output numbers in a human-readable format
+     --progress              show progress during transfer
+ -P                          same as --partial --progress
+ -i, --itemize-changes       output a change-summary for all updates
+     --out-format=FORMAT     output updates using the specified FORMAT
+     --log-file=FILE         log what we're doing to the specified FILE
+     --log-file-format=FMT   log updates using the specified FMT
+     --password-file=FILE    read daemon-access password from FILE
+     --list-only             list the files instead of copying them
+     --bwlimit=RATE          limit socket I/O bandwidth
+     --outbuf=N|L|B          set output buffering to None, Line, or Block
+     --write-batch=FILE      write a batched update to FILE
+     --only-write-batch=FILE like --write-batch but w/o updating destination
+     --read-batch=FILE       read a batched update from FILE
+     --protocol=NUM          force an older protocol version to be used
+     --iconv=CONVERT_SPEC    request charset conversion of filenames
+     --checksum-seed=NUM     set block/file checksum seed (advanced)
+     --noatime               do not alter atime when opening source files
+ -4, --ipv4                  prefer IPv4
+ -6, --ipv6                  prefer IPv6
+     --version               print version number
+(-h) --help                  show this help (-h is --help only if used alone)
+
+Use "rsync --daemon --help" to see the daemon-mode command-line options.
+Please see the rsync(1) and rsyncd.conf(5) man pages for full documentation.
+See http://rsync.samba.org/ for updates, bug reports, and answers
+rsync error: syntax or usage error (code 1) at main.c(1556) [client=3.1.1]
+hduser@hadoopnode1:~$ ssh hduser@hadoopnode2
+  ___                               ____  _    ___             
+ / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___ 
+| | | | '__/ _` | '_ \ / _` |/ _ \ | |_) | | | | | | '_ \ / _ \
+| |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
+ \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
+                       |___/                                   
+
+Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
+System load:   0.00            	Up time:       1 day		
+Memory usage:  11 % of 494Mb  	IP:            192.168.0.111
+CPU temp:      46°C           	
+Usage of /:    13% of 15G    	
+
+Last login: Tue Apr 18 21:52:43 2017 from 192.168.0.106
+hduser@hadoopnode2:~$ exit
+logout
+Connection to hadoopnode2 closed.
+hduser@hadoopnode1:~$ ls .ssh
+authorized_keys  id_rsa  id_rsa.pub  known_hosts
+hduser@hadoopnode1:~$ touch /.ssh/testfile
+touch: cannot touch ‘/.ssh/testfile’: No such file or directory
+hduser@hadoopnode1:~$ touch .ssh/testfile
+hduser@hadoopnode1:~$ ls .ssh
+authorized_keys  id_rsa  id_rsa.pub  known_hosts  testfile
+hduser@hadoopnode1:~$ cat testfile
+cat: testfile: No such file or directory
+hduser@hadoopnode1:~$ cd .ssh
+hduser@hadoopnode1:~/.ssh$ cat testfile
+hduser@hadoopnode1:~/.ssh$ cat > testfile
+This is a test file for rsync
+;
+^C
+hduser@hadoopnode1:~/.ssh$ cat testfile
+This is a test file for rsync
+;
+hduser@hadoopnode1:~/.ssh$ rsync .ssh hduser@hadoopnode2
+rsync: link_stat "/home/hduser/.ssh/.ssh" failed: No such file or directory (2)
+rsync error: some files/attrs were not transferred (see previous errors) (code 23) at main.c(1183) [sender=3.1.1]
+hduser@hadoopnode1:~/.ssh$ cd ..
+hduser@hadoopnode1:~$ ls
+HadoopData
+hduser@hadoopnode1:~$ rsync .ssh hduser@hadoopnode2
+skipping directory .ssh
+hduser@hadoopnode1:~$ rsync -anv .ssh testdir
+sending incremental file list
+created directory testdir
+.ssh/
+.ssh/authorized_keys
+.ssh/id_rsa
+.ssh/id_rsa.pub
+.ssh/known_hosts
+.ssh/testfile
+
+sent 226 bytes  received 65 bytes  582.00 bytes/sec
+total size is 4,065  speedup is 13.97 (DRY RUN)
+hduser@hadoopnode1:~$ ls
+HadoopData
+hduser@hadoopnode1:~$ rsync -anv .ssh/ testdir
+sending incremental file list
+created directory testdir
+./
+authorized_keys
+id_rsa
+id_rsa.pub
+known_hosts
+testfile
+
+sent 209 bytes  received 64 bytes  546.00 bytes/sec
+total size is 4,065  speedup is 14.89 (DRY RUN)
+hduser@hadoopnode1:~$ rsync -a .ssh/ testdir
+hduser@hadoopnode1:~$ ls
+HadoopData  testdir
+hduser@hadoopnode1:~$ ls testdir
+authorized_keys  id_rsa  id_rsa.pub  known_hosts  testfile
+hduser@hadoopnode1:~$ rm -r testdir
+hduser@hadoopnode1:~$ ls
+HadoopData
+hduser@hadoopnode1:~$ ssh hduser@hadoopnode1
+  ___                               ____  _    ___             
+ / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___ 
+| | | | '__/ _` | '_ \ / _` |/ _ \ | |_) | | | | | | '_ \ / _ \
+| |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
+ \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
+                       |___/                                   
+
+Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
+System load:   0.00            	Up time:       1 day		
+Memory usage:  12 % of 494Mb  	IP:            192.168.0.110
+CPU temp:      40°C           	
+Usage of /:    14% of 15G    	
+
+Last login: Thu Apr 20 14:17:37 2017 from 192.168.0.106
+hduser@hadoopnode1:~$ ls .ssh
+authorized_keys  id_rsa  id_rsa.pub  known_hosts  testfile
+hduser@hadoopnode1:~$ exit
+logout
+Connection to hadoopnode1 closed.
+hduser@hadoopnode1:~$ ssh hduser@hadoopnode2
+  ___                               ____  _    ___             
+ / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___ 
+| | | | '__/ _` | '_ \ / _` |/ _ \ | |_) | | | | | | '_ \ / _ \
+| |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
+ \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
+                       |___/                                   
+
+Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
+System load:   0.00            	Up time:       1 day		
+Memory usage:  11 % of 494Mb  	IP:            192.168.0.111
+CPU temp:      46°C           	
+Usage of /:    13% of 15G    	
+
+Last login: Thu Apr 20 14:40:24 2017 from hadoopnode1
+hduser@hadoopnode2:~$ ls .ssh
+authorized_keys  id_rsa  id_rsa.pub  known_hosts
+hduser@hadoopnode2:~$ cat .ssh/authorized_keys
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDijzB2SV13w2vQ6nI9i16HkMSaB4KaVKrwIZfxZgGSrfLFw5fXmvKGyxUjMWV+AeTCZDecOJ9WQFoypmvthVWasUOu8Lomoy9Rqkck61iMxOi1/wXMj/jWdWE2gvrTd6O8fhE84wGPemL4I8bGDq9uIgEUu3Jch1Qv87wuK2dKkWWSmKBklAM0H5LpophZ+uCvim50LmpgZL8vuhXzM2qYJXjk2O4l2aN94a249ri37IFdRBd7cKM0bz066r3wG+9nvP/7mFVFqK0rBw+yuOaXgY2eMuXY2y4WytN5iqg0i6ubdk/fVMDkhQeunlsGt8nYLD/HZXk6l/o2stASyhjT hduser@orangepione
+hduser@hadoopnode2:~$ cat .ssh/id_rsa
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpgIBAAKCAQEA4o8wdkldd8Nr0OpyPYteh5DEmgeCmlSq8CGX8WYBkq3yxcOX
+15ryhssVIzFlfgHkwmQ3nDifVkBaMqZr7YVVmrFDrvC6JqMvUapHJOtYjMTotf8F
+zI/41nVhNoL603ejvH4RPOMBj3pi+CPGxg6vbiIBFLtyXIdUL/O8LitnSpFlkpig
+ZJQDNB+S6aKYWfrgr4pudC5qYGS/L7oV8zNqmCV45NjuJdmjfeGtuPa4t+yBXUQX
+e3CjNG89Ouq98BvvZ7z/+5hVRaitKwcPsrjml4GNnjLl2NsuFsrTeYqoNIurm3ZP
+31TA5IUHrp5bBrfJ2Cw/x2V5Opf6NrLQEsoY0wIDAQABAoIBAQC1IoA/giaNcxuH
+O3o8xGm+fzsAXxLHKvxD4sflQ4XsbNCV1uxWf9Z5eHKc4Yhgd0kbNh7T8t1Ji0fS
+CQZvL1QiyqjvfB2IeJ2DcF1TIip42ZGouI09YLo1VEF14MCDQ7sQH8bOZDxCJzpr
+Y8cvYFxX9C3jEn67haMEd50zWJZLoXPm7dy5pRJdqE6hQnL4Pk2eiePLzW+USky4
+6E1ux0DsxH/I3yUyPHMYGLK6iFJXjeapywWVpsGqtSKxx04lfXHC4/D3Dmaxmow0
+FUBs1hQrbJ6G3xOBPZYsULuns8vRULFBkjSu/tdpuh7fCkcrHpv+6rVYWvV+YK9J
+nx0Mg1bRAoGBAP5Kr8Y2CQ2/TJLDprvmB4HABR1U71WEtNtvDOb578VbbTA7t5n8
+JiSPxXu80NbqhKtuBuRvZT4TmWZJo6oOBCBWxjlKZMQG/35/p1TsHvC0ecawLyiO
+Arvh5u6YCjzTUMkNaRSKk1pBEHqY8/g6UJrKVZ5gfi/mnzXL6R7v/WqbAoGBAOQU
+z3Zr6z4ksvfQu0ZjSLEa+i2ZXYDazGcqEoSIcsUs5ww7SJwtaAOMBPlZEL8tbzFO
+DxDpZxb33nnH62f+KK2fGjfgR2tjxuTGHI/2F/RxbWbFOGa/wvxbdsA4g93D2g+O
+dbe8kh1JGtrozHuVARwPe0Fi6kl7kzGQWkX/YXIpAoGBAKOSDzcEkxZQs0TErX+4
+G6QOjDut4rWzw1JTQI1iwCTHBpk8EIHwe+iQwosxjXRxLh3HjI9sSEeB++6b97bv
+hR/4MVGw1NhzV+1a15v8tnpG3P49XlhL4N5SFWXsTsmJdDGferRH3zjzGVKDCIvn
+lum6tRBHKWROiKLmI3JPFUd5AoGBAJQHqaq7Wj/IA9vxPkrtz1UbJDqKKnSiDT37
+wW8BPDQa844tv++VTMfYjbXkB4l9DIjcl8yrH7x5fYxeo7un6nDdLWAMkW3yoTkE
+F6+b0mpVX+Lup6+QUBYHqugRBgzdu16TYHWyzsZxFxvzMhwXVlQG/EEw2Mx+hscJ
+YH3DxVQZAoGBAMXn9hKnEbIfAs162v3uGvdSQTt8ssyxDiC6bUgJHt1HiMA4OJF7
+3wlraTwrQV8+ZgrioCfM/C45R6c2EB+9Hgy9x19TnAB1WpMEl/HdYcEUlXyvXPx0
+Iw0+NoKXU9i7+x14lEKhCqeQnPtABoIB7aIptd047PfZe0TeMMMZki3A
+-----END RSA PRIVATE KEY-----
+hduser@hadoopnode2:~$ cat .ssh/known hosts
+cat: .ssh/known: No such file or directory
+cat: hosts: No such file or directory
+hduser@hadoopnode2:~$ cat .ssh/known_hosts
+|1|BwnFGWoj+5cI0Mo+GdsDFeRUjbk=|jKIsaLuzRjLuVF+rn4VFgFPL5vo= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCVZlVE/lWw7pd+V9m+0vIqCwgcQjop91y3utmVbgXhuVL+6ZYyHpFjvpGdmIpb+v2/9umq7BoL6MMLcPlgbKmE=
+|1|Z1Jaj3dQxqU/c1qh56rLUhFnffw=|D+/t+tGocoL26soqfNNC/jagOSo= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCVZlVE/lWw7pd+V9m+0vIqCwgcQjop91y3utmVbgXhuVL+6ZYyHpFjvpGdmIpb+v2/9umq7BoL6MMLcPlgbKmE=
+|1|5bQzwWHxWw4SBgUv9eoVgXLqK1I=|li9mCulJnEUuu10nVwrK0pFEa/Q= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCVZlVE/lWw7pd+V9m+0vIqCwgcQjop91y3utmVbgXhuVL+6ZYyHpFjvpGdmIpb+v2/9umq7BoL6MMLcPlgbKmE=
+|1|BGxpfCLGPAqfHh+UlbQY75qT4qY=|G1Tjpn3caZt5U4iWHMtWOKDOcLM= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBIDmla8gbzd90U157sKIAEWpQ2PlWp2t3lBQIUF9UWaCKA/u0fSV5EfkPGqEjCf01FVilUXOUNqpv4hROVzo3OY=
+hduser@hadoopnode2:~$ exit
+logout
+Connection to hadoopnode2 closed.
+hduser@hadoopnode1:~$ ls
+HadoopData
+hduser@hadoopnode1:~$ rsync -anv .ssh/ hduser@hadoopnode2:~/.ssh
+sending incremental file list
+./
+known_hosts
+testfile
+
+sent 196 bytes  received 25 bytes  88.40 bytes/sec
+total size is 4,065  speedup is 18.39 (DRY RUN)
+hduser@hadoopnode1:~$ ls .ssh
+authorized_keys  id_rsa  id_rsa.pub  known_hosts  testfile
+hduser@hadoopnode1:~$ rsync -av .ssh/ hduser@hadoopnode2:~/.ssh
+sending incremental file list
+./
+known_hosts
+testfile
+
+sent 1,866 bytes  received 69 bytes  774.00 bytes/sec
+total size is 4,065  speedup is 2.10
+hduser@hadoopnode1:~$ hadoop job -history
+DEPRECATED: Use of this script to execute mapred command is deprecated.
+Instead use the mapred command for it.
+
+Usage: CLI [-history <jobHistoryFile>]
+hduser@hadoopnode1:~$ ls $HADOOP_HOME
+bin  include  libexec      logs        README.txt  share
+etc  lib      LICENSE.txt  NOTICE.txt  sbin
+hduser@hadoopnode1:~$ ls $HADOOP_HOME/BIN
+ls: cannot access /opt/hadoop-2.7.3/BIN: No such file or directory
+hduser@hadoopnode1:~$ ls $HADOOP_HOME/bin
+container-executor  hdfs      mapred.cmd               yarn
+hadoop              hdfs.cmd  rcc                      yarn.cmd
+hadoop.cmd          mapred    test-container-executor
+hduser@hadoopnode1:~$ ls $HADOOP_HOME/bin/yarn
+/opt/hadoop-2.7.3/bin/yarn
+hduser@hadoopnode1:~$ $HADOOP_HOME/bin/yarn
+Usage: yarn [--config confdir] [COMMAND | CLASSNAME]
+  CLASSNAME                             run the class named CLASSNAME
+ or
+  where COMMAND is one of:
+  resourcemanager -format-state-store   deletes the RMStateStore
+  resourcemanager                       run the ResourceManager
+  nodemanager                           run a nodemanager on each slave
+  timelineserver                        run the timeline server
+  rmadmin                               admin tools
+  sharedcachemanager                    run the SharedCacheManager daemon
+  scmadmin                              SharedCacheManager admin tools
+  version                               print the version
+  jar <jar>                             run a jar file
+  application                           prints application(s)
+                                        report/kill application
+  applicationattempt                    prints applicationattempt(s)
+                                        report
+  container                             prints container(s) report
+  node                                  prints node report(s)
+  queue                                 prints queue information
+  logs                                  dump container logs
+  classpath                             prints the class path needed to
+                                        get the Hadoop jar and the
+                                        required libraries
+  cluster                               prints cluster information
+  daemonlog                             get/set the log level for each
+                                        daemon
+
+Most commands print help when invoked w/o parameters.
+hduser@hadoopnode1:~$ $HADOOP_HOME/bin/yarn logs
+Retrieve logs for completed YARN applications.
+usage: yarn logs -applicationId <application ID> [OPTIONS]
+
+general options are:
+ -appOwner <Application Owner>   AppOwner (assumed to be current user if
+                                 not specified)
+ -containerId <Container ID>     ContainerId (must be specified if node
+                                 address is specified)
+ -help                           Displays help for all commands.
+ -nodeAddress <Node Address>     NodeAddress in the format nodename:port
+                                 (must be specified if container id is
+                                 specified)
+hduser@hadoopnode1:~$ $HADOOP_HOME/bin/yarn logs -help
+Retrieve logs for completed YARN applications.
+usage: yarn logs -applicationId <application ID> [OPTIONS]
+
+general options are:
+ -appOwner <Application Owner>   AppOwner (assumed to be current user if
+                                 not specified)
+ -containerId <Container ID>     ContainerId (must be specified if node
+                                 address is specified)
+ -help                           Displays help for all commands.
+ -nodeAddress <Node Address>     NodeAddress in the format nodename:port
+                                 (must be specified if container id is
+                                 specified)
+hduser@hadoopnode1:~$ $HADOOP_HOME/sbin/start-dfs.sh
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/20 15:01:24 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Starting namenodes on [hadoopnode1]
+hadoopnode1: starting namenode, logging to /opt/hadoop-2.7.3/logs/hadoop-hduser-namenode-hadoopnode1.out
+hadoopnode1: starting datanode, logging to /opt/hadoop-2.7.3/logs/hadoop-hduser-datanode-hadoopnode1.out
+hadoopnode2: starting datanode, logging to /opt/hadoop-2.7.3/logs/hadoop-hduser-datanode-hadoopnode2.out
+Starting secondary namenodes [0.0.0.0]
+0.0.0.0: starting secondarynamenode, logging to /opt/hadoop-2.7.3/logs/hadoop-hduser-secondarynamenode-hadoopnode1.out
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/20 15:02:04 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+hduser@hadoopnode1:~$ $HADOOP_HOME/sbin/start-yarn.sh
+starting yarn daemons
+starting resourcemanager, logging to /opt/hadoop-2.7.3/logs/yarn-hduser-resourcemanager-hadoopnode1.out
+hadoopnode2: starting nodemanager, logging to /opt/hadoop-2.7.3/logs/yarn-hduser-nodemanager-hadoopnode2.out
+hadoopnode1: starting nodemanager, logging to /opt/hadoop-2.7.3/logs/yarn-hduser-nodemanager-hadoopnode1.out
+hduser@hadoopnode1:~$ $HADOOP_HOME/bin/yarn logs -application_1492355703655_0001options parsing failed: Missing required option: applicationId
+Retrieve logs for completed YARN applications.
+usage: yarn logs -applicationId <application ID> [OPTIONS]
+
+general options are:
+ -appOwner <Application Owner>   AppOwner (assumed to be current user if
+                                 not specified)
+ -containerId <Container ID>     ContainerId (must be specified if node
+                                 address is specified)
+ -help                           Displays help for all commands.
+ -nodeAddress <Node Address>     NodeAddress in the format nodename:port
+                                 (must be specified if container id is
+                                 specified)
+hduser@hadoopnode1:~$ $HADOOP_HOME/bin/yarn logs -applicationId application_1492355703655_0001
+17/04/20 15:06:56 INFO client.RMProxy: Connecting to ResourceManager at hadoopnode1/192.168.0.110:8050
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/20 15:06:56 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Unable to get ApplicationState. Attempting to fetch logs directly from the filesystem.
+/tmp/logs/hduser/logs/application_1492355703655_0001 does not exist.
+Log aggregation has not completed or is not enabled.
+hduser@hadoopnode1:~$ jps
+3218 NameNode
+3620 SecondaryNameNode
+3992 NodeManager
+3817 ResourceManager
+3387 DataNode
+4429 Jps
+hduser@hadoopnode1:~$ echo $MAPRED_EXAMPLES
+/opt/hadoop-2.7.3/share/hadoop/mapreduce
+hduser@hadoopnode1:~$ ls $MAPRED_EXAMPLES
+hadoop-mapreduce-client-app-2.7.3.jar
+hadoop-mapreduce-client-common-2.7.3.jar
+hadoop-mapreduce-client-core-2.7.3.jar
+hadoop-mapreduce-client-hs-2.7.3.jar
+hadoop-mapreduce-client-hs-plugins-2.7.3.jar
+hadoop-mapreduce-client-jobclient-2.7.3.jar
+hadoop-mapreduce-client-jobclient-2.7.3-tests.jar
+hadoop-mapreduce-client-shuffle-2.7.3.jar
+hadoop-mapreduce-examples-2.7.3.jar
+lib
+lib-examples
+sources
+hduser@hadoopnode1:~$ lynx 0.0.0.0:10020
+Looking up  '0.0.0.0' first
+
+Looking up 0.0.0.0 first
+Looking up 0.0.0.0:10020
+Making HTTP connection to 0.0.0.0:10020
+Alert!: Unable to connect to remote host.
+
+lynx: Can't access startfile http://0.0.0.0:10020/
+hduser@hadoopnode1:~$ 
+hduser@hadoopnode1:~$ lynx localhost:10020
+Looking up  'localhost' first
+
+Looking up localhost first
+Looking up localhost:10020
+Making HTTP connection to localhost:10020
+Alert!: Unable to connect to remote host.
+
+lynx: Can't access startfile http://localhost:10020/
+hduser@hadoopnode1:~$ lynx hadoopnode1:8088
+Looking up  'hadoopnode1' first
+hduser@hadoopnode1:~$ ls
+HadoopData
+hduser@hadoopnode1:~$ ls -al
+total 44
+drwxr-xr-x 5 hduser hadoop 4096 Apr 20 14:47 .
+drwxr-xr-x 4 root   root   4096 Apr 14 20:29 ..
+-rw------- 1 hduser hadoop 8810 Apr 20 14:48 .bash_history
+-rw-r--r-- 1 hduser hadoop  220 Apr 14 20:29 .bash_logout
+-rw-r--r-- 1 hduser hadoop 3971 Apr 17 21:17 .bashrc
+drwxr-xr-x 2 hduser hadoop 4096 Apr 16 10:24 HadoopData
+drwxr-xr-x 2 hduser hadoop 4096 Apr 15 14:37 .oracle_jre_usage
+-rw-r--r-- 1 hduser hadoop  675 Apr 14 20:29 .profile
+drwxr-xr-x 2 hduser hadoop 4096 Apr 20 14:42 .ssh
+hduser@hadoopnode1:~$ rm -r .ssh
+hduser@hadoopnode1:~$ $HADOOP_HOME/sbin/stop-yarn.sh
+stopping yarn daemons
+stopping resourcemanager
+hadoopnode1: Could not create directory '/home/hduser/.ssh'.
+The authenticity of host 'hadoopnode1 (192.168.0.110)' can't be established.
+ECDSA key fingerprint is ad:7e:5f:e7:20:c1:25:53:9d:8b:4a:46:c7:11:26:59.
+Are you sure you want to continue connecting (yes/no)? The authenticity of host 'hadoopnode2 (192.168.0.111)' can't be established.
+ECDSA key fingerprint is ad:7e:5f:e7:20:c1:25:53:9d:8b:4a:46:c7:11:26:59.
+Are you sure you want to continue connecting (yes/no)? yes
+hadoopnode1: Warning: Permanently added 'hadoopnode1,192.168.0.110' (ECDSA) to the list of known hosts.
+hduser@hadoopnode1's password: Please type 'yes' or 'no': 
+hadoopnode1: Permission denied, please try again.
+hduser@hadoopnode1's password: 
+Please type 'yes' or 'no': 
+hduser@hadoopnode1's password: hadoopnode1: Permission denied, please try again.
+
+hadoopnode1: Permission denied (publickey,password).
+^C
+hadoopnode2: Host key verification failed.
+
+hduser@hadoopnode1:~$ ssh hduser@hadoopnode2
+The authenticity of host 'hadoopnode2 (192.168.0.111)' can't be established.
+ECDSA key fingerprint is ad:7e:5f:e7:20:c1:25:53:9d:8b:4a:46:c7:11:26:59.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'hadoopnode2,192.168.0.111' (ECDSA) to the list of known hosts.
+hduser@hadoopnode2's password: 
+  ___                               ____  _    ___             
+ / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___ 
+| | | | '__/ _` | '_ \ / _` |/ _ \ | |_) | | | | | | '_ \ / _ \
+| |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
+ \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
+                       |___/                                   
+
+Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
+System load:   0.04            	Up time:       1 day		
+Memory usage:  22 % of 494Mb  	IP:            192.168.0.111
+CPU temp:      45°C           	
+Usage of /:    13% of 15G    	
+
+Last login: Thu Apr 20 14:52:09 2017 from 192.168.0.106
+hduser@hadoopnode2:~$ exit
+logout
+Connection to hadoopnode2 closed.
+hduser@hadoopnode1:~$ $HADOOP_HOME/sbin/stop-yarn.sh
+stopping yarn daemons
+no resourcemanager to stop
+hduser@hadoopnode1's password: hduser@hadoopnode2's password: 
+hadoopnode1: stopping nodemanager
+^C
+hadoopnode2: Connection closed by 192.168.0.111
+
+hduser@hadoopnode1:~$ jps
+3218 NameNode
+3620 SecondaryNameNode
+3387 DataNode
+4862 Jps
+hduser@hadoopnode1:~$ jps
+4976 Jps
+3620 SecondaryNameNode
+3387 DataNode
+hduser@hadoopnode1:~$ $HADOOP_HOME/sbin/stop-dfs.sh
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/20 15:52:50 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Stopping namenodes on [hadoopnode1]
+hduser@hadoopnode1's password: 
+hduser@hadoopnode1's password: hadoopnode1: Permission denied, please try again.
+
+hduser@hadoopnode1:~$ 
+hadoopnode1: Permission denied, please try again.
+hduser@hadoopnode1's password: 
+hadoopnode1: Permission denied (publickey,password).
+jps
+3620 SecondaryNameNode
+5063 Jps
+3387 DataNode
+hduser@hadoopnode1:~$ $HADOOP_HOME/sbin/stop-dfs.sh
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/20 15:53:18 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Stopping namenodes on [hadoopnode1]
+hduser@hadoopnode1's password: 
+hadoopnode1: no namenode to stop
+hduser@hadoopnode1's password: hduser@hadoopnode2's password: 
+hadoopnode1: stopping datanode
+^C
+
+hduser@hadoopnode1:~$ jps
+3620 SecondaryNameNode
+5372 Jps
+hduser@hadoopnode1:~$ sudo poweroff
+[sudo] password for hduser: 
+Connection to hadoopnode1 closed by remote host.
+Connection to hadoopnode1 closed.
+(env) ASPs-MacBook-Pro:~ asp$ ssh hduser@hadoopnode1
+hduser@hadoopnode1's password: 
+  ___                               ____  _    ___             
+ / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___ 
+| | | | '__/ _` | '_ \ / _` |/ _ \ | |_) | | | | | | '_ \ / _ \
+| |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
+ \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
+                       |___/                                   
+
+Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
+System load:   0.14            	Up time:       47 sec		
+Memory usage:  10 % of 494Mb  	IP:            192.168.0.110
+CPU temp:      39°C           	
+Usage of /:    14% of 15G    	
+
+Last login: Thu Apr 20 14:47:55 2017 from hadoopnode1
+hduser@hadoopnode1:~$ jps
+846 Jps
+hduser@hadoopnode1:~$ ls -al
+total 44
+drwxr-xr-x 5 hduser hadoop  4096 Apr 20 15:46 .
+drwxr-xr-x 4 root   root    4096 Apr 14 20:29 ..
+-rw------- 1 hduser hadoop 10154 Apr 20 15:54 .bash_history
+-rw-r--r-- 1 hduser hadoop   220 Apr 14 20:29 .bash_logout
+-rw-r--r-- 1 hduser hadoop  3971 Apr 17 21:17 .bashrc
+drwxr-xr-x 2 hduser hadoop  4096 Apr 16 10:24 HadoopData
+drwxr-xr-x 2 hduser hadoop  4096 Apr 15 14:37 .oracle_jre_usage
+-rw-r--r-- 1 hduser hadoop   675 Apr 14 20:29 .profile
+drwx------ 2 hduser hadoop  4096 Apr 20 15:46 .ssh
+hduser@hadoopnode1:~$ ls .ssh
+known_hosts
+hduser@hadoopnode1:~$ ls
+HadoopData
+hduser@hadoopnode1:~$ cat .ssh/known_hosts
+|1|UqVYsm/na4WTve68VcEztVr7XhA=|iEqWdWmXzGQaavHI8whuHJVvZJA= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCVZlVE/lWw7pd+V9m+0vIqCwgcQjop91y3utmVbgXhuVL+6ZYyHpFjvpGdmIpb+v2/9umq7BoL6MMLcPlgbKmE=
+|1|4xLbBvjJQg+1MXPnddjKxSvOH54=|3ldr3L7yfFxs/Cx7QLB4OJxBgHg= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCVZlVE/lWw7pd+V9m+0vIqCwgcQjop91y3utmVbgXhuVL+6ZYyHpFjvpGdmIpb+v2/9umq7BoL6MMLcPlgbKmE=
+|1|TsoUzclgaT+lrsz16QNVaf5H1Ro=|5a0+cWzmzX5StRCLLMpUKKnvxRI= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCVZlVE/lWw7pd+V9m+0vIqCwgcQjop91y3utmVbgXhuVL+6ZYyHpFjvpGdmIpb+v2/9umq7BoL6MMLcPlgbKmE=
+|1|QpysZMEiF+NgedfWn+SHH0KNnio=|Uin7qXVjywaIeKUmGzkh0+vFNHM= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCVZlVE/lWw7pd+V9m+0vIqCwgcQjop91y3utmVbgXhuVL+6ZYyHpFjvpGdmIpb+v2/9umq7BoL6MMLcPlgbKmE=
+hduser@hadoopnode1:~$ ssh-keygen -t rsa -P ""
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/hduser/.ssh/id_rsa): 
+Your identification has been saved in /home/hduser/.ssh/id_rsa.
+Your public key has been saved in /home/hduser/.ssh/id_rsa.pub.
+The key fingerprint is:
+99:5b:6b:de:cd:c1:a2:0a:ff:21:95:a7:03:8a:b5:1a hduser@hadoopnode1
+The key's randomart image is:
++---[RSA 2048]----+
+|                 |
+|                 |
+|                 |
+|         o .     |
+|      . S + .    |
+|     o o = + .   |
+|    E + o * . o  |
+|     o o + = + . |
+|    .   oo+ . o  |
++-----------------+
+hduser@hadoopnode1:~$ cat .ssh/id_rsa.pub > .ssh/authorized_keys
+hduser@hadoopnode1:~$ ls .ssh
+authorized_keys  id_rsa  id_rsa.pub  known_hosts
+hduser@hadoopnode1:~$ cat .ssh/authorized_keys
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0bzYIvhWGKmTqdFFmn6YqG0/0kOYcP3dBFK9GQABYRQCReYO3N5PFDRF7mje/xkvB9Mr9rkO3GZDCOIWEa2J1Jr8QAehvrC0KxCeLkrepk816oPxEi7nQO1FEJ+I4tWWGqS8CgamlkPEdehR/uj9svGVjTWxYA01JOk6F1MyByqL5gf4xjNWyBqWu2p+x2vpPqLH4SPrDpttWbH66KmREIpw0X25bx9QRDef50kgElFZZMjFClC3pcJigZfNwbTd2zky1+zUfCguRMI4T4jZILS7n1bk++e0Jv9lHgIKBUVRjnjM+4+VHF/DnzDfqwTNbNQFKuWJyDkfx/2dJRwUT hduser@hadoopnode1
+hduser@hadoopnode1:~$ ssh hduser@hadoopnode1
+  ___                               ____  _    ___             
+ / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___ 
+| | | | '__/ _` | '_ \ / _` |/ _ \ | |_) | | | | | | '_ \ / _ \
+| |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
+ \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
+                       |___/                                   
+
+Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
+System load:   0.00            	Up time:       6 min		
+Memory usage:  11 % of 494Mb  	IP:            192.168.0.110
+CPU temp:      40°C           	
+Usage of /:    14% of 15G    	
+
+Last login: Thu Apr 20 15:56:50 2017 from 192.168.0.106
+hduser@hadoopnode1:~$ exit
+logout
+Connection to hadoopnode1 closed.
+hduser@hadoopnode1:~$ hadoop version
+Hadoop 2.7.3
+Subversion https://git-wip-us.apache.org/repos/asf/hadoop.git -r baa91f7c6bc9cb92be5982de4719c1c8af91ccff
+Compiled by root on 2016-08-18T01:41Z
+Compiled with protoc 2.5.0
+From source with checksum 2e4ce5f957ea4db193bce3734ff29ff4
+This command was run using /opt/hadoop-2.7.3/share/hadoop/common/hadoop-common-2.7.3.jar
+hduser@hadoopnode1:~$ cd .ssh
+hduser@hadoopnode1:~/.ssh$ ls
+authorized_keys  id_rsa  id_rsa.pub  known_hosts
+hduser@hadoopnode1:~/.ssh$ cat id_rsa
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEAtG82CL4Vhipk6nRRZp+mKhtP9JDmHD93QRSvRkAAWEUAkXmD
+tzeTxQ0Re5o3v8ZLwfTK/a5DtxmQwjiFhGtidSa/EAHob6wtCsQni5K3qZPNeqD8
+RIu50DtRRCfiOLVlhqkvAoGppZDxHXoUf7o/bLxlY01sWANNSTpOhdTMgcqi+YH+
+MYzVsgalrtqfsdr6T6ix+Ej6w6bbVmx+uipkRCKcNF9uW8fUEQ3n+dJIBJRWWTIx
+QpQt6XCYoGXzcG03ds5Mtfs1HwoLkTCOE+I2SC0u59W5PvntCb/ZR4CCgVFUY54z
+PuPlRxfw58w36sEzWzUBSrlicg5H8f9nSUcFEwIDAQABAoIBAGM5ZTWZkqydU7G7
+Faih0vcE3gtYQ7L1E9euUFUJjSb9izp04II5BgIvFZYrUM0ddzvKKncnBgYDASBN
+hN81ToeuLxPWeMQwovRwum5+2JFgvnbZYOExFZX1iNM6O6WD27kaAMgYFfr+ohnb
+sLos6gQZ9oeNZC9iYXYLonLmezBEGWK+tjSCrEVFxNA/CspCdzL7QAGi7ytrqEzA
+1SeJh+7o1SFXzNmC+wA+QWdHLBs8qVE8IGecQNzeTYZQ+u3ogXkhYipP2iGLcriy
+LkTGCW/h+VzILBwAhwfBJtPA5e8NWYJTnYXo4k7YCJVqL9HaOrbYQnvlYlcOALyn
+SAC+owECgYEA76VvOJAYHtqx6XDLIti44yDpv+VCu4wXJ+ByDLyENDhWRWj3SU30
+7sH6Kgvr7Fe0BkmzE456F/Zs4QrYu+1VUxkVgDcswjC+m7c+ib4tblP/HtYAwOKL
+i0QndOtf7LWmJSgGJSmqHJTr/uIUtcroO3Xzij+oazH0HvhBZPtLybECgYEAwL9c
+EgnWrR/Tf64mewU/21z8EaJ9EFj0bTinwBEXyT7D9PtjuaTeLAi3yUFQ4eFvQQRD
+YWnMLJ1iUKPTVLp5WkSVqDbZyFR8DKk1/OXmO3BDXRPPVoxqfwj9RI83MJbar9Tu
+JaeewwPtYmKM6Jv/SxSvIRfaXmoYDxnZQJXgKAMCgYEA4WKhMPxsgxBCBYBcvKBB
+evQog58WXRdLa+iuuwXN/OMDWHJ5KItWEfuD0Wm28Ggn20YTUxBMCh9slVbDMjPr
+bKUJ0LWTtetsST1VZuzjA4GiTpkMylwGy+tEhLUeWZ0Z7pYu+WKvKARz1BtDSRrV
+wZ6Ud3CZcH/hzgLEVjn2NHECgYBX/8XoUmeZuPsVwwu8hMQHwecvofDZYtONfh1Q
+Wj1y2t4aXh/EpRnuHrjSAKkNx5/Enk6pDeVyxRQa3wDgIRbAeKmfGBPMG45bNXH5
+mXjI0FNhDmdOC2OfxhnjkENRQr5rIprrxCB+xq89iOLuXDJtM+9U+4/uJSAA3PtM
+OmERwwKBgQDfV8DypQeTXi3ivi3XEJSPIkOUhw+DHtYSuE/X+JC/PiuC5qz/ymCf
+YXw8wPjZX4mhJzMo4YvYtmuDbN0c4kHf3eLhvLQ47d9yw7I45SM7zdwWydMLcBmm
+v8X6CnQMbKCy9SLN8j5s9qeECXGV7i72Jt+xwxjvWBXOBBjQqhxsZg==
+-----END RSA PRIVATE KEY-----
+hduser@hadoopnode1:~/.ssh$ cat id_rsa.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0bzYIvhWGKmTqdFFmn6YqG0/0kOYcP3dBFK9GQABYRQCReYO3N5PFDRF7mje/xkvB9Mr9rkO3GZDCOIWEa2J1Jr8QAehvrC0KxCeLkrepk816oPxEi7nQO1FEJ+I4tWWGqS8CgamlkPEdehR/uj9svGVjTWxYA01JOk6F1MyByqL5gf4xjNWyBqWu2p+x2vpPqLH4SPrDpttWbH66KmREIpw0X25bx9QRDef50kgElFZZMjFClC3pcJigZfNwbTd2zky1+zUfCguRMI4T4jZILS7n1bk++e0Jv9lHgIKBUVRjnjM+4+VHF/DnzDfqwTNbNQFKuWJyDkfx/2dJRwUT hduser@hadoopnode1
+hduser@hadoopnode1:~/.ssh$ ls
+authorized_keys  id_rsa  id_rsa.pub  known_hosts
+hduser@hadoopnode1:~/.ssh$ ls authorized_keys
+authorized_keys
+hduser@hadoopnode1:~/.ssh$ cat authorized_keys
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0bzYIvhWGKmTqdFFmn6YqG0/0kOYcP3dBFK9GQABYRQCReYO3N5PFDRF7mje/xkvB9Mr9rkO3GZDCOIWEa2J1Jr8QAehvrC0KxCeLkrepk816oPxEi7nQO1FEJ+I4tWWGqS8CgamlkPEdehR/uj9svGVjTWxYA01JOk6F1MyByqL5gf4xjNWyBqWu2p+x2vpPqLH4SPrDpttWbH66KmREIpw0X25bx9QRDef50kgElFZZMjFClC3pcJigZfNwbTd2zky1+zUfCguRMI4T4jZILS7n1bk++e0Jv9lHgIKBUVRjnjM+4+VHF/DnzDfqwTNbNQFKuWJyDkfx/2dJRwUT hduser@hadoopnode1
+hduser@hadoopnode1:~/.ssh$ hadoop -version
+Error: No command named `-version' was found. Perhaps you meant `hadoop version'
+hduser@hadoopnode1:~/.ssh$ hadoop version
+Hadoop 2.7.3
+Subversion https://git-wip-us.apache.org/repos/asf/hadoop.git -r baa91f7c6bc9cb92be5982de4719c1c8af91ccff
+Compiled by root on 2016-08-18T01:41Z
+Compiled with protoc 2.5.0
+From source with checksum 2e4ce5f957ea4db193bce3734ff29ff4
+This command was run using /opt/hadoop-2.7.3/share/hadoop/common/hadoop-common-2.7.3.jar
+hduser@hadoopnode1:~/.ssh$ sudo nano $HADOOP_HOME/etc/hadoop/hadoop-env.sh
+[sudo] password for hduser: 
+hduser@hadoopnode1:~/.ssh$ 

@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width,maximum-scale=2">
+    <meta name="description" content="Orange Pi Hadoop Cluster : Create a Hadoop 2.7.3 Cluster with Orange Pi One">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="/assets/css/style.css?v=a3fc1900e07b09b05c6ab84481dca4087886c823">
+
+    <title>Orange Pi Hadoop Cluster</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="http://github.com/andrew-pyle/Single-Board-Cluster">View on GitHub</a>
+
+          <h1 id="project_title">Orange Pi Hadoop Cluster</h1>
+          <h2 id="project_tagline">
+            Create a Hadoop 2.7.3 Cluster with Orange Pi One</h2>
+          <h3 id="project_tagline">Andrew Pyle | IFSC 7370 | April 2017</h3>
+
+          
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2 id="troubleshooting-the-cluster">Troubleshooting the Cluster</h2>
+<p>At this point, I have no idea what is malfunctioning with this cluster. The reported cause of a MapReduce job failing seems to be different every time!</p>
+
+<p>I’ll try to collect all the logs I can for analysis, gather some more tutorials, and troubleshoot the namenode. Then I’ll clone the OS and restart the cluster.</p>
+
+<blockquote>
+  <p>NOTE: The Hadoop logging protocol is very complicated, and after several hours of attempting to find the cause of the job failure, I decided that it is not worth spending even more time to discover the root cause of the failure. I’ll just troubleshoot “from the ground up”</p>
+</blockquote>
+
+<p>Here’s what I tried:</p>
+
+<h3 id="ensure-hostnames-working-properly">Ensure Hostnames Working Properly</h3>
+<p>Include the Hadoop cluster ndoes in my client machine’s (MacBook Pro) <code class="highlighter-rouge">etc/hosts</code> file:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>sudo nano /etc/hosts
+</code></pre>
+</div>
+<p>Add the Hadoop nodes:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="c">### Hadoop Cluster Nodes - Orange Pi ###</span>
+192.168.0.110	hadoopnode1
+192.168.0.111	hadoopnode2
+</code></pre>
+</div>
+<p>This now works from my client machine:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>ssh hduser@hadoopnode1
+</code></pre>
+</div>
+
+<h3 id="check-the-java-version">Check the Java version</h3>
+<p>Check to see if the java version is correct:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>java -version
+
+java version <span class="s2">"1.8.0_121"</span>
+Java<span class="o">(</span>TM<span class="o">)</span> SE Runtime Environment <span class="o">(</span>build 1.8.0_121-b13<span class="o">)</span>
+Java HotSpot<span class="o">(</span>TM<span class="o">)</span> Client VM <span class="o">(</span>build 25.121-b13, mixed mode<span class="o">)</span>
+</code></pre>
+</div>
+<p>Java 1.8.0 seems to be the version I installed, so that looks right.</p>
+
+<h3 id="check-hostnames">Check Hostnames</h3>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>cat /etc/hosts
+
+127.0.0.1   localhost orangepione
+::1         localhost orangepione ip6-localhost ip6-loopback
+fe00::0     ip6-localnet
+ff00::0     ip6-mcastprefix
+ff02::1     ip6-allnodes
+ff02::2     ip6-allrouters
+192.168.0.110 hadoopnode1
+192.168.0.111 hadoopnode2
+</code></pre>
+</div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>cat /etc/hostname
+
+hadoopnode1
+
+</code></pre>
+</div>
+<p>There was an extra newline after <code class="highlighter-rouge">hadoopnode1</code>, so I deleted that.</p>
+
+<h3 id="ssh-access">SSH Access</h3>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>cat ~/.ssh/authorized_keys
+
+ssh-rsa &lt;KEY REDACTED FOR SECURITY&gt; hduser@orangepione
+</code></pre>
+</div>
+<p>Aha! We might be on to something here. The SSH key is for hduser@orangepione, which doesn’t exist anymore. We changed the hostname from orangepione to hadoopnode1/2.</p>
+
+<p>Let’s delete the <code class="highlighter-rouge">~/.ssh</code> directory and recreate the SSH key:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>ssh-keygen -t rsa -P <span class="s2">""</span>
+<span class="gp">$ </span>cat ~/.ssh/id_rsa.pub &gt; ~/.ssh/authorized_keys
+<span class="c"># Replace    ^^^^^^^^^^ with the directory you choose</span>
+<span class="c"># in the ssh-keygen command. id_rsa is default.</span>
+</code></pre>
+</div>
+<p>Copying the <code class="highlighter-rouge">id_rsa.pub</code> (public key) into the <code class="highlighter-rouge">authorized_keys</code> file allows any machine with the <code class="highlighter-rouge">id_rsa</code> (private key) to login without a password.</p>
+
+<p><a href="https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories-on-a-vps">Rsync</a> is a great way to clone the folder to the home folder of the other nodes:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>rsync -av ~/.ssh hduser@hadoopnode2:~ <span class="c"># sync the .ssh folder to the ~ directory of the other node.</span>
+</code></pre>
+</div>
+
+<p>Ensure the SSH key allows passwordless login:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>ssh hduser@hadoopnode1 <span class="c"># It works! (or not)</span>
+<span class="gp">$ </span><span class="nb">exit</span>
+</code></pre>
+</div>
+
+<p><em>Update: Deleting the hostname after the public key in <code class="highlighter-rouge">id_rsa.pub</code> and in <code class="highlighter-rouge">authorized_keys</code> did not change the ability to SSH passwordless, so that is probably not the issue.</em></p>
+
+<h3 id="hadoop-install-verification">Hadoop Install Verification</h3>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>hadoop version
+
+Hadoop 2.7.3
+Subversion https://git-wip-us.apache.org/repos/asf/hadoop.git -r baa91f7c6bc9cb92be5982de4719c1c8af91ccff
+Compiled by root on 2016-08-18T01:41Z
+Compiled with protoc 2.5.0
+From <span class="nb">source </span>with checksum 2e4ce5f957ea4db193bce3734ff29ff4
+This <span class="nb">command </span>was run using /opt/hadoop-2.7.3/share/hadoop/common/hadoop-common-2.7.3.jar
+</code></pre>
+</div>
+<p>Seems to be Hadoop 2.7.3, so that’s right.</p>
+
+<h3 id="hdfs-fsck">HDFS <code class="highlighter-rouge">fsck</code></h3>
+
+<p>I ran the Hadoop filesystem check:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>hdfs fsck / <span class="c"># Check the whole dfs, starting from /</span>
+
+..................Status: HEALTHY
+ Total size:	1508057 B
+ Total <span class="nb">dirs</span>:	11
+ Total files:	21
+ Total symlinks:		0
+ Total blocks <span class="o">(</span>validated<span class="o">)</span>:	21 <span class="o">(</span>avg. block size 71812 B<span class="o">)</span>
+ Minimally replicated blocks:	21 <span class="o">(</span>100.0 %<span class="o">)</span>
+ Over-replicated blocks:	0 <span class="o">(</span>0.0 %<span class="o">)</span>
+ Under-replicated blocks:	2 <span class="o">(</span>9.523809 %<span class="o">)</span>
+ Mis-replicated blocks:		0 <span class="o">(</span>0.0 %<span class="o">)</span>
+ Default replication factor:	2
+ Average block replication:	2.0
+ Corrupt blocks:		0
+ Missing replicas:		16 <span class="o">(</span>27.586206 %<span class="o">)</span>
+ Number of data-nodes:		2
+ Number of racks:		1
+FSCK ended at Sat Apr 22 11:44:53 CDT 2017 <span class="k">in </span>126 milliseconds
+
+
+The filesystem under path <span class="s1">'/'</span> is HEALTHY
+</code></pre>
+</div>
+<p>It looks like corrupted blocks is not the issue. I’m guessing the 2 <code class="highlighter-rouge">under-replicated blocks</code> are due to failed jobs.</p>
+
+<h3 id="reformat-hdfs">Reformat HDFS</h3>
+<p>I saved all the HDFS files to my client machine:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>hdfs dfs -get / ~/HdfsDump
+<span class="gp">$ </span>scp -r HdfsDump user@clientipaddress:~
+
+<span class="gp">$ </span>scp -r /hdfs user@clientipaddress:~
+</code></pre>
+</div>
+<p>Delete all HDFS files and reformat:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>rm -rf /hdfs/<span class="k">*</span>
+<span class="gp">$ </span>hdfs namenode -format
+</code></pre>
+</div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>hdfs dfsadmin -report
+</code></pre>
+</div>
+<p>After starting the <code class="highlighter-rouge">dfs</code> and <code class="highlighter-rouge">yarn</code>, only <code class="highlighter-rouge">hadoopnode1</code> is connected. This may be due to a cluster ID conflict.</p>
+
+<p>I’ll use the hdfs directory structure from <a href="https://medium.com/@jasonicarter/how-to-hadoop-at-home-with-raspberry-pi-part-3-7d114d35fdf1">Jason Carter’s blog</a> (parts 2 &amp; 3 specifically).</p>
+
+<p>I’ll remove all the files on both nodes and try again:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>sudo rm -rf /hdfs <span class="c"># hadoopnode1 &amp; 2</span>
+<span class="gp">$ </span>sudo mkdir -p /hdfs/namenode <span class="c"># only hadoopnode1</span>
+<span class="gp">$ </span>sudo mkdir -p /hdfs/datanode <span class="c"># hadoopnode1 &amp; 2</span>
+<span class="gp">$ </span>sudo chown hduser:hadoop /hdfs/ -R <span class="c"># change directory ownership</span>
+<span class="gp">$ </span>chmod 750 /hdfs <span class="c"># change directory permissions</span>
+<span class="gp">$ </span>ls -l / | grep hdfs <span class="c"># view directory</span>
+
+drwxr-x---  4 hduser hadoop  4096 Apr 22 12:57 hdfs
+</code></pre>
+</div>
+<p>Change configuration to  new <code class="highlighter-rouge">/hdfs</code> directory structure:</p>
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code>File: hdfs-site.xml
+
+<span class="nt">&lt;configuration&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>dfs.replication<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>2<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>dfs.blocksize<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>5242880<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>dfs.namenode.name.dir<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>file:/hdfs/namenode<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+    <span class="nt">&lt;name&gt;</span>dfs.datanode.name.dir<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;value&gt;</span>file:/hdfs/datanode<span class="nt">&lt;/value&gt;</span>
+  <span class="nt">&lt;/property&gt;</span>
+<span class="nt">&lt;/configuration&gt;</span>
+</code></pre>
+</div>
+<p>Sync to <code class="highlighter-rouge">hadoopnode2</code>:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>rsync -av <span class="nv">$HADOOP_CONF_DIR</span>/ hduser@hadoopnode2:<span class="nv">$HADOOP_CONF_DIR</span>
+<span class="c"># rsync -anv will do a dry-run so you can see the specific files</span>
+<span class="c"># to be sent before you actually send anything.</span>
+</code></pre>
+</div>
+<p>Create HDFS again:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="c"># On the namenode (hadoopnode1 for me)</span>
+<span class="gp">$ </span>hdfs namenode -format
+
+<span class="gp">$ </span><span class="nv">$HADOOP_HOME</span>/sbin/start-dfs.sh
+<span class="gp">$ </span><span class="nv">$HADOOP_HOME</span>/sbin/start-yarn.sh
+</code></pre>
+</div>
+<p>Check the status:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>hdfs dfsadmin -report
+
+Configured Capacity: 30753898496 <span class="o">(</span>28.64 GB<span class="o">)</span>
+Present Capacity: 26473508864 <span class="o">(</span>24.66 GB<span class="o">)</span>
+DFS Remaining: 26473459712 <span class="o">(</span>24.66 GB<span class="o">)</span>
+DFS Used: 49152 <span class="o">(</span>48 KB<span class="o">)</span>
+DFS Used%: 0.00%
+Under replicated blocks: 0
+Blocks with corrupt replicas: 0
+Missing blocks: 0
+Missing blocks <span class="o">(</span>with replication factor 1<span class="o">)</span>: 0
+
+-------------------------------------------------
+Live datanodes <span class="o">(</span>2<span class="o">)</span>:
+
+Name: 192.168.0.111:50010 <span class="o">(</span>hadoopnode2<span class="o">)</span>
+Hostname: hadoopnode2
+Decommission Status : Normal
+Configured Capacity: 15376949248 <span class="o">(</span>14.32 GB<span class="o">)</span>
+DFS Used: 24576 <span class="o">(</span>24 KB<span class="o">)</span>
+Non DFS Used: 2121494528 <span class="o">(</span>1.98 GB<span class="o">)</span>
+DFS Remaining: 13255430144 <span class="o">(</span>12.35 GB<span class="o">)</span>
+DFS Used%: 0.00%
+DFS Remaining%: 86.20%
+Configured Cache Capacity: 0 <span class="o">(</span>0 B<span class="o">)</span>
+Cache Used: 0 <span class="o">(</span>0 B<span class="o">)</span>
+Cache Remaining: 0 <span class="o">(</span>0 B<span class="o">)</span>
+Cache Used%: 100.00%
+Cache Remaining%: 0.00%
+Xceivers: 1
+Last contact: Sat Apr 22 13:18:48 CDT 2017
+
+
+Name: 192.168.0.110:50010 <span class="o">(</span>hadoopnode1<span class="o">)</span>
+Hostname: hadoopnode1
+Decommission Status : Normal
+Configured Capacity: 15376949248 <span class="o">(</span>14.32 GB<span class="o">)</span>
+DFS Used: 24576 <span class="o">(</span>24 KB<span class="o">)</span>
+Non DFS Used: 2158895104 <span class="o">(</span>2.01 GB<span class="o">)</span>
+DFS Remaining: 13218029568 <span class="o">(</span>12.31 GB<span class="o">)</span>
+DFS Used%: 0.00%
+DFS Remaining%: 85.96%
+Configured Cache Capacity: 0 <span class="o">(</span>0 B<span class="o">)</span>
+Cache Used: 0 <span class="o">(</span>0 B<span class="o">)</span>
+Cache Remaining: 0 <span class="o">(</span>0 B<span class="o">)</span>
+Cache Used%: 100.00%
+Cache Remaining%: 0.00%
+Xceivers: 1
+Last contact: Sat Apr 22 13:18:50 CDT 2017
+</code></pre>
+</div>
+<p>Both <code class="highlighter-rouge">datanodes</code> up!</p>
+
+<h3 id="hadoop-configuration">Hadoop Configuration</h3>
+<p>I’m going to try the Hadoop configuration from <a href="https://medium.com/@jasonicarter/how-to-hadoop-at-home-with-raspberry-pi-part-3-7d114d35fdf1">Jason Carter’s blog</a> (parts 2 &amp; 3 specifically), as we did above.</p>
+<ol>
+  <li><code class="highlighter-rouge">yarn-site.xml</code>
+```xml</li>
+</ol>
+<configuration>
+<!-- Site specific YARN configuration properties -->
+  <property>
+    <name>yarn.resourcemanager.hostname</name>
+    <value>hadoopnode1</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+    <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+  </property>
+</configuration>
+<div class="highlighter-rouge"><pre class="highlight"><code>2. `hdfs-site.xml`
+```xml
+&lt;configuration&gt;
+  &lt;property&gt;
+    &lt;name&gt;dfs.replication&lt;/name&gt;
+    &lt;value&gt;2&lt;/value&gt;
+  &lt;/property&gt;
+  &lt;property&gt;
+    &lt;name&gt;dfs.blocksize&lt;/name&gt;
+    &lt;value&gt;5242880&lt;/value&gt;
+  &lt;/property&gt;
+  &lt;property&gt;
+    &lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;
+    &lt;value&gt;file:/hdfs/namenode&lt;/value&gt;
+  &lt;/property&gt;
+  &lt;property&gt;
+    &lt;name&gt;dfs.datanode.name.dir&lt;/name&gt;
+    &lt;value&gt;file:/hdfs/datanode&lt;/value&gt;
+  &lt;/property&gt;
+&lt;/configuration&gt;
+</code></pre>
+</div>
+<ol>
+  <li><code class="highlighter-rouge">mapred-site.xml</code>
+```xml</li>
+</ol>
+<configuration>
+  <property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+  </property>
+</configuration>
+<div class="highlighter-rouge"><pre class="highlight"><code>4. `core-site.xml`
+```xml
+&lt;configuration&gt;
+ &lt;property&gt;
+    &lt;name&gt;fs.defaultFS&lt;/name&gt;
+    &lt;value&gt;hdfs://hadoopnode1:53410&lt;/value&gt;
+  &lt;/property&gt;
+&lt;/configuration&gt;
+</code></pre>
+</div>
+<blockquote>
+  <p>I noticed here that I left the following setting in <code class="highlighter-rouge">core-site.xml</code> when I reformatted the HDFS:</p>
+  <div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+ <span class="nt">&lt;name&gt;</span>hadoop.tmp.dir<span class="nt">&lt;/name&gt;</span>
+ <span class="nt">&lt;value&gt;</span>/hdfs/tmp/<span class="nt">&lt;/value&gt;</span>
+<span class="nt">&lt;/property&gt;</span>
+</code></pre>
+  </div>
+  <p>I should probably reformat the HDFS again to make it comply with the new structure.</p>
+</blockquote>
+
+<ol>
+  <li><code class="highlighter-rouge">hadoop-env.sh</code>
+Uncomment the following <code class="highlighter-rouge">export</code> line and define the HADOOP_HEAPSIZE parameter.
+    <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="c"># The maximum amount of heap to use, in MB. Default is 1000.</span>
+<span class="nb">export </span><span class="nv">HADOOP_HEAPSIZE</span><span class="o">=</span>128
+</code></pre>
+    </div>
+    <p>Sync to <code class="highlighter-rouge">hadoopnode2</code>:
+```bash
+$ rsync -av $HADOOP_CONF_DIR/ hduser@hadoopnode2:$HADOOP_CONF_DIR</p>
+  </li>
+</ol>
+
+<h1 id="hdfs-sitexml-wont-be-sent-because-we-didnt-make-any-new-changes-since-the-hdfs-reformat-ones">hdfs-site.xml won’t be sent because we didn’t make any new changes since the HDFS reformat ones.</h1>
+<p>sending incremental file list
+core-site.xml
+hadoop-env.sh
+mapred-site.xml
+yarn-site.xml</p>
+
+<p>sent 2,369 bytes  received 182 bytes  1,020.40 bytes/sec
+total size is 78,384  speedup is 30.73</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>Reformat HDFS:
+```bash
+$ $HADOOP_HOME/sbin/stop-dfs.sh
+$ $HADOOP_HOME/sbin/stop-yarn.sh
+</code></pre>
+</div>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>sudo rm -rf /hdfs
+<span class="gp">$ </span>sudo mkdir -p /hdfs/namenode <span class="c"># only hadoopnode1</span>
+<span class="gp">$ </span>sudo mkdir -p /hdfs/datanode <span class="c"># hadoopnode1 &amp; 2</span>
+<span class="gp">$ </span>sudo chown hduser:hadoop /hdfs/ -R <span class="c"># change directory ownership</span>
+<span class="gp">$ </span>chmod 750 /hdfs <span class="c"># change directory permissions</span>
+<span class="gp">$ </span>ls -l / | grep hdfs <span class="c"># view directory</span>
+
+drwxr-x---  4 hduser hadoop  4096 Apr 22 14:08 hdfs
+</code></pre>
+</div>
+<p>Create HDFS again (again):</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="c"># On the namenode (hadoopnode1 for me)</span>
+<span class="gp">$ </span>hdfs namenode -format
+
+<span class="gp">$ </span><span class="nv">$HADOOP_HOME</span>/sbin/start-dfs.sh
+<span class="gp">$ </span><span class="nv">$HADOOP_HOME</span>/sbin/start-yarn.sh
+</code></pre>
+</div>
+<p>Check the status:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>hdfs dfsadmin -report
+</code></pre>
+</div>
+<p>Both <code class="highlighter-rouge">datanodes</code> up, and no <code class="highlighter-rouge">/tmp</code> directory:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="c"># On namenode</span>
+<span class="gp">$ </span>ls /hdfs
+datanode  namenode
+</code></pre>
+</div>
+
+<h3 id="word-count-test">Word Count Test</h3>
+<p>Load a <code class="highlighter-rouge">.txt</code> file from the client machine and put it into HDFS:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>hdfs dfs -put /path/to/local/file.txt /path/to/HDFS/file.txt
+</code></pre>
+</div>
+<p>Run a wordcount job from the Hadoop example MapReduce applications.</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">cd</span> /opt/hadoop-2.7.3/share/hadoop/mapreduce
+<span class="gp">$ </span>ls
+
+hadoop-mapreduce-client-app-2.7.3.jar
+hadoop-mapreduce-client-common-2.7.3.jar
+hadoop-mapreduce-client-core-2.7.3.jar
+hadoop-mapreduce-client-hs-2.7.3.jar
+hadoop-mapreduce-client-hs-plugins-2.7.3.jar
+hadoop-mapreduce-client-jobclient-2.7.3.jar
+hadoop-mapreduce-client-jobclient-2.7.3-tests.jar
+hadoop-mapreduce-client-shuffle-2.7.3.jar
+hadoop-mapreduce-examples-2.7.3.jar
+lib
+lib-examples
+sources
+
+<span class="c"># Output directory in command must not exist! The job will</span>
+<span class="c"># fail if the specified directory exists already.</span>
+<span class="gp">$ </span>yarn jar hadoop-mapreduce-examples-2.7.3.jar wordcount /path/to/hdfs/file.txt /path/to/output/directory
+</code></pre>
+</div>
+<h4 id="success">SUCCESS!</h4>
+<p><strong>Whoop!</strong> CLI Output of first successful Job:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c &lt;libfile&gt;', or link it with '-z noexecstack'.
+17/04/22 14:25:45 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/04/22 14:25:50 INFO client.RMProxy: Connecting to ResourceManager at hadoopnode1/192.168.0.110:8032
+17/04/22 14:25:56 INFO input.FileInputFormat: Total input paths to process : 1
+17/04/22 14:25:56 INFO mapreduce.JobSubmitter: number of splits:1
+17/04/22 14:25:57 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1492888277723_0001
+17/04/22 14:25:59 INFO impl.YarnClientImpl: Submitted application application_1492888277723_0001
+17/04/22 14:26:00 INFO mapreduce.Job: The url to track the job: http://hadoopnode1:8088/proxy/application_1492888277723_0001/
+17/04/22 14:26:00 INFO mapreduce.Job: Running job: job_1492888277723_0001
+17/04/22 14:26:39 INFO mapreduce.Job: Job job_1492888277723_0001 running in uber mode : false
+17/04/22 14:26:39 INFO mapreduce.Job:  map 0% reduce 0%
+17/04/22 14:27:10 INFO mapreduce.Job:  map 100% reduce 0%
+17/04/22 14:27:35 INFO mapreduce.Job:  map 100% reduce 100%
+17/04/22 14:27:36 INFO mapreduce.Job: Job job_1492888277723_0001 completed successfully
+17/04/22 14:27:37 INFO mapreduce.Job: Counters: 49
+	File System Counters
+		FILE: Number of bytes read=349637
+		FILE: Number of bytes written=937211
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=1111292
+		HDFS: Number of bytes written=257189
+		HDFS: Number of read operations=6
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=2
+	Job Counters
+		Launched map tasks=1
+		Launched reduce tasks=1
+		Data-local map tasks=1
+		Total time spent by all maps in occupied slots (ms)=27800
+		Total time spent by all reduces in occupied slots (ms)=21129
+		Total time spent by all map tasks (ms)=27800
+		Total time spent by all reduce tasks (ms)=21129
+		Total vcore-milliseconds taken by all map tasks=27800
+		Total vcore-milliseconds taken by all reduce tasks=21129
+		Total megabyte-milliseconds taken by all map tasks=28467200
+		Total megabyte-milliseconds taken by all reduce tasks=21636096
+	Map-Reduce Framework
+      Map input records=19150
+  		Map output records=184794
+  		Map output bytes=1819171
+  		Map output materialized bytes=349637
+  		Input split bytes=99
+  		Combine input records=184794
+  		Combine output records=23648
+  		Reduce input groups=23648
+  		Reduce shuffle bytes=349637
+  		Reduce input records=23648
+  		Reduce output records=23648
+  		Spilled Records=47296
+  		Shuffled Maps =1
+  		Failed Shuffles=0
+  		Merged Map outputs=1
+  		GC time elapsed (ms)=1003
+  		CPU time spent (ms)=16010
+  		Physical memory (bytes) snapshot=215564288
+  		Virtual memory (bytes) snapshot=642580480
+  		Total committed heap usage (bytes)=131350528
+  	Shuffle Errors
+  		BAD_ID=0
+  		CONNECTION=0
+  		IO_ERROR=0
+  		WRONG_LENGTH=0
+  		WRONG_MAP=0
+  		WRONG_REDUCE=0
+  	File Input Format Counters
+  		Bytes Read=1111193
+  	File Output Format Counters
+  		Bytes Written=257189
+</code></pre>
+</div>
+<p>Let’s look at the actual wordcount output. The output directory has two parts. (<a href="http://stackoverflow.com/questions/10666488/what-are-success-and-part-r-00000-files-in-hadoop/10666874#10666874">See here for a StackOverflow question about it</a>)</p>
+<ol>
+  <li><code class="highlighter-rouge">_SUCCESS</code> An empty file that signifies a successful job completion</li>
+  <li>Raw output files
+    <ul>
+      <li><code class="highlighter-rouge">part-x-00000</code> Output of task number 00000</li>
+      <li><code class="highlighter-rouge">part-x-00001</code> Output of task number 00001
+ …</li>
+      <li><code class="highlighter-rouge">part-x-yyyyy</code> Output of task number yyyyy</li>
+    </ul>
+  </li>
+</ol>
+
+<p><code class="highlighter-rouge">IliadOutput</code> contents:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>hdfs dfs -ls IliadOutput
+
+Found 2 items
+<span class="c"># Signifies successful job</span>
+-rw-r--r--   2 hduser supergroup          0 2017-04-22 14:27 /IliadCount/_SUCCESS
+
+<span class="c"># Wordcount output file of the only reduce task</span>
+-rw-r--r--   2 hduser supergroup     257189 2017-04-22 14:27 /IliadCount/part-r-00000
+</code></pre>
+</div>
+
+<h3 id="calculate-π-test">Calculate π Test</h3>
+<p>With the previous configurations, we tried the pi MapReduce example application. Let’s try it again with the new configuration.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">cd</span> /opt/hadoop-2.7.3/share/hadoop/mapreduce
+<span class="gp">$ </span>ls
+
+hadoop-mapreduce-client-app-2.7.3.jar
+hadoop-mapreduce-client-common-2.7.3.jar
+hadoop-mapreduce-client-core-2.7.3.jar
+hadoop-mapreduce-client-hs-2.7.3.jar
+hadoop-mapreduce-client-hs-plugins-2.7.3.jar
+hadoop-mapreduce-client-jobclient-2.7.3.jar
+hadoop-mapreduce-client-jobclient-2.7.3-tests.jar
+hadoop-mapreduce-client-shuffle-2.7.3.jar
+hadoop-mapreduce-examples-2.7.3.jar
+lib
+lib-examples
+sources
+
+<span class="gp">$ </span>yarn jar hadoop-mapreduce-examples-2.7.3.jar pi 16 1000
+</code></pre>
+</div>
+<p>The job got stuck here for about 30 minutes.</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>INFO mapreduce.Job: Running job: job_1492888277723_0002
+</code></pre>
+</div>
+<p>I think the resources of the Orange Pi are too small for the job  parameters. The touble is that I cannot find any description of the parameters for the pi program anywhere.</p>
+
+<p>I’ll try to reconfigure Hadoop to understand the resource limitations of the Orange Pi One.</p>
+
+<h3 id="rerereconfigure">Re(RE)(RE)configure</h3>
+<ol>
+  <li><code class="highlighter-rouge">yarn-site.xml</code>
+```xml</li>
+</ol>
+<configuration>
+  <property>
+    <name>yarn.resourcemanager.hostname</name>
+    <value>hadoopnode1</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+    <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.resource.memory-mb</name>
+    <value>384</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.minimum-allocation-mb</name>
+    <value>128</value>
+  </property>
+  <property>
+    <name>yarn.scheduler.maximum-allocation-mb</name>
+    <value>384</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.vmem-check-enabled</name>
+    <value>false</value>
+    <description>Whether virtual memory limits will be enforced  for containers.</description>
+  </property>
+</configuration>
+<div class="highlighter-rouge"><pre class="highlight"><code>2. `mapred-site.xml`
+```xml
+&lt;configuration&gt;
+  &lt;property&gt;
+    &lt;name&gt;mapreduce.framework.name&lt;/name&gt;
+    &lt;value&gt;yarn&lt;/value&gt;
+  &lt;/property&gt;
+  &lt;property&gt;
+    &lt;name&gt;mapreduce.map.memory.mb&lt;/name&gt;
+     &lt;value&gt;256&lt;/value&gt;
+  &lt;/property&gt;
+  &lt;property&gt;
+     &lt;name&gt;mapreduce.reduce.memory.mb&lt;/name&gt;
+     &lt;value&gt;384&lt;/value&gt;
+  &lt;/property&gt;
+  &lt;property&gt;
+    &lt;name&gt;yarn.app.mapreduce.am.resource.mb&lt;/name&gt;
+    &lt;value&gt;128&lt;/value&gt;
+  &lt;/property&gt;
+&lt;/configuration&gt;
+</code></pre>
+</div>
+<p>Propagate the changes with <code class="highlighter-rouge">rsync</code> as above.</p>
+<blockquote>
+  <p>The $HADOOP_HOME/sbin/start-dfs.sh script has started failing to start the DataNode service. Maybe reformatting the HDFS as above will correct the error.</p>
+</blockquote>
+
+<h4 id="test">Test</h4>
+<h5 id="calculate-pi">Calculate Pi</h5>
+
+<p>The application failed with the following messages:</p>
+
+<p><code class="highlighter-rouge">hadoopnode2</code></p>
+<div class="highlighter-rouge"><pre class="highlight"><code>Diagnostics: Container [pid=3907,containerID=container_1492900593461_0001_01_000001] is running beyond virtual memory limits. Current usage: 16.7 MB of 128 MB physical memory used; 1.1 GB of 268.8 MB virtual memory used. Killing container.
+</code></pre>
+</div>
+<p><code class="highlighter-rouge">hadoopnode1</code></p>
+<div class="highlighter-rouge"><pre class="highlight"><code>ApplicationMaster for attempt appattempt_1492900593461_0001_000002 timed out
+</code></pre>
+</div>
+<p>It seems that removing the virtual memory limit enforcement setting was not properly synced to <code class="highlighter-rouge">hadoopnode2</code>, and the container was killed for exceeding the allotment, which is (2.1 *  physical memory allotment). It also seems that the retry attempt on <code class="highlighter-rouge">hadoopnode1</code> timed out because the ApplicationMaster could not start a container. This seems to indicate insufficient memory settings.</p>
+
+<h5 id="wordcount">Wordcount</h5>
+<p>1.1 MB text file from <a href="http://www.gutenberg.org/">Project Gutenberg</a></p>
+
+<h6 id="test-job-1">Test Job 1:</h6>
+<p><code class="highlighter-rouge">hadoopnode2</code></p>
+<div class="highlighter-rouge"><pre class="highlight"><code>YarnException: Unauthorized request to start container
+</code></pre>
+</div>
+<p><code class="highlighter-rouge">hadoopnode1</code></p>
+<div class="highlighter-rouge"><pre class="highlight"><code>ApplicationMaster for attempt appattempt_1492900593461_0002_000001 timed out
+</code></pre>
+</div>
+<p>Once again, it seems that insufficient resources are to blame. The container could not start properly.</p>
+
+<h6 id="test-job-2">Test Job 2:</h6>
+<p>Success!</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>17/04/23 07:38:31 INFO client.RMProxy: Connecting to ResourceManager at hadoopnode1/192.168.0.110:8032
+17/04/23 07:38:35 INFO input.FileInputFormat: Total input paths to process : 1
+17/04/23 07:38:36 INFO mapreduce.JobSubmitter: number of splits:1
+17/04/23 07:38:36 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1492900593461_0003
+17/04/23 07:38:38 INFO impl.YarnClientImpl: Submitted application application_1492900593461_0003
+17/04/23 07:38:38 INFO mapreduce.Job: The url to track the job: http://hadoopnode1:8088/proxy/application_1492900593461_0003/
+17/04/23 07:38:38 INFO mapreduce.Job: Running job: job_1492900593461_0003
+17/04/23 07:39:18 INFO mapreduce.Job: Job job_1492900593461_0003 running in uber mode : false
+17/04/23 07:39:18 INFO mapreduce.Job:  map 0% reduce 0%
+17/04/23 07:39:41 INFO mapreduce.Job:  map 67% reduce 0%
+17/04/23 07:39:44 INFO mapreduce.Job:  map 100% reduce 0%
+17/04/23 07:40:09 INFO mapreduce.Job:  map 100% reduce 100%
+17/04/23 07:40:10 INFO mapreduce.Job: Job job_1492900593461_0003 completed successfully
+17/04/23 07:40:11 INFO mapreduce.Job: Counters: 49
+	File System Counters
+		FILE: Number of bytes read=349637
+		FILE: Number of bytes written=937165
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=1111292
+		HDFS: Number of bytes written=257189
+		HDFS: Number of read operations=6
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=2
+	Job Counters
+		Launched map tasks=1
+		Launched reduce tasks=1
+		Data-local map tasks=1
+		Total time spent by all maps in occupied slots (ms)=45734
+		Total time spent by all reduces in occupied slots (ms)=62559
+		Total time spent by all map tasks (ms)=22867
+		Total time spent by all reduce tasks (ms)=20853
+		Total vcore-milliseconds taken by all map tasks=22867
+		Total vcore-milliseconds taken by all reduce tasks=20853
+		Total megabyte-milliseconds taken by all map tasks=5853952
+		Total megabyte-milliseconds taken by all reduce tasks=8007552
+	Map-Reduce Framework
+		Map input records=19150
+		Map output records=184794
+		Map output bytes=1819171
+		Map output materialized bytes=349637
+		Input split bytes=99
+		Combine input records=184794
+		Combine output records=23648
+		Reduce input groups=23648
+		Reduce shuffle bytes=349637
+		Reduce input records=23648
+		Reduce output records=23648
+		Spilled Records=47296
+		Shuffled Maps =1
+		Failed Shuffles=0
+		Merged Map outputs=1
+		GC time elapsed (ms)=1192
+		CPU time spent (ms)=13260
+		Physical memory (bytes) snapshot=220286976
+		Virtual memory (bytes) snapshot=641531904
+		Total committed heap usage (bytes)=132689920
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters
+		Bytes Read=1111193
+	File Output Format Counters
+		Bytes Written=257189
+</code></pre>
+</div>
+<p>This time, it seems like the job stayed within the memory allocation limits. The job only took 1 min 30 sec.</p>
+
+<h3 id="discussion">Discussion</h3>
+
+<p><em>DISCLAIMER: I do not understand everything about physical and virtual memory management in operating systems, especially under Hadoop, YARN and MapReduce. However, I know that Hadoop was designed for large-scale analytics on machines with many times the resources available in my cluster. In some ways this project was a lost cause before it began. This cluster of Orange Pi Ones is not the environment Hadoop was designed for, indeed, the jobs that I ran in this tutorial could have been run easily on my client machine alone, even with an application written in an interpreted language. But this does not prevent us from improving the setup as much as we can!</em></p>
+
+<h4 id="hadoop-application-failure-analysis">Hadoop Application Failure Analysis</h4>
+<p>Over the course of this project, Hadoop distributed applications failed for 2 main reasons:</p>
+
+<ol>
+  <li>Application timed out while ApplicationMaster was allocating a container</li>
+  <li>Containers ran beyond virtual memory limits</li>
+  <li>Block could not be found in HDFS</li>
+</ol>
+
+<blockquote>
+  <p><em>I think the “Block could not be found in HDFS” error was due to file corruption after a hard poweroff. HDFS seems to corrupt very easily, so be sure not to pull the plug on a running Hadoop application!</em></p>
+</blockquote>
+
+<p>After doing some research, I think the first two errors are due to the same issue: limited memory resources of the Orange Pi One (512 MB). My thought is that a container was allocated to a given node, and a certain map or reduce task was assigned to that container. During the creation of the container or during the execution of the task, the memory required greatly exceeded the available physical memory, resulting in large virtual memory usage. For example, jobs which failed because of killed containers reported:</p>
+
+<ul>
+  <li><strong>Physical:</strong> 16.7 MB / 128 MB</li>
+  <li><strong>Virtual:</strong> 1.1 GB / 268.8 MB</li>
+</ul>
+
+<p>This heavy reliance on virtual memory usage caused nodes in use to become unresponsive, causing the application to fail: If virtual memory limits were enforced, the container was killed, or if they were not enforced, the application would become unresponsive, and Hadoop would fail the job.</p>
+
+<p>The configuration resources I used as a guide were either designed for a <a href="https://hortonworks.com/blog/how-to-plan-and-configure-yarn-in-hdp-2-0/">production system</a> with RAM on the order of 50 GB, or a <a href="http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#YARN_and_MapReduce_memory_configuration_overview">Raspberry Pi cluster</a> with about double the memory per machine. I attempted to scale down the YARN container allocation, JVM heap size, and Map &amp; Reduce task allocations, but I now think that the extremely small allocations only contributed to the runaway virtual memory usage.</p>
+
+<h4 id="future-work">Future Work</h4>
+<p>Future work should address the node resource bottleneck. One concern is distributing the workload among the nodes. On jobs which used only a single task at a time, only one node at a time was involved in the processing at a time. It would certainly seem that Hadoop should be able to allocate smaller map and reduce tasks so that they fit within the memory of the cluster node.</p>
+
+<p>Trying to spread out the file over the HDFS in a more even manner would seem to be a helpful as well. Decreasing the block size from the default value as I have done here seems to be helpful, but not enough to prevent Hadoop from storing all blocks of a small file on one node. <a href="http://www.widriksson.com/raspberry-pi-hadoop-cluster/">Jonas Widriksson’s original Hadoop v1 tutorial</a> has some useful ideas in this regard.</p>
+
+<p>My conclusion is that a cluster of two Orange Pi Ones does not have the resources available to provide stable MapReduce performance. It seemed that as long as the container was successfully created by the ApplicationMaster, the job had a good chance of completing. But many map or reduce tasks just consumed more resources than a single node had available to give while still being responsive, crashing the job.</p>
+
+<p>With detailed analysis and tweaking of the YARN, MapReduce, and Operating system configuration, I believe that small jobs could run stably on my cluster. But the small pool of resources can only be stretched so thin before a node crashes and takes the cluster down with it.</p>
+
+<h4 id="conclusion">Conclusion</h4>
+<p>Adding more nodes (and therefore more memory) would be the best and most direct approach to stabilizing the performance of my Orange Pi One cluster. However, if directly increasing the cluster’s memory resources is not possible, optimization of Hadoop’s usage of existing resources is the best strategy. <a href="https://hadoop.apache.org/docs/r2.7.3/">Hadoop documentation</a>, here I come!</p>
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        
+        <p class="copyright">Orange Pi Hadoop Cluster maintained by <a href="http://github.com/andrew-pyle">andrew-pyle</a></p>
+        
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+  </body>
+</html>
