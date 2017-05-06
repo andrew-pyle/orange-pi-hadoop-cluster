@@ -11,4 +11,6 @@ HadoopNode.img
 
 # Folders
 /3MT
-_site
+/_site
+/JobOutput
+/terminal-output
