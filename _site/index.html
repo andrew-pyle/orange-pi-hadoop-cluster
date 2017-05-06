@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width,maximum-scale=2">
     <meta name="description" content="Orange Pi Hadoop Cluster : Create a Hadoop 2.7.3 Cluster with Orange Pi One">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="/assets/css/style.css?v=73656c9a95f82a7079ff62d6ecb7b1110fd6423d">
+    <link rel="stylesheet" type="text/css" media="screen" href="/assets/css/style.css?v=ba51bbc11b40b1112245c08a5e4cdc58efdec041">
 
     <title>Orange Pi Hadoop Cluster</title>
   </head>
@@ -21,7 +21,7 @@
 
           <h1 id="project_title">Orange Pi Hadoop Cluster</h1>
           <h2 id="project_tagline">
-            Create a Hadoop 2.7.3 Cluster with Orange Pi One<br />
+            <!-- Create a Hadoop 2.7.3 Cluster with Orange Pi One<br /> -->
             Andrew Pyle | IFSC 7370 | April 2017
           </h2>
 
@@ -32,20 +32,20 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <p><img src="/images/orange-cover.JPG" alt="Orange Pi One" /></p>
+        <!-- <div class="container">
+          <img src="/images/orange-cover.JPG" alt="Orange Pi One Board" />
+          <div class="overlay">
+            <h1>Orange Pi One & Apache Hadoop</h1>
+            <img src="images/hadoop-logo.JPG" alt="Orange Pi One" />
+            <h1><span>+<span class="spacer"></span><br /><span class="spacer"></span>Orange Pi One</span></h1>
+          </div>
+        </div> -->
+        <p><img src="images/3MT-Andrew-Pyle.png" alt="Orange Pi One" /></p>
 
-<h1 id="todo">TODO:</h1>
-<ul>
-  <li>export $HADOOP_EXAMPLES</li>
-  <li>New config files &amp; descriptions of settings</li>
-  <li>Secondary NameNode</li>
-  <li>Include References</li>
-</ul>
+<h1 id="small-scale-big-data">Small Scale, Big Data</h1>
+<p><a href="http://hadoop.apache.org/">Hadoop</a> is an open-source distributed computing framework from the <a href="http://www.apache.org/">Apache Software Foundation</a>. It is primarily aimed at Big Data analytics and has become the de-facto standard for Distributed analytics. It runs on Linux, and (lucky for us students of data) the <a href="http://linux-sunxi.org/Orange_Pi_One">Orange Pi One</a> is a very affordable machine to learn about distributed computing, albeit with very limited resources.</p>
 
-<h1 id="sort-of-big-data-with-hadoop">(Sort-Of) Big Data with Hadoop</h1>
-<p><a href="http://hadoop.apache.org/">Hadoop</a> is an open-source distributed computing framework from the <a href="http://www.apache.org/">Apache Software Foundation</a>. It is primarily aimed at Big Data analytics and has become the de-facto standard for Distributed analytics. It runs on Linux, and (lucky for us students of data) the <a href="http://linux-sunxi.org/Orange_Pi_One">Orange Pi One</a> is a very affordable machine, albeit with very limited resources to learn about distributed computing.</p>
-
-<p>So let’s set up a physical Hadoop 2 cluster with single-board Linux computers! I will be using two <a href="http://linux-sunxi.org/Orange_Pi_One">Orange Pi One</a> boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of two single-board computers. This setup will not be powerful enough for production use, but it will demonstrate a simple implementation of the Hadoop 2 ecosystem for learning purposes.</p>
+<p>So let’s set up a fully distributed, physical Hadoop 2 cluster with single-board Linux computers! I will be using two <a href="http://linux-sunxi.org/Orange_Pi_One">Orange Pi One</a> boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of two single-board computers. This setup will not be powerful enough for production use, but it will demonstrate a simple implementation of the Hadoop 2 ecosystem for learning purposes.</p>
 
 <h1 id="contents">Contents</h1>
 <!-- MDTOC maxdepth:2 firsth1:0 numbering:1 flatten:0 bullets:0 updateOnSave:1 -->
@@ -227,20 +227,6 @@ Average reading speed: 22.27 MB/s
 <img src="./images/armbian-unzip.png" alt="alt text" title="Unzipped Armbian Orange Pi One OS image" />
 Armbian offers a <a href="https://docs.armbian.com/User-Guide_Getting-Started/">GPG signature</a> for authentication of the OS image download, if you want to check that out. The <a href="http://notes.jerzygangi.com/the-best-pgp-tutorial-for-mac-os-x-ever/">process</a> is quite involved however.</p>
 
-<h5 id="references">References</h5>
-<h6 id="tutorials">Tutorials</h6>
-<ul>
-  <li><a href="https://tdstraub.wordpress.com/2016/04/05/orange-pi-one-quick-start-guide/">ORANGE PI ONE – QUICK START GUIDE by Travis Straub</a></li>
-  <li><a href="http://www.cnx-software.com/2016/03/16/orange-pi-one-board-quick-start-guide-with-armbian-debian-based-linux-distribution/">Orange Pi One Board Quick Start Guide with Armbian Debian based Linux Distribution</a></li>
-</ul>
-
-<h6 id="technical">Technical</h6>
-<ul>
-  <li><a href="https://linux-sunxi.org/Orange_Pi_Lite">Sunxi - Orange Pi One Hardware Information</a></li>
-  <li><a href="https://www.armbian.com/orange-pi-one/">Armbian - Orange Pi One Page</a></li>
-  <li><a href="https://docs.armbian.com/User-Guide_Getting-Started/">Armbian Docs - Getting Started Guide</a></li>
-</ul>
-
 <p>We will be using <a href="https://etcher.io">Etcher</a> to flash the microSD card. It is a simple interface available for many OSes.</p>
 
 <p><img src="/images/etcher.png" alt="Etcher Screenshot" /></p>
@@ -284,11 +270,13 @@ Armbian offers a <a href="https://docs.armbian.com/User-Guide_Getting-Started/">
 
 <p>It works! I got a brief look at the boot process before the monitor went blank due to resolution issues (probably), and the green light went solid with occasional flashes (the light is on the lower right corner of the board, by the GPIO pins). The red light started solid and then went out.</p>
 
+<hr />
+
 <h3 id="operate-the-operating-system">Operate the Operating System</h3>
 <p>Now that the boot process has begun successfully, let’s login and configure the opartating system.</p>
 
 <h4 id="login-with-secure-shell-ssh">Login with Secure Shell (SSH)</h4>
-<p>Since the monitor is blank, it’s not helping us complete the initial boot process. Thankfully SSH is enabled by default on the Orange Pi! SSH is a method of remotely logging in to a Unix-based (e.g. Linux) operating system. INSERT SSH REFERENCE.</p>
+<p>Since the monitor is blank, it’s not helping us complete the initial boot process. Thankfully SSH is enabled by default on the Orange Pi! SSH is a method of remotely logging in to a Unix-based (e.g. Linux) operating system. <a href="https://en.wikipedia.org/wiki/Secure_Shell">SSH Wikipedia link</a>.</p>
 
 <p>Since the Orange Pi booted up while connected to the network, it received an IP Address by DHCP. I can check that at my router’s homepage.</p>
 <blockquote>
@@ -299,9 +287,8 @@ Armbian offers a <a href="https://docs.armbian.com/User-Guide_Getting-Started/">
 
 <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>ssh root@[ip_address]   <span class="c"># Replace [ip_address] with the IP</span>
                           <span class="c"># address of your Orange Pi</span>
-</code></pre>
-</div>
-<div class="language-bash highlighter-rouge"><pre class="highlight"><code>root@192.168.0.108 password:    <span class="c">#1234</span>
+
+root@192.168.0.108 password:    <span class="c">#1234</span>
 </code></pre>
 </div>
 <p>A nice login screen is displayed upon SSH connection.</p>
@@ -485,14 +472,25 @@ Run this command for more information.</p>
 </div>
 
 <blockquote>
-  <p>These commands can take a <strong>really</strong> long time to complete. Especially if it has not been run in a while. You are updating every single program on your computer at once! Be sure to wait until the command prompt</p>
-  <div class="language-bash highlighter-rouge"><pre class="highlight"><code>root@orangepione:<span class="err">$</span>
+  <p>These commands can take a <strong>really</strong> long time to complete. Especially if it has not been run in a while. You are updating every single program on your computer at once! Be sure to wait until the command prompt appears again before typing new commands:</p>
+  <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">root@orangepione:$  </span>
 </code></pre>
   </div>
-  <p>appears again before typing new commands.</p>
 </blockquote>
 
 <p>After a successful upgrade, we are ready to begin the Hadoop 2 installation! Let’s pat ourselves on the back for a successful Orange Pi installation!</p>
+
+<h3 id="references">References</h3>
+
+<ol>
+  <li><a href="http://linux-sunxi.org/Orange_Pi_One">Sunxi Orange Pi One Hardware Info</a></li>
+  <li><a href="https://tdstraub.wordpress.com/2016/04/05/orange-pi-one-quick-start-guide/">Orange Pi One Quickstart Guide by Travis Straub</a></li>
+  <li><a href="http://www.cnx-software.com/2016/03/16/orange-pi-one-board-quick-start-guide-with-armbian-debian-based-linux-distribution/">Orange Pi One Board Quick Start Guide with Armbian Debian based Linux Distribution</a></li>
+  <li><a href="https://www.armbian.com/orange-pi-one/">Armbian - Orange Pi One</a></li>
+  <li><a href="https://docs.armbian.com/User-Guide_Getting-Started/">Armbian Docs Guide</a></li>
+  <li><a href="http://oss.digirati.com.br/f3/">F3 by Digirati</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Secure_Shell">SSH Wikipedia link</a></li>
+</ol>
 
 <h2 id="hadoop-273">Hadoop 2.7.3</h2>
 <h3 id="hadoop-2-architecture">Hadoop 2 Architecture</h3>
@@ -501,7 +499,7 @@ Run this command for more information.</p>
 <p>So let’s gain a quick overview of Hadoop 2 now. Read <a href="http://ercoppa.github.io/HadoopInternals/HadoopArchitectureOverview.html">this article</a> for a more lengthy explanation.</p>
 
 <p><img src="/images/yarn-architecture.gif" alt="Hadoop Cluster" />
-Image from <a href="https://hadoop.apache.org/docs/r2.7.2/hadoop-yarn/hadoop-yarn-site/YARN.html">Apache Hadoop Documentation</a> © 2008-2017 Apache Software</p>
+<em>Image from <a href="https://hadoop.apache.org/docs/r2.7.2/hadoop-yarn/hadoop-yarn-site/YARN.html">Apache Hadoop Documentation</a> © 2008-2017 Apache Software Foundation</em></p>
 
 <h4 id="cluster-architecture">Cluster Architecture</h4>
 <p>The Hadoop 2 architecture relies on pooling the resources of a group of computers linked by a network. Several programs work together to distribute programs and data among all the computers so that processing may be done in parallel.</p>
@@ -541,11 +539,19 @@ Image from <a href="https://hadoop.apache.org/docs/r2.7.2/hadoop-yarn/hadoop-yar
 
 <p>The above information will become very relevant as we dive into the installation and configuration of the cluster! Let’s move on!</p>
 
+<h4 id="references-1">References</h4>
+<ol>
+  <li><a href="http://www.apache.org/">Apache Software Foundation</a></li>
+  <li><a href="http://hadoop.apache.org/">Apache Hadoop</a></li>
+  <li><a href="https://hadoop.apache.org/docs/r2.7.3/">Apache Hadoop Documentation</a></li>
+  <li><a href="http://ercoppa.github.io/HadoopInternals/HadoopArchitectureOverview.html">Hadoop Architecture</a></li>
+</ol>
+
 <hr />
 
-<p><em>The rest of this section of the journal draws from the <a href="http://www.piprojects.xyz/install-hadoop-java-orange-pi/">Install Hadoop on the Orange Pi</a> tutorial from <a href="http://www.piprojects.xyz/">Pi Projects</a> for creating a single-node cluster. Check them out!</em></p>
-
 <h3 id="install-oracle-java">Install Oracle Java</h3>
+<p><em>This section draws from the <a href="http://www.piprojects.xyz/install-hadoop-java-orange-pi/">Install Hadoop on the Orange Pi</a> tutorial from <a href="http://www.piprojects.xyz/">Pi Projects</a> for creating a single-node cluster. Check them out!</em></p>
+
 <p>We will be installing <a href="http://hadoop.apache.org/releases.html">Apache Hadoop 2.7.3</a> (released 25 Aug 2016) on the Orange Pi. This is not the most up-to-date version, but there is more information on the Internet about Hadoop 2.7.x than either 2.8.x or 3.x.x.</p>
 
 <p>Java is required for Hadoop, as much of the functionality of the system is rooted in executing Java code. Let’s install <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">Oracle Java JDK 8</a>. From what I’ve read online Oracle’s JDK is more performant for Hadoop clusters than Open JDK or other alternatives. See Apache info <a href="https://wiki.apache.org/hadoop/HadoopJavaVersions">here</a>.</p>
@@ -576,13 +582,14 @@ lrwxrwxrwx 1 root root   22 Apr 14 20:17 java -&gt; /etc/alternatives/java
 lrwxrwxrwx 1 root root   23 Apr 14 20:17 javac -&gt; /etc/alternatives/javac
 </code></pre>
 </div>
-
-<h5 id="references-1">References</h5>
+<h4 id="installing-java-references">Installing Java References</h4>
 <ol>
-  <li>http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html</li>
-  <li>http://www.rpiblog.com/2014/03/installing-oracle-jdk-8-on-raspberry-pi.html</li>
-  <li>https://wiki.apache.org/hadoop/HadoopJavaVersions</li>
+  <li><a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">Oracle Java JDK 8</a></li>
+  <li><a href="http://www.rpiblog.com/2014/03/installing-oracle-jdk-8-on-raspberry-pi.html">Install JDK 8</a></li>
+  <li><a href="https://wiki.apache.org/hadoop/HadoopJavaVersions">Hadoop Java Version Page</a></li>
 </ol>
+
+<hr />
 
 <h3 id="create-hadoop-user">Create Hadoop user</h3>
 <p>First, we will create a user for hadoop’s processes in the <code class="highlighter-rouge">sudo</code> group. This will allow the machines in the cluster to communicate with each other.</p>
@@ -591,6 +598,8 @@ lrwxrwxrwx 1 root root   23 Apr 14 20:17 javac -&gt; /etc/alternatives/javac
 <span class="gp">$ </span><span class="nv">$ </span>sudo adduser hduser sudo
 </code></pre>
 </div>
+
+<hr />
 
 <h3 id="install-hadoop-273">Install Hadoop 2.7.3</h3>
 <h4 id="download-hadoop-273">Download Hadoop 2.7.3</h4>
@@ -602,7 +611,7 @@ lrwxrwxrwx 1 root root   23 Apr 14 20:17 javac -&gt; /etc/alternatives/javac
 <p>Go to http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz and <code class="highlighter-rouge">wget</code> the Hadoop binary from the suggested mirror for the download.</p>
 <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>wget http://www.namesdir.com/mirrors/apache/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
 
-sudo tar xzvf hadoop-2.7.3.tar.gz -C /opt
+<span class="gp">$ </span>sudo tar xzvf hadoop-2.7.3.tar.gz -C /opt
 </code></pre>
 </div>
 
@@ -613,12 +622,6 @@ sudo tar xzvf hadoop-2.7.3.tar.gz -C /opt
 <span class="gp">$ </span>sudo chown -R hduser:hadoop hadoop-2.7.3
 </code></pre>
 </div>
-
-<h5 id="references-2">References</h5>
-<ol>
-  <li>http://hadoop.apache.org/releases.html</li>
-  <li>http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop</li>
-</ol>
 
 <h4 id="configure-hadoop-environment">Configure Hadoop environment</h4>
 <p>Now we will configure the hduser account to run Hadoop services.</p>
@@ -713,16 +716,22 @@ This <span class="nb">command </span>was run using /opt/hadoop-2.7.3/share/hadoo
 
 <p>At this point Hadoop is installed. Yay! However, the services and configuration of Hadoop itself are not setup. So onto configuration!</p>
 
-<h5 id="references-3">References</h5>
+<h4 id="installing-hadoop-273-references">Installing Hadoop 2.7.3 References</h4>
 <ol>
-  <li>http://www.piprojects.xyz/install-hadoop-java-orange-pi/</li>
-  <li>http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop</li>
+  <li><a href="http://hadoop.apache.org/releases.html">Apache Hadoop Releases</a></li>
+  <li><a href="http://www.piprojects.xyz/install-hadoop-java-orange-pi/">Install Hadoop on the Orange Pi</a></li>
+  <li><a href="http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/">Jonas Widriksson’s Tutorial</a></li>
+  <li><a href="http://www.widriksson.com/raspberry-pi-hadoop-cluster/">Jonas Widriksson’s Original Hadoop v1 Tutorial</a></li>
 </ol>
 
+<hr />
+
 <h3 id="connect-hadoop-cluster">Connect Hadoop Cluster</h3>
-<p><em>This section of the journal draws from two tutorials:</em>
-<em>1. <a href="http://www.piprojects.xyz/install-hadoop-java-orange-pi/">Install Hadoop on the Orange Pi</a> tutorial from <a href="http://www.piprojects.xyz/">Pi Projects</a></em>
-<em>2. Multi-node cluster configuration: <a href="http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop">Jonas Widriksson’s Tutorial</a> for setting up a Hadoop 2.7.2 cluster on Raspbery Pis.</em></p>
+<p><em>This section of the journal draws from two tutorials:</em></p>
+<ul>
+  <li><em><a href="http://www.piprojects.xyz/install-hadoop-java-orange-pi/">Install Hadoop on the Orange Pi</a> tutorial from <a href="http://www.piprojects.xyz/">Pi Projects</a></em></li>
+  <li><em>Multi-node cluster configuration: <a href="http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop">Jonas Widriksson’s Tutorial</a> for setting up a Hadoop 2.7.2 cluster on Raspbery Pis.</em></li>
+</ul>
 
 <h4 id="network-access">Network Access</h4>
 <p>Hadoop’s services span multiple computers (called nodes) connected by a network to provide the big-data crunching ability it is known for. We have to set up each node to recognize the other nodes on the network.</p>
@@ -784,84 +793,105 @@ authorized_keys  id_rsa  id_rsa.pub  known_hosts
 </code></pre>
 </div>
 
+<h4 id="networking-references">Networking References</h4>
+<ol>
+  <li><a href="https://debian-handbook.info/browse/stable/sect.hostname-name-service.html">Hostname - Debian Manual</a></li>
+  <li><a href="https://kb.iu.edu/d/adov">DHCP</a></li>
+  <li><a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2">SSH Keys</a></li>
+</ol>
+
+<hr />
+
 <h3 id="hadoop-configuration">Hadoop Configuration</h3>
 <h4 id="cluster-settings">Cluster Settings</h4>
 <p>Now we will setup the Hadoop system itself. There are 5 relevant setting files that we need to configure. We will leave the rest as default.</p>
 
 <ol>
-  <li><code class="highlighter-rouge">$HADOOP_CONF_DIR/slaves</code>
-Replace the contents with the names of the nodes in your cluster:
-    <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>nano <span class="nv">$HADOOP_CONF_DIR</span>/slaves
+  <li>
+    <p><code class="highlighter-rouge">$HADOOP_CONF_DIR/slaves</code>:</p>
+
+    <p>Replace the contents with the names of the nodes in your cluster:</p>
+    <div class="language-bash highlighter-rouge"><pre class="highlight"><code> <span class="nv">$ </span>nano <span class="nv">$HADOOP_CONF_DIR</span>/slaves
 </code></pre>
     </div>
-    <blockquote>
-      <p><em>Example</em></p>
-      <div class="highlighter-rouge"><pre class="highlight"><code>hadoopnode1
-hadoopnode2
-</code></pre>
-      </div>
-    </blockquote>
-  </li>
-  <li><code class="highlighter-rouge">$HADOOP_CONF_DIR/core-site.xml</code>
-```xml</li>
-</ol>
-<configuration>
-  <property>
-    <name>hadoop.tmp.dir</name>
-    <value>/hdfs/tmp</value>
-  </property>
-  <property>
-    <name>fs.default.name</name>
-    <value>hdfs://hadoopnode1:54310</value>
-  </property>
-</configuration>
-<div class="highlighter-rouge"><pre class="highlight"><code>3. `$HADOOP_CONF_DIR/hdfs-site.xml`
-```xml
-&lt;configuration&gt;
-  &lt;property&gt;
-    &lt;name&gt;dfs.replication&lt;/name&gt;
-    &lt;value&gt;2&lt;/value&gt;
-  &lt;/property&gt;
-&lt;/configuration&gt;
-</code></pre>
-</div>
-<ol>
-  <li><code class="highlighter-rouge">$HADOOP_CONF_DIR/mapred-site.xml</code>
-Don’t panic if you can’t find this one. It doesn’t exist by default. We need to create it from the template provided.
-    <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="c"># Creates the .xml file from the template by copying</span>
-<span class="gp">$ </span>cp <span class="nv">$HADOOP_CONF_DIR</span>/mapred-site.xml.template <span class="nv">$HADOOP_CONF_DIR</span>/mapred-site.xml
-<span class="gp">$ </span>nano mapred-site.xml
+    <p><em>Example</em></p>
+    <div class="highlighter-rouge"><pre class="highlight"><code> hadoopnode1
+ hadoopnode2
 </code></pre>
     </div>
-    <p>```xml</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">$HADOOP_CONF_DIR/core-site.xml</code>:</p>
+
+    <div class="language-xml highlighter-rouge"><pre class="highlight"><code> <span class="nt">&lt;configuration&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>hadoop.tmp.dir<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>/hdfs/tmp<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>fs.default.name<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>hdfs://hadoopnode1:54310<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;/configuration&gt;</span>
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">$HADOOP_CONF_DIR/hdfs-site.xml</code>:</p>
+
+    <div class="language-xml highlighter-rouge"><pre class="highlight"><code> <span class="nt">&lt;configuration&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>dfs.replication<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>2<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;/configuration&gt;</span>
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">$HADOOP_CONF_DIR/mapred-site.xml</code>:</p>
+
+    <p>Don’t panic if you can’t find this one. It doesn’t exist by default. We need to create it from the template provided.</p>
+
+    <div class="language-bash highlighter-rouge"><pre class="highlight"><code> <span class="c"># Creates the .xml file from the template by copying</span>
+ <span class="nv">$ </span>cp <span class="nv">$HADOOP_CONF_DIR</span>/mapred-site.xml.template <span class="nv">$HADOOP_CONF_DIR</span>/mapred-site.xml
+ <span class="nv">$ </span>nano mapred-site.xml
+</code></pre>
+    </div>
+    <p>Add the following property:</p>
+    <div class="language-xml highlighter-rouge"><pre class="highlight"><code> <span class="nt">&lt;property&gt;</span>
+   <span class="nt">&lt;name&gt;</span>mapreduce.framework.name<span class="nt">&lt;/name&gt;</span>
+   <span class="nt">&lt;value&gt;</span>yarn<span class="nt">&lt;/value&gt;</span>
+ <span class="nt">&lt;/property&gt;</span>
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">$HADOOP_CONF_DIR/yarn-site.xml</code>:</p>
+
+    <div class="language-xml highlighter-rouge"><pre class="highlight"><code> <span class="nt">&lt;configuration&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>yarn.resourcemanager.resource-tracker.address<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>hadoopnode1:8025<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>yarn.resourcemanager.scheduler.address<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>hadoopnode1:8035<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>yarn.resourcemanager.address<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>hadoopnode1:8050<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>yarn.nodemanager.aux-services<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>mapreduce_shuffle<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;/configuration&gt;</span>
+</code></pre>
+    </div>
   </li>
 </ol>
-<property>
-  <name>mapreduce.framework.name</name>
-  <value>yarn</value>
-</property>
-<div class="highlighter-rouge"><pre class="highlight"><code>5. `$HADOOP_CONF_DIR/yarn-site.xml`
-```xml
-&lt;configuration&gt;
-  &lt;property&gt;
-    &lt;name&gt;yarn.resourcemanager.resource-tracker.address&lt;/name&gt;
-    &lt;value&gt;hadoopnode1:8025&lt;/value&gt;
-  &lt;/property&gt;
-  &lt;property&gt;
-    &lt;name&gt;yarn.resourcemanager.scheduler.address&lt;/name&gt;
-    &lt;value&gt;hadoopnode1:8035&lt;/value&gt;
-  &lt;/property&gt;
-  &lt;property&gt;
-    &lt;name&gt;yarn.resourcemanager.address&lt;/name&gt;
-    &lt;value&gt;hadoopnode1:8050&lt;/value&gt;
-  &lt;/property&gt;
-  &lt;property&gt;
-    &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;
-    &lt;value&gt;mapreduce_shuffle&lt;/value&gt;
-  &lt;/property&gt;
-&lt;/configuration&gt;
-</code></pre>
-</div>
+
 <p>YARN is the resource negotiator for Hadoop. It allocates the memory and CPU resources for each Hadoop job. In addition to the basic settings below, we can also configure how YARN distributes the system resources in this file. Understanding and configuring all these settings is out of the scope of this journal, however. See the <a href="https://hadoop.apache.org/docs/r2.7.3/hadoop-yarn/hadoop-yarn-site/YARN.html">Apache Hadoop 2.7.3 YARN Docs</a> for the complete details.</p>
 
 <h4 id="create-hdfs">Create HDFS</h4>
@@ -875,6 +905,16 @@ Create hdfs:</p>
 <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>hdfs namenode -format <span class="c"># XxX Explanation?</span>
 </code></pre>
 </div>
+
+<h4 id="hadoop-configuration-references">Hadoop Configuration References</h4>
+<ol>
+  <li><a href="https://hadoop.apache.org/docs/r2.7.3/">Apache Hadoop 2.7.3 Docs</a></li>
+  <li><a href="https://hadoop.apache.org/docs/r2.7.3/hadoop-yarn/hadoop-yarn-site/YARN.html">Apache Hadoop 2.7.3 YARN Docs</a></li>
+  <li><a href="http://www.piprojects.xyz/install-hadoop-java-orange-pi/">Install Hadoop on the Orange Pi</a></li>
+  <li><a href="http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/">Jonas Widriksson’s Tutorial</a></li>
+</ol>
+
+<hr />
 
 <h3 id="create-hadoop-nodes">Create Hadoop Nodes</h3>
 <h4 id="clone-sd-card">Clone SD Card</h4>
@@ -901,23 +941,20 @@ Create hdfs:</p>
 </div>
 <p>Here is my output:</p>
 <div class="highlighter-rouge"><pre class="highlight"><code>/dev/disk0 (internal, physical):
-   #:                       TYPE NAME                    SIZE       IDENTIFIER
-   0:      GUID_partition_scheme                        *250.1 GB   disk0
-   1:                        EFI EFI                     209.7 MB   disk0s1
-   2:          Apple_CoreStorage Macintosh SSD           249.2 GB   disk0s2
-   3:                 Apple_Boot Recovery HD             650.0 MB   disk0s3
+   #:                   TYPE NAME            SIZE      IDENTIFIER
+   0:  GUID_partition_scheme                *250.1 GB  disk0
+   1:                    EFI EFI             209.7 MB  disk0s1
+   2:      Apple_CoreStorage Macintosh SSD   249.2 GB  disk0s2
+   3:             Apple_Boot Recovery HD     650.0 MB  disk0s3
 
 /dev/disk1 (internal, virtual):
-   #:                       TYPE NAME                    SIZE       IDENTIFIER
-   0:                            Macintosh SSD          +248.8 GB   disk1
-                                 Logical Volume on disk0s2
-                                 C36692BE-8110-4E9E-AC14-4C9F3E5B57F9
-                                 Unencrypted
+   #:                   TYPE NAME            SIZE      IDENTIFIER
+   0:                        Macintosh SSD  +248.8 GB  disk1
 
 /dev/disk3 (internal, physical): (&lt;&lt;&lt; Armbian OS SD Card Here)
-   #:                       TYPE NAME                    SIZE       IDENTIFIER
-   0:     FDisk_partition_scheme                        *15.9 GB    disk3
-   1:                      Linux                         15.6 GB    disk3s1
+   #:                   TYPE NAME       SIZE     IDENTIFIER
+   0: FDisk_partition_scheme           *15.9 GB  disk3
+   1:                  Linux            15.6 GB  disk3s1
 </code></pre>
 </div>
 <p>Let’s unmount the SD card file system:</p>
@@ -962,6 +999,15 @@ Unmount of all volumes on disk3 was successful
 </div>
 
 <p><img src="/images/nano-hostname-2.png" alt="nano /etc/hostname" /></p>
+
+<h4 id="cluster-setup-references">Cluster Setup References</h4>
+<ol>
+  <li><a href="https://raspberrypi.stackexchange.com/questions/311/how-do-i-backup-my-raspberry-pi">Clone Raspberry Pi SD Card</a></li>
+  <li><a href="https://superuser.com/questions/631592/why-is-dev-rdisk-about-20-times-faster-than-dev-disk-in-mac-os-x">rdisk Access Protocol</a></li>
+</ol>
+
+<hr />
+
 <h3 id="start-hadoop">Start Hadoop</h3>
 <p>Now that we have configured Hadoop, cloned the OS (with Hadoop configuration) to each node, and set the hostnames, let’s start this Hadoop cluster up!</p>
 
@@ -978,6 +1024,8 @@ Are you sure you want to continue connecting (yes/no)?
 </div>
 <p>Enter yes.</p>
 
+<p>It may ask you to trust the authenticity of host <code class="highlighter-rouge">(0.0.0.0)</code>, which is the machine itself. Enter yes for this too.</p>
+
 <p>Now, verify that all services are running:</p>
 <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>jps
 </code></pre>
@@ -991,6 +1039,8 @@ Are you sure you want to continue connecting (yes/no)?
 4429 Jps
 </code></pre>
 </div>
+<p><em>If you don’t get a <code class="highlighter-rouge">SecondaryNameNode</code>, make sure you trusted <code class="highlighter-rouge">0.0.0.0</code> during the connection. <code class="highlighter-rouge">SecondaryNameNode</code> runs on the localhost (<code class="highlighter-rouge">0.0.0.0</code>) in this configuration.</em></p>
+
 <p>And these on the <strong>Slave Nodes</strong> (hadoopnode2 for us):</p>
 <div class="highlighter-rouge"><pre class="highlight"><code>3108 DataNode
 3434 Jps
@@ -1006,6 +1056,8 @@ Are you sure you want to continue connecting (yes/no)?
 
 <p>Let’s take a moment to celebrate before we test out the hadoop cluster with the <a href="http://www.informit.com/articles/article.aspx?p=2190194&amp;seqNum=3">Hadoop pi test program</a> from informIT®!</p>
 
+<hr />
+
 <h3 id="test-hadoop">Test Hadoop</h3>
 <p>Hadoop ships with a .jar of example MapReduce applications, located at <code class="highlighter-rouge">$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.3.jar</code></p>
 
@@ -1015,6 +1067,12 @@ Are you sure you want to continue connecting (yes/no)?
 
 <span class="c">#Example</span>
 <span class="gp">$ </span>yarn hadoop-mapreduce-examples-2.7.3.jar pi 16 100
+</code></pre>
+</div>
+<p>To make this faster in the future, I exported the path to an alias:</p>
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span><span class="nb">export </span><span class="nv">MAPRED_EXAMPLES</span><span class="o">=</span><span class="nv">$HADOOP_HOME</span>/share/hadoop/mapreduce
+
+<span class="c"># You can append this to ~/.bashrc to apply it on any shell</span>
 </code></pre>
 </div>
 <p>Run the .jar with no parameters to see all the applications available.</p>
@@ -1041,6 +1099,7 @@ hdfs namenode -format
 <p>Now I get network-related errors. Something like <strong>“Connection to the ResourceManager timed out.”</strong></p>
 
 <p>At this point, I think I will just start over from scratch.</p>
+
 <h2 id="troubleshooting-hadoop">Troubleshooting Hadoop</h2>
 <p>At this point, I have no idea what is malfunctioning with this cluster. The reported cause of a MapReduce job failing seems to be different every time!</p>
 
@@ -1068,6 +1127,8 @@ hdfs namenode -format
 </code></pre>
 </div>
 
+<hr />
+
 <h3 id="check-the-java-version">Check the Java version</h3>
 <p>Check to see if the java version is correct:</p>
 <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>java -version
@@ -1078,6 +1139,8 @@ Java HotSpot<span class="o">(</span>TM<span class="o">)</span> Client VM <span c
 </code></pre>
 </div>
 <p>Java 1.8.0 seems to be the version I installed, so that looks right.</p>
+
+<hr />
 
 <h3 id="check-hostnames">Check Hostnames</h3>
 <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>cat /etc/hosts
@@ -1095,10 +1158,11 @@ ff02::2     ip6-allrouters
 <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>cat /etc/hostname
 
 hadoopnode1
-
 </code></pre>
 </div>
 <p>There was an extra newline after <code class="highlighter-rouge">hadoopnode1</code>, so I deleted that.</p>
+
+<hr />
 
 <h3 id="ssh-access-1">SSH Access</h3>
 <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>cat ~/.ssh/authorized_keys
@@ -1130,6 +1194,8 @@ ssh-rsa &lt;KEY REDACTED FOR SECURITY&gt; hduser@orangepione
 
 <p><em>Update: Deleting the hostname after the public key in <code class="highlighter-rouge">id_rsa.pub</code> and in <code class="highlighter-rouge">authorized_keys</code> did not change the ability to SSH passwordless, so that is probably not the issue.</em></p>
 
+<hr />
+
 <h3 id="hadoop-install-verification">Hadoop Install Verification</h3>
 <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>hadoop version
 
@@ -1142,6 +1208,8 @@ This <span class="nb">command </span>was run using /opt/hadoop-2.7.3/share/hadoo
 </code></pre>
 </div>
 <p>Seems to be Hadoop 2.7.3, so that’s right.</p>
+
+<hr />
 
 <h3 id="hdfs-fsck">HDFS <code class="highlighter-rouge">fsck</code></h3>
 
@@ -1172,6 +1240,8 @@ The filesystem under path <span class="s1">'/'</span> is HEALTHY
 </div>
 <p>It looks like corrupted blocks is not the issue. I’m guessing the 2 <code class="highlighter-rouge">under-replicated blocks</code> are due to failed jobs.</p>
 
+<hr />
+
 <h3 id="reformat-hdfs">Reformat HDFS</h3>
 <p>I saved all the HDFS files to my client machine:</p>
 <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>hdfs dfs -get / ~/HdfsDump
@@ -1190,9 +1260,7 @@ The filesystem under path <span class="s1">'/'</span> is HEALTHY
 </div>
 <p>After starting the <code class="highlighter-rouge">dfs</code> and <code class="highlighter-rouge">yarn</code>, only <code class="highlighter-rouge">hadoopnode1</code> is connected. This may be due to a cluster ID conflict.</p>
 
-<p>I’ll use the hdfs directory structure from <a href="https://medium.com/@jasonicarter/how-to-hadoop-at-home-with-raspberry-pi-part-3-7d114d35fdf1">Jason Carter’s blog</a> (parts 2 &amp; 3 specifically).</p>
-
-<p>I’ll remove all the files on both nodes and try again:</p>
+<p>I’ll remove all the files on both nodes and try again, using the hdfs directory structure from <a href="https://medium.com/@jasonicarter/how-to-hadoop-at-home-with-raspberry-pi-part-3-7d114d35fdf1">Jason Carter’s blog</a> (parts 2 &amp; 3 specifically):</p>
 <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>sudo rm -rf /hdfs <span class="c"># hadoopnode1 &amp; 2</span>
 <span class="gp">$ </span>sudo mkdir -p /hdfs/namenode <span class="c"># only hadoopnode1</span>
 <span class="gp">$ </span>sudo mkdir -p /hdfs/datanode <span class="c"># hadoopnode1 &amp; 2</span>
@@ -1203,7 +1271,7 @@ The filesystem under path <span class="s1">'/'</span> is HEALTHY
 drwxr-x---  4 hduser hadoop  4096 Apr 22 12:57 hdfs
 </code></pre>
 </div>
-<p>Change configuration to  new <code class="highlighter-rouge">/hdfs</code> directory structure:</p>
+<p>Change configuration to reflect new <code class="highlighter-rouge">/hdfs</code> directory structure:</p>
 <div class="language-xml highlighter-rouge"><pre class="highlight"><code>File: hdfs-site.xml
 
 <span class="nt">&lt;configuration&gt;</span>
@@ -1294,90 +1362,97 @@ Last contact: Sat Apr 22 13:18:50 CDT 2017
 </div>
 <p>Both <code class="highlighter-rouge">datanodes</code> up!</p>
 
-<h3 id="hadoop-configuration-1">Hadoop Configuration</h3>
-<blockquote>
-  <p>A Hadoop cluster stands or falls with its configuration.</p>
-</blockquote>
+<hr />
 
-<p>This is by far the most complex and important part of a Hadoop cluster. It seems that a cluster’s performance is entirely dependent on the efficiency of its configuration. I did not count on needing to understand the architecture of the Hadoop system to install and use a cluster. However, as it turns out, you must be familiar with it at a high-level before you can touch the first configuration file.</p>
+<h3 id="hadoop-configuration-1">Hadoop Configuration</h3>
 
 <h4 id="change-configuration-scheme">Change Configuration Scheme</h4>
 <p>I’m going to try the Hadoop configuration from <a href="https://medium.com/@jasonicarter/how-to-hadoop-at-home-with-raspberry-pi-part-3-7d114d35fdf1">Jason Carter’s blog</a> (parts 2 &amp; 3 specifically), as we did above.</p>
+
 <ol>
-  <li><code class="highlighter-rouge">yarn-site.xml</code>
-```xml</li>
-</ol>
-<configuration>
-<!-- Site specific YARN configuration properties -->
-  <property>
-    <name>yarn.resourcemanager.hostname</name>
-    <value>hadoopnode1</value>
-  </property>
-  <property>
-    <name>yarn.nodemanager.aux-services</name>
-    <value>mapreduce_shuffle</value>
-  </property>
-  <property>
-    <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
-    <value>org.apache.hadoop.mapred.ShuffleHandler</value>
-  </property>
-</configuration>
-<div class="highlighter-rouge"><pre class="highlight"><code>2. `hdfs-site.xml`
-```xml
-&lt;configuration&gt;
-  &lt;property&gt;
-    &lt;name&gt;dfs.replication&lt;/name&gt;
-    &lt;value&gt;2&lt;/value&gt;
-  &lt;/property&gt;
-  &lt;property&gt;
-    &lt;name&gt;dfs.blocksize&lt;/name&gt;
-    &lt;value&gt;5242880&lt;/value&gt;
-  &lt;/property&gt;
-  &lt;property&gt;
-    &lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;
-    &lt;value&gt;file:/hdfs/namenode&lt;/value&gt;
-  &lt;/property&gt;
-  &lt;property&gt;
-    &lt;name&gt;dfs.datanode.name.dir&lt;/name&gt;
-    &lt;value&gt;file:/hdfs/datanode&lt;/value&gt;
-  &lt;/property&gt;
-&lt;/configuration&gt;
+  <li>
+    <p><code class="highlighter-rouge">yarn-site.xml</code>:</p>
+
+    <div class="language-xml highlighter-rouge"><pre class="highlight"><code> <span class="nt">&lt;configuration&gt;</span>
+ <span class="c">&lt;!-- Site specific YARN configuration properties --&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>yarn.resourcemanager.hostname<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>hadoopnode1<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>yarn.nodemanager.aux-services<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>mapreduce_shuffle<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>yarn.nodemanager.aux-services.mapreduce.shuffle.class<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>org.apache.hadoop.mapred.ShuffleHandler<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;/configuration&gt;</span>
 </code></pre>
-</div>
-<ol>
-  <li><code class="highlighter-rouge">mapred-site.xml</code>
-```xml</li>
-</ol>
-<configuration>
-  <property>
-    <name>mapreduce.framework.name</name>
-    <value>yarn</value>
-  </property>
-</configuration>
-<div class="highlighter-rouge"><pre class="highlight"><code>4. `core-site.xml`
-```xml
-&lt;configuration&gt;
- &lt;property&gt;
-    &lt;name&gt;fs.defaultFS&lt;/name&gt;
-    &lt;value&gt;hdfs://hadoopnode1:53410&lt;/value&gt;
-  &lt;/property&gt;
-&lt;/configuration&gt;
+    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">hdfs-site.xml</code>:</p>
+
+    <div class="language-xml highlighter-rouge"><pre class="highlight"><code> <span class="nt">&lt;configuration&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>dfs.replication<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>2<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>dfs.blocksize<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>5242880<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>dfs.namenode.name.dir<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>file:/hdfs/namenode<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>dfs.datanode.name.dir<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>file:/hdfs/datanode<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;/configuration&gt;</span>
 </code></pre>
-</div>
-<blockquote>
-  <p>I noticed here that I left the following setting in <code class="highlighter-rouge">core-site.xml</code> when I reformatted the HDFS:</p>
-  <div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
+    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">mapred-site.xml</code>:</p>
+
+    <div class="language-xml highlighter-rouge"><pre class="highlight"><code> <span class="nt">&lt;configuration&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>mapreduce.framework.name<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>yarn<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;/configuration&gt;</span>
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">core-site.xml</code>:</p>
+
+    <div class="language-xml highlighter-rouge"><pre class="highlight"><code> <span class="nt">&lt;configuration&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>fs.defaultFS<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>hdfs://hadoopnode1:53410<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;/configuration&gt;</span>
+</code></pre>
+    </div>
+
+    <blockquote>
+      <p>I noticed here that I left the following setting in <code class="highlighter-rouge">core-site.xml</code> when I reformatted the HDFS:</p>
+      <div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;property&gt;</span>
  <span class="nt">&lt;name&gt;</span>hadoop.tmp.dir<span class="nt">&lt;/name&gt;</span>
  <span class="nt">&lt;value&gt;</span>/hdfs/tmp/<span class="nt">&lt;/value&gt;</span>
 <span class="nt">&lt;/property&gt;</span>
 </code></pre>
-  </div>
-  <p>I should probably reformat the HDFS again to make it comply with the new structure.</p>
-</blockquote>
-
-<ol>
-  <li><code class="highlighter-rouge">hadoop-env.sh</code>
-Uncomment the following <code class="highlighter-rouge">export</code> line and define the HADOOP_HEAPSIZE parameter.
+      </div>
+      <p>I should probably reformat the HDFS again to make it comply with the new structure.</p>
+    </blockquote>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">hadoop-env.sh</code>
+Uncomment the following <code class="highlighter-rouge">export</code> line to define the HADOOP_HEAPSIZE parameter.</p>
     <div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="c"># The maximum amount of heap to use, in MB. Default is 1000.</span>
 <span class="nb">export </span><span class="nv">HADOOP_HEAPSIZE</span><span class="o">=</span>128
 </code></pre>
@@ -1432,6 +1507,8 @@ drwxr-x---  4 hduser hadoop  4096 Apr 22 14:08 hdfs
 datanode  namenode
 </code></pre>
 </div>
+
+<hr />
 
 <h3 id="word-count-test">Word Count Test</h3>
 <p>Load a <code class="highlighter-rouge">.txt</code> file from the client machine and put it into HDFS:</p>
@@ -1560,6 +1637,8 @@ Found 2 items
 </code></pre>
 </div>
 
+<hr />
+
 <h3 id="calculate-π-test">Calculate π Test</h3>
 <p>With the previous configurations, we tried the pi MapReduce example application. Let’s try it again with the new configuration.</p>
 
@@ -1590,6 +1669,8 @@ sources
 
 <p>I’ll try to reconfigure Hadoop to understand the resource limitations of the Orange Pi One.</p>
 
+<hr />
+
 <h3 id="optimize-configuration">Optimize Configuration</h3>
 <p>Now I will try combining configurations:</p>
 <ul>
@@ -1598,67 +1679,77 @@ sources
 </ul>
 
 <h4 id="configuration-3">Configuration #3</h4>
+
 <ol>
-  <li><code class="highlighter-rouge">yarn-site.xml</code>
-```xml</li>
-</ol>
-<configuration>
-  <property>
-    <name>yarn.resourcemanager.hostname</name>
-    <value>hadoopnode1</value>
-  </property>
-  <property>
-    <name>yarn.nodemanager.aux-services</name>
-    <value>mapreduce_shuffle</value>
-  </property>
-  <property>
-    <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
-    <value>org.apache.hadoop.mapred.ShuffleHandler</value>
-  </property>
-  <property>
-    <name>yarn.nodemanager.resource.memory-mb</name>
-    <value>384</value>
-  </property>
-  <property>
-    <name>yarn.scheduler.minimum-allocation-mb</name>
-    <value>128</value>
-  </property>
-  <property>
-    <name>yarn.scheduler.maximum-allocation-mb</name>
-    <value>384</value>
-  </property>
-  <property>
-    <name>yarn.nodemanager.vmem-check-enabled</name>
-    <value>false</value>
-    <description>Whether virtual memory limits will be enforced  for containers.</description>
-  </property>
-</configuration>
-<div class="highlighter-rouge"><pre class="highlight"><code>2. `mapred-site.xml`
-```xml
-&lt;configuration&gt;
-  &lt;property&gt;
-    &lt;name&gt;mapreduce.framework.name&lt;/name&gt;
-    &lt;value&gt;yarn&lt;/value&gt;
-  &lt;/property&gt;
-  &lt;property&gt;
-    &lt;name&gt;mapreduce.map.memory.mb&lt;/name&gt;
-     &lt;value&gt;256&lt;/value&gt;
-  &lt;/property&gt;
-  &lt;property&gt;
-     &lt;name&gt;mapreduce.reduce.memory.mb&lt;/name&gt;
-     &lt;value&gt;384&lt;/value&gt;
-  &lt;/property&gt;
-  &lt;property&gt;
-    &lt;name&gt;yarn.app.mapreduce.am.resource.mb&lt;/name&gt;
-    &lt;value&gt;128&lt;/value&gt;
-  &lt;/property&gt;
-&lt;/configuration&gt;
+  <li>
+    <p><code class="highlighter-rouge">yarn-site.xml</code>:</p>
+
+    <div class="language-xml highlighter-rouge"><pre class="highlight"><code> <span class="nt">&lt;configuration&gt;</span>
+ <span class="nt">&lt;property&gt;</span>
+   <span class="nt">&lt;name&gt;</span>yarn.resourcemanager.hostname<span class="nt">&lt;/name&gt;</span>
+   <span class="nt">&lt;value&gt;</span>hadoopnode1<span class="nt">&lt;/value&gt;</span>
+ <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;property&gt;</span>
+   <span class="nt">&lt;name&gt;</span>yarn.nodemanager.aux-services<span class="nt">&lt;/name&gt;</span>
+   <span class="nt">&lt;value&gt;</span>mapreduce_shuffle<span class="nt">&lt;/value&gt;</span>
+ <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;property&gt;</span>
+   <span class="nt">&lt;name&gt;</span>yarn.nodemanager.aux-services.mapreduce.shuffle.class<span class="nt">&lt;/name&gt;</span>
+   <span class="nt">&lt;value&gt;</span>org.apache.hadoop.mapred.ShuffleHandler<span class="nt">&lt;/value&gt;</span>
+ <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;property&gt;</span>
+   <span class="nt">&lt;name&gt;</span>yarn.nodemanager.resource.memory-mb<span class="nt">&lt;/name&gt;</span>
+   <span class="nt">&lt;value&gt;</span>384<span class="nt">&lt;/value&gt;</span>
+ <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;property&gt;</span>
+   <span class="nt">&lt;name&gt;</span>yarn.scheduler.minimum-allocation-mb<span class="nt">&lt;/name&gt;</span>
+   <span class="nt">&lt;value&gt;</span>128<span class="nt">&lt;/value&gt;</span>
+ <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;property&gt;</span>
+   <span class="nt">&lt;name&gt;</span>yarn.scheduler.maximum-allocation-mb<span class="nt">&lt;/name&gt;</span>
+   <span class="nt">&lt;value&gt;</span>384<span class="nt">&lt;/value&gt;</span>
+ <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;property&gt;</span>
+   <span class="nt">&lt;name&gt;</span>yarn.nodemanager.vmem-check-enabled<span class="nt">&lt;/name&gt;</span>
+   <span class="nt">&lt;value&gt;</span>false<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;description&gt;</span>Whether virtual memory limits will be enforced  for containers.<span class="nt">&lt;/description&gt;</span>
+ <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;/configuration&gt;</span>
 </code></pre>
-</div>
+    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">mapred-site.xml</code>:</p>
+
+    <div class="language-xml highlighter-rouge"><pre class="highlight"><code> <span class="nt">&lt;configuration&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>mapreduce.framework.name<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>yarn<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>mapreduce.map.memory.mb<span class="nt">&lt;/name&gt;</span>
+      <span class="nt">&lt;value&gt;</span>256<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+      <span class="nt">&lt;name&gt;</span>mapreduce.reduce.memory.mb<span class="nt">&lt;/name&gt;</span>
+      <span class="nt">&lt;value&gt;</span>384<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>yarn.app.mapreduce.am.resource.mb<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>128<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;/configuration&gt;</span>
+</code></pre>
+    </div>
+  </li>
+</ol>
+
 <p>Propagate the changes with <code class="highlighter-rouge">rsync</code> as above.</p>
 <blockquote>
   <p>The $HADOOP_HOME/sbin/start-dfs.sh script has started failing to start the DataNode service. Maybe reformatting the HDFS as above will correct the error.</p>
 </blockquote>
+
+<hr />
 
 <h3 id="test-again">Test Again</h3>
 <h4 id="calculate-pi">Calculate Pi</h4>
@@ -1766,6 +1857,134 @@ sources
 
 <p>Whatever the cause, this time the job stayed within the memory allocation limits.</p>
 
+<h4 id="troubleshooting-references">Troubleshooting References</h4>
+<ol>
+  <li><a href="https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories-on-a-vps">Rsync</a></li>
+  <li><a href="https://medium.com/@jasonicarter/how-to-hadoop-at-home-with-raspberry-pi-part-3-7d114d35fdf1">Jason Carter’s blog</a></li>
+  <li><a href="http://stackoverflow.com/questions/10666488/what-are-success-and-part-r-00000-files-in-hadoop/10666874#10666874">Understanding Hadoop Output</a></li>
+  <li><a href="https://hortonworks.com/blog/how-to-plan-and-configure-yarn-in-hdp-2-0/">HortonWorks Production Cluster Configuration</a></li>
+  <li>Wordcount test files: <a href="http://www.gutenberg.org/">Project Gutenberg</a></li>
+</ol>
+
+<h2 id="final-configuration">Final Configuration</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">OS</code> Armbian 5.25 Orangepione Debian jessie default</li>
+  <li><code class="highlighter-rouge">Hadoop Version</code> Apache Hadoop 2.7.3</li>
+  <li><code class="highlighter-rouge">$HADOOP_HOME=/opt/hadoop-2.7.3</code></li>
+</ul>
+
+<h4 id="hadoop-configuration-hadoop_conf_dir">Hadoop Configuration: <code class="highlighter-rouge">$HADOOP_CONF_DIR/</code></h4>
+
+<ol>
+  <li>
+    <p><code class="highlighter-rouge">hadoop-env.sh</code>:</p>
+
+    <div class="language-bash highlighter-rouge"><pre class="highlight"><code> <span class="nb">export </span><span class="nv">JAVA_HOME</span><span class="o">=</span>/opt/jdk1.8.0_121/
+ <span class="c"># The maximum amount of heap to use, in MB. Default is 1000.</span>
+ <span class="nb">export </span><span class="nv">HADOOP_HEAPSIZE</span><span class="o">=</span>128
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">core-site.xml</code>:</p>
+
+    <div class="language-xml highlighter-rouge"><pre class="highlight"><code> <span class="nt">&lt;configuration&gt;</span>
+  <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>fs.defaultFS<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>hdfs://hadoopnode1:53410<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;/configuration&gt;</span>
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">hdfs-site.xml</code>:</p>
+
+    <div class="language-xml highlighter-rouge"><pre class="highlight"><code> <span class="nt">&lt;configuration&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>dfs.replication<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>2<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>dfs.blocksize<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>5242880<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>dfs.namenode.name.dir<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>file:/hdfs/namenode<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>dfs.datanode.name.dir<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>file:/hdfs/datanode<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;/configuration&gt;</span>
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">yarn-site.xml</code>:</p>
+
+    <div class="language-xml highlighter-rouge"><pre class="highlight"><code> <span class="nt">&lt;configuration&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>yarn.resourcemanager.hostname<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>hadoopnode1<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>yarn.nodemanager.aux-services<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>mapreduce_shuffle<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>yarn.nodemanager.aux-services.mapreduce.shuffle.class<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>org.apache.hadoop.mapred.ShuffleHandler<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>yarn.nodemanager.resource.memory-mb<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>384<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>yarn.scheduler.minimum-allocation-mb<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>128<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>yarn.scheduler.maximum-allocation-mb<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>384<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>yarn.nodemanager.vmem-check-enabled<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>false<span class="nt">&lt;/value&gt;</span>
+     <span class="nt">&lt;description&gt;</span>Whether virtual memory limits will be enforced for container$
+   <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;/configuration&gt;</span>
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">mapred-site.xml</code>:</p>
+
+    <div class="language-xml highlighter-rouge"><pre class="highlight"><code> <span class="nt">&lt;configuration&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>mapreduce.framework.name<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>yarn<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>mapreduce.map.memory.mb<span class="nt">&lt;/name&gt;</span>
+      <span class="nt">&lt;value&gt;</span>256<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+      <span class="nt">&lt;name&gt;</span>mapreduce.reduce.memory.mb<span class="nt">&lt;/name&gt;</span>
+      <span class="nt">&lt;value&gt;</span>384<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+   <span class="nt">&lt;property&gt;</span>
+     <span class="nt">&lt;name&gt;</span>yarn.app.mapreduce.am.resource.mb<span class="nt">&lt;/name&gt;</span>
+     <span class="nt">&lt;value&gt;</span>128<span class="nt">&lt;/value&gt;</span>
+   <span class="nt">&lt;/property&gt;</span>
+ <span class="nt">&lt;/configuration&gt;</span>
+</code></pre>
+    </div>
+  </li>
+</ol>
+
 <h2 id="project-discussion">Project Discussion</h2>
 
 <p><em>DISCLAIMER: I do not understand everything about physical and virtual memory management in operating systems, especially under Hadoop, YARN and MapReduce. However, I know that Hadoop was designed for large-scale analytics on machines with many times the resources available in my cluster. In some ways this project was a lost cause before it began. This cluster of Orange Pi Ones is not the environment Hadoop was designed for, indeed, the jobs that I ran in this tutorial could have been run easily on my client machine alone, even with an application written in an interpreted language. But this does not prevent us from improving the setup as much as we can!</em></p>
@@ -1793,6 +2012,8 @@ sources
 
 <p>The configuration resources I used as a guide were either designed for a <a href="https://hortonworks.com/blog/how-to-plan-and-configure-yarn-in-hdp-2-0/">production system</a> with RAM on the order of 50 GB, or a <a href="http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#YARN_and_MapReduce_memory_configuration_overview">Raspberry Pi cluster</a> with about double the memory per machine. I attempted to scale down the YARN container allocation, JVM heap size, and Map &amp; Reduce task allocations, but I now think that the extremely small allocations only contributed to the runaway virtual memory usage.</p>
 
+<hr />
+
 <h3 id="future-work">Future Work</h3>
 <p>Future work should address the node resource bottleneck. One concern is distributing the workload among the nodes. On jobs which used only a single task at a time, only one node at a time was involved in the processing at a time. It would certainly seem that Hadoop should be able to allocate smaller map and reduce tasks so that they fit within the memory of the cluster node.</p>
 
@@ -1802,16 +2023,32 @@ sources
 <h4 id="hadoop-memory-management-configuration">Hadoop Memory Management Configuration</h4>
 <p>A cluster of two Orange Pi Ones does not have the resources available to provide stable MapReduce performance. It seemed that as long as the container was successfully created by the ApplicationMaster, the job had a good chance of completing. But many map or reduce tasks just consumed more resources than a single node had available to give while still being responsive, crashing the job.</p>
 
-<p>With detailed analysis and tweaking of the YARN, MapReduce, and Operating system configuration, I believe that small jobs could run stably on my cluster. But the small pool of resources can only be stretched so thin before a node crashes and takes the cluster down with it.</p>
+<p>With detailed analysis and tweaking of the YARN, MapReduce, and Operating system configuration, I believe that small jobs could run stably on my cluster. But the small pool of resources can only be stretched so thin before a node thrashes and takes the cluster down with it.</p>
 
-<h3 id="conclusion">Conclusion</h3>
-<p>Adding more nodes (and therefore more memory) would be the best and most direct approach to stabilizing the performance of my Orange Pi One cluster. However, if directly increasing the cluster’s memory resources is not possible, optimization of Hadoop’s usage of existing resources is the best strategy. <a href="https://hadoop.apache.org/docs/r2.7.3/">Hadoop documentation</a>, here I come!</p>
+<hr />
 
-<h5 id="references-4">References</h5>
+<h3 id="conclusions">Conclusions</h3>
+<p>There are two main conclusions from this project.</p>
+
+<h4 id="configuration-must-be-optimized">Configuration Must be Optimized</h4>
+
+<blockquote>
+  <p>A Hadoop cluster stands or falls with its configuration.</p>
+</blockquote>
+
+<p>First, Hadoop configuration is the most complex part of setting up a Hadoop cluster, but it also seems to be the most important. A cluster’s performance is entirely dependent on the efficiency of its configuration. In fact, calculating the optimal resource configuration will be required I did not count on needing to understand the software architecture of the Hadoop system to install and use a cluster. However, as it turns out, you must be at least familiar with it before you can touch the first configuration file.</p>
+
+<h4 id="my-cluster-needs-more-memory">My Cluster Needs More Memory</h4>
+
+<p>And second, this cluster needs more memory. Adding more nodes would be the one approach for increasing the memory resources of the cluster, but it would leave the memory per node at its present critically small value. Thus, for this approach, optimization of Hadoop’s memory usage at the container, application, and node level is crucial for use of the Orange Pi One as a Hadoop cluster node. <a href="https://hadoop.apache.org/docs/r2.7.3/">Hadoop documentation</a>, here I come!</p>
+
+<p>Using machines with more onboard memory as nodes will increase the memory resources of the cluster. This approach is clearly more closely aligned with the design of Hadoop, and would most likely improve the stability of the cluster without much change in the configuration. From my reading in other tutorials, it seems that 1 GB, double the memory of the Orange Pi One (512 MB), is sufficient to run Hadoop 2 MapReduce Jobs with consistent success.</p>
+
+<h4 id="references-2">References</h4>
 <ol>
-  <li>Hadoop 2.7.2 Cluster Raspbery Pi http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop</li>
-  <li>DCHP https://kb.iu.edu/d/adov</li>
-  <li>Hostname https://debian-handbook.info/browse/stable/sect.hostname-name-service.html</li>
+  <li><a href="https://medium.com/@jasonicarter/how-to-hadoop-at-home-with-raspberry-pi-part-3-7d114d35fdf1">Jason Carter’s Blog</a></li>
+  <li><a href="http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#YARN_and_MapReduce_memory_configuration_overview">Jonas Widriksson’s Blog</a></li>
+  <li><a href="http://www.widriksson.com/raspberry-pi-hadoop-cluster/">Jonas Widriksson’s Original Hadoop v1 Tutorial</a></li>
 </ol>
 
       </section>

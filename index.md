@@ -3,19 +3,12 @@ layout: default
 title: Orange Pi Hadoop Cluster
 ---
 
+![Orange Pi One](images/3MT-Andrew-Pyle.png)
 
-![Orange Pi One](./images/orange-cover.JPG)
+# Small Scale, Big Data
+[Hadoop](http://hadoop.apache.org/) is an open-source distributed computing framework from the [Apache Software Foundation](http://www.apache.org/). It is primarily aimed at Big Data analytics and has become the de-facto standard for Distributed analytics. It runs on Linux, and (lucky for us students of data) the [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) is a very affordable machine to learn about distributed computing, albeit with very limited resources.
 
-# TODO:
-* export $HADOOP_EXAMPLES
-* New config files & descriptions of settings
-* Secondary NameNode
-* Include References
-
-# (Sort-Of) Big Data with Hadoop
-[Hadoop](http://hadoop.apache.org/) is an open-source distributed computing framework from the [Apache Software Foundation](http://www.apache.org/). It is primarily aimed at Big Data analytics and has become the de-facto standard for Distributed analytics. It runs on Linux, and (lucky for us students of data) the [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) is a very affordable machine, albeit with very limited resources to learn about distributed computing.
-
-So let's set up a physical Hadoop 2 cluster with single-board Linux computers! I will be using two [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of two single-board computers. This setup will not be powerful enough for production use, but it will demonstrate a simple implementation of the Hadoop 2 ecosystem for learning purposes.
+So let's set up a fully distributed, physical Hadoop 2 cluster with single-board Linux computers! I will be using two [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of two single-board computers. This setup will not be powerful enough for production use, but it will demonstrate a simple implementation of the Hadoop 2 ecosystem for learning purposes.
 
 # Contents
 <!-- MDTOC maxdepth:2 firsth1:0 numbering:1 flatten:0 bullets:0 updateOnSave:1 -->
@@ -181,16 +174,6 @@ Download and unzip the OS image. I used [The Unarchiver](http://unarchiver.c3.cx
 ![alt text](./images/armbian-unzip.png "Unzipped Armbian Orange Pi One OS image")
 Armbian offers a [GPG signature](https://docs.armbian.com/User-Guide_Getting-Started/) for authentication of the OS image download, if you want to check that out. The [process](http://notes.jerzygangi.com/the-best-pgp-tutorial-for-mac-os-x-ever/) is quite involved however.
 
-##### References
-###### Tutorials
-* [ORANGE PI ONE – QUICK START GUIDE by Travis Straub](https://tdstraub.wordpress.com/2016/04/05/orange-pi-one-quick-start-guide/)
-* [Orange Pi One Board Quick Start Guide with Armbian Debian based Linux Distribution](http://www.cnx-software.com/2016/03/16/orange-pi-one-board-quick-start-guide-with-armbian-debian-based-linux-distribution/)
-
-###### Technical
-* [Sunxi - Orange Pi One Hardware Information](https://linux-sunxi.org/Orange_Pi_Lite)
-* [Armbian - Orange Pi One Page](https://www.armbian.com/orange-pi-one/)
-* [Armbian Docs - Getting Started Guide](https://docs.armbian.com/User-Guide_Getting-Started/)
-
 We will be using [Etcher](https://etcher.io) to flash the microSD card. It is a simple interface available for many OSes.
 
 ![Etcher Screenshot](./images/etcher.png)
@@ -230,11 +213,14 @@ I use the [Plugable 4-port USB Hub](http://plugable.com/products/USB2-HUB4BC) to
 
 It works! I got a brief look at the boot process before the monitor went blank due to resolution issues (probably), and the green light went solid with occasional flashes (the light is on the lower right corner of the board, by the GPIO pins). The red light started solid and then went out.
 
+
+--------
+
 ### Operate the Operating System
 Now that the boot process has begun successfully, let's login and configure the opartating system.
 
 #### Login with Secure Shell (SSH)
-Since the monitor is blank, it's not helping us complete the initial boot process. Thankfully SSH is enabled by default on the Orange Pi! SSH is a method of remotely logging in to a Unix-based (e.g. Linux) operating system. INSERT SSH REFERENCE.
+Since the monitor is blank, it's not helping us complete the initial boot process. Thankfully SSH is enabled by default on the Orange Pi! SSH is a method of remotely logging in to a Unix-based (e.g. Linux) operating system. [SSH Wikipedia link](https://en.wikipedia.org/wiki/Secure_Shell).
 
 Since the Orange Pi booted up while connected to the network, it received an IP Address by DHCP. I can check that at my router's homepage.
 >(There are other methods to ascertain the IP address of the devices on your home network, like [Fing](https://www.fing.io/) for iOS and Android).
@@ -244,8 +230,7 @@ SSH into the Orange Pi One. The default password for root on Armbian is '1234'. 
 ```bash
 $ ssh root@[ip_address]   # Replace [ip_address] with the IP
                           # address of your Orange Pi
-```
-```bash
+
 root@192.168.0.108 password:    #1234
 ```
 A nice login screen is displayed upon SSH connection.
@@ -422,13 +407,23 @@ And this one actually downloads and installs the new versions of the programs.
 root@orangepione:$ apt-get upgrade
 ```
 
->These commands can take a **really** long time to complete. Especially if it has not been run in a while. You are updating every single program on your computer at once! Be sure to wait until the command prompt
->```bash
->root@orangepione:$
->```
->appears again before typing new commands.
+>These commands can take a **really** long time to complete. Especially if it has not been run in a while. You are updating every single program on your computer at once! Be sure to wait until the command prompt appears again before typing new commands:
+```bash
+root@orangepione:$  
+```
+
 
 After a successful upgrade, we are ready to begin the Hadoop 2 installation! Let's pat ourselves on the back for a successful Orange Pi installation!
+
+### References
+
+1. [Sunxi Orange Pi One Hardware Info](http://linux-sunxi.org/Orange_Pi_One)
+1. [Orange Pi One Quickstart Guide by Travis Straub](https://tdstraub.wordpress.com/2016/04/05/orange-pi-one-quick-start-guide/)
+1. [Orange Pi One Board Quick Start Guide with Armbian Debian based Linux Distribution](http://www.cnx-software.com/2016/03/16/orange-pi-one-board-quick-start-guide-with-armbian-debian-based-linux-distribution/)
+1. [Armbian - Orange Pi One](https://www.armbian.com/orange-pi-one/)
+1. [Armbian Docs Guide](https://docs.armbian.com/User-Guide_Getting-Started/)
+1. [F3 by Digirati](http://oss.digirati.com.br/f3/)
+1. [SSH Wikipedia link](https://en.wikipedia.org/wiki/Secure_Shell)
 
 ## Hadoop 2.7.3
 ### Hadoop 2 Architecture
@@ -437,7 +432,7 @@ I didn't know this starting out, but knowledge of the Hadoop architecture is rea
 So let's gain a quick overview of Hadoop 2 now. Read [this article](http://ercoppa.github.io/HadoopInternals/HadoopArchitectureOverview.html) for a more lengthy explanation.
 
 ![Hadoop Cluster](images/yarn-architecture.gif)
-Image from [Apache Hadoop Documentation](https://hadoop.apache.org/docs/r2.7.2/hadoop-yarn/hadoop-yarn-site/YARN.html) © 2008-2017 Apache Software
+*Image from [Apache Hadoop Documentation](https://hadoop.apache.org/docs/r2.7.2/hadoop-yarn/hadoop-yarn-site/YARN.html) © 2008-2017 Apache Software Foundation*
 
 #### Cluster Architecture
 The Hadoop 2 architecture relies on pooling the resources of a group of computers linked by a network. Several programs work together to distribute programs and data among all the computers so that processing may be done in parallel.
@@ -471,11 +466,18 @@ Here are the important parts of a running Hadoop job:
 
 The above information will become very relevant as we dive into the installation and configuration of the cluster! Let's move on!
 
-------------------
+#### References
+1. [Apache Software Foundation](http://www.apache.org/)
+1. [Apache Hadoop](http://hadoop.apache.org/)
+1. [Apache Hadoop Documentation](https://hadoop.apache.org/docs/r2.7.3/)
+1. [Hadoop Architecture](http://ercoppa.github.io/HadoopInternals/HadoopArchitectureOverview.html)
 
-*The rest of this section of the journal draws from the [Install Hadoop on the Orange Pi](http://www.piprojects.xyz/install-hadoop-java-orange-pi/) tutorial from [Pi Projects](http://www.piprojects.xyz/) for creating a single-node cluster. Check them out!*
+
+--------
 
 ### Install Oracle Java
+*This section draws from the [Install Hadoop on the Orange Pi](http://www.piprojects.xyz/install-hadoop-java-orange-pi/) tutorial from [Pi Projects](http://www.piprojects.xyz/) for creating a single-node cluster. Check them out!*
+
 We will be installing [Apache Hadoop 2.7.3](http://hadoop.apache.org/releases.html) (released 25 Aug 2016) on the Orange Pi. This is not the most up-to-date version, but there is more information on the Internet about Hadoop 2.7.x than either 2.8.x or 3.x.x.
 
 Java is required for Hadoop, as much of the functionality of the system is rooted in executing Java code. Let's install [Oracle Java JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html). From what I've read online Oracle's JDK is more performant for Hadoop clusters than Open JDK or other alternatives. See Apache info [here](https://wiki.apache.org/hadoop/HadoopJavaVersions).
@@ -506,11 +508,13 @@ asp@orangepione:~$ ls -l  /usr/bin/ | grep java
 lrwxrwxrwx 1 root root   22 Apr 14 20:17 java -> /etc/alternatives/java
 lrwxrwxrwx 1 root root   23 Apr 14 20:17 javac -> /etc/alternatives/javac
 ```
+#### Installing Java References
+1. [Oracle Java JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+1. [Install JDK 8](http://www.rpiblog.com/2014/03/installing-oracle-jdk-8-on-raspberry-pi.html)
+1. [Hadoop Java Version Page](https://wiki.apache.org/hadoop/HadoopJavaVersions)
 
-##### References
-1. http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
-1. http://www.rpiblog.com/2014/03/installing-oracle-jdk-8-on-raspberry-pi.html
-1. https://wiki.apache.org/hadoop/HadoopJavaVersions
+
+--------
 
 ### Create Hadoop user
 First, we will create a user for hadoop's processes in the `sudo` group. This will allow the machines in the cluster to communicate with each other.
@@ -519,6 +523,9 @@ $ sudo addgroup hadoop
 $ sudo adduser --ingroup hadoop hduser
 $ $ sudo adduser hduser sudo
 ```
+
+
+--------
 
 ### Install Hadoop 2.7.3
 #### Download Hadoop 2.7.3
@@ -529,7 +536,7 @@ Go to http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.7.3/hadoop-2.7
 ```bash
 $ wget http://www.namesdir.com/mirrors/apache/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
 
-sudo tar xzvf hadoop-2.7.3.tar.gz -C /opt
+$ sudo tar xzvf hadoop-2.7.3.tar.gz -C /opt
 ```
 
 Let's change the ownership of the Hadoop files to the `hduser` account. This will allow the Hadoop processes to make chages to these files without being `root` or having `sudo` permissions.
@@ -539,10 +546,6 @@ Change to the `/opt` folder where the Hadoop files are located and change the ow
 $ cd /opt
 $ sudo chown -R hduser:hadoop hadoop-2.7.3
 ```
-
-##### References
-1. http://hadoop.apache.org/releases.html
-1. http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop
 
 #### Configure Hadoop environment
 Now we will configure the hduser account to run Hadoop services.
@@ -633,14 +636,19 @@ If you get an error, one of the environment variables is not properly set.
 
 At this point Hadoop is installed. Yay! However, the services and configuration of Hadoop itself are not setup. So onto configuration!
 
-##### References
-1. http://www.piprojects.xyz/install-hadoop-java-orange-pi/
-1. http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop
+#### Installing Hadoop 2.7.3 References
+1. [Apache Hadoop Releases](http://hadoop.apache.org/releases.html)
+1. [Install Hadoop on the Orange Pi](http://www.piprojects.xyz/install-hadoop-java-orange-pi/)
+1. [Jonas Widriksson's Tutorial](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/)
+1. [Jonas Widriksson's Original Hadoop v1 Tutorial](http://www.widriksson.com/raspberry-pi-hadoop-cluster/)
+
+
+--------
 
 ### Connect Hadoop Cluster
 *This section of the journal draws from two tutorials:*
-*1. [Install Hadoop on the Orange Pi](http://www.piprojects.xyz/install-hadoop-java-orange-pi/) tutorial from [Pi Projects](http://www.piprojects.xyz/)*
-*2. Multi-node cluster configuration: [Jonas Widriksson's Tutorial](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop) for setting up a Hadoop 2.7.2 cluster on Raspbery Pis.*
+* *[Install Hadoop on the Orange Pi](http://www.piprojects.xyz/install-hadoop-java-orange-pi/) tutorial from [Pi Projects](http://www.piprojects.xyz/)*
+* *Multi-node cluster configuration: [Jonas Widriksson's Tutorial](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop) for setting up a Hadoop 2.7.2 cluster on Raspbery Pis.*
 
 #### Network Access
 Hadoop's services span multiple computers (called nodes) connected by a network to provide the big-data crunching ability it is known for. We have to set up each node to recognize the other nodes on the network.
@@ -702,76 +710,97 @@ $ ls ~/.ssh
 authorized_keys  id_rsa  id_rsa.pub  known_hosts
 ```
 
+#### Networking References
+1. [Hostname - Debian Manual](https://debian-handbook.info/browse/stable/sect.hostname-name-service.html)
+1. [DHCP](https://kb.iu.edu/d/adov)
+1. [SSH Keys](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2)
+
+
+--------
+
 ### Hadoop Configuration
 #### Cluster Settings
 Now we will setup the Hadoop system itself. There are 5 relevant setting files that we need to configure. We will leave the rest as default.
 
-1. `$HADOOP_CONF_DIR/slaves`
-Replace the contents with the names of the nodes in your cluster:
-```bash
-$ nano $HADOOP_CONF_DIR/slaves
-```
->*Example*
->```
->hadoopnode1
->hadoopnode2
->```
-2. `$HADOOP_CONF_DIR/core-site.xml`
-```xml
-<configuration>
-  <property>
-    <name>hadoop.tmp.dir</name>
-    <value>/hdfs/tmp</value>
-  </property>
-  <property>
-    <name>fs.default.name</name>
-    <value>hdfs://hadoopnode1:54310</value>
-  </property>
-</configuration>
-```
-3. `$HADOOP_CONF_DIR/hdfs-site.xml`
-```xml
-<configuration>
-  <property>
-    <name>dfs.replication</name>
-    <value>2</value>
-  </property>
-</configuration>
-```
-4. `$HADOOP_CONF_DIR/mapred-site.xml`
-Don't panic if you can't find this one. It doesn't exist by default. We need to create it from the template provided.
-```bash
-# Creates the .xml file from the template by copying
-$ cp $HADOOP_CONF_DIR/mapred-site.xml.template $HADOOP_CONF_DIR/mapred-site.xml
-$ nano mapred-site.xml
-```
-```xml
-<property>
-  <name>mapreduce.framework.name</name>
-  <value>yarn</value>
-</property>
-```
-5. `$HADOOP_CONF_DIR/yarn-site.xml`
-```xml
-<configuration>
-  <property>
-    <name>yarn.resourcemanager.resource-tracker.address</name>
-    <value>hadoopnode1:8025</value>
-  </property>
-  <property>
-    <name>yarn.resourcemanager.scheduler.address</name>
-    <value>hadoopnode1:8035</value>
-  </property>
-  <property>
-    <name>yarn.resourcemanager.address</name>
-    <value>hadoopnode1:8050</value>
-  </property>
-  <property>
-    <name>yarn.nodemanager.aux-services</name>
-    <value>mapreduce_shuffle</value>
-  </property>
-</configuration>
-```
+1. `$HADOOP_CONF_DIR/slaves`:
+
+    Replace the contents with the names of the nodes in your cluster:
+    ```bash
+    $ nano $HADOOP_CONF_DIR/slaves
+    ```
+    *Example*
+    ```
+    hadoopnode1
+    hadoopnode2
+    ```
+
+1. `$HADOOP_CONF_DIR/core-site.xml`:
+
+    ```xml
+    <configuration>
+      <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/hdfs/tmp</value>
+      </property>
+      <property>
+        <name>fs.default.name</name>
+        <value>hdfs://hadoopnode1:54310</value>
+      </property>
+    </configuration>
+    ```
+
+1. `$HADOOP_CONF_DIR/hdfs-site.xml`:
+
+    ```xml
+    <configuration>
+      <property>
+        <name>dfs.replication</name>
+        <value>2</value>
+      </property>
+    </configuration>
+    ```
+
+1. `$HADOOP_CONF_DIR/mapred-site.xml`:
+
+    Don't panic if you can't find this one. It doesn't exist by default. We need to create it from the template provided.
+
+    ```bash
+    # Creates the .xml file from the template by copying
+    $ cp $HADOOP_CONF_DIR/mapred-site.xml.template $HADOOP_CONF_DIR/mapred-site.xml
+    $ nano mapred-site.xml
+    ```
+    Add the following property:
+    ```xml
+    <property>
+      <name>mapreduce.framework.name</name>
+      <value>yarn</value>
+    </property>
+    ```
+
+1. `$HADOOP_CONF_DIR/yarn-site.xml`:
+
+    ```xml
+    <configuration>
+      <property>
+        <name>yarn.resourcemanager.resource-tracker.address</name>
+        <value>hadoopnode1:8025</value>
+      </property>
+      <property>
+        <name>yarn.resourcemanager.scheduler.address</name>
+        <value>hadoopnode1:8035</value>
+      </property>
+      <property>
+        <name>yarn.resourcemanager.address</name>
+        <value>hadoopnode1:8050</value>
+      </property>
+      <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+      </property>
+    </configuration>
+    ```
+
+
 YARN is the resource negotiator for Hadoop. It allocates the memory and CPU resources for each Hadoop job. In addition to the basic settings below, we can also configure how YARN distributes the system resources in this file. Understanding and configuring all these settings is out of the scope of this journal, however. See the [Apache Hadoop 2.7.3 YARN Docs](https://hadoop.apache.org/docs/r2.7.3/hadoop-yarn/hadoop-yarn-site/YARN.html) for the complete details.
 
 #### Create HDFS
@@ -785,6 +814,15 @@ $ chmod 750 /hdfs/tmp # XxX
 ```bash
 $ hdfs namenode -format # XxX Explanation?
 ```
+
+#### Hadoop Configuration References
+1. [Apache Hadoop 2.7.3 Docs](https://hadoop.apache.org/docs/r2.7.3/)
+1. [Apache Hadoop 2.7.3 YARN Docs](https://hadoop.apache.org/docs/r2.7.3/hadoop-yarn/hadoop-yarn-site/YARN.html)
+1. [Install Hadoop on the Orange Pi](http://www.piprojects.xyz/install-hadoop-java-orange-pi/)
+1. [Jonas Widriksson's Tutorial](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/)
+
+
+--------
 
 ### Create Hadoop Nodes
 #### Clone SD Card
@@ -810,23 +848,20 @@ $ diskutil list
 Here is my output:
 ```
 /dev/disk0 (internal, physical):
-   #:                       TYPE NAME                    SIZE       IDENTIFIER
-   0:      GUID_partition_scheme                        *250.1 GB   disk0
-   1:                        EFI EFI                     209.7 MB   disk0s1
-   2:          Apple_CoreStorage Macintosh SSD           249.2 GB   disk0s2
-   3:                 Apple_Boot Recovery HD             650.0 MB   disk0s3
+   #:                   TYPE NAME            SIZE      IDENTIFIER
+   0:  GUID_partition_scheme                *250.1 GB  disk0
+   1:                    EFI EFI             209.7 MB  disk0s1
+   2:      Apple_CoreStorage Macintosh SSD   249.2 GB  disk0s2
+   3:             Apple_Boot Recovery HD     650.0 MB  disk0s3
 
 /dev/disk1 (internal, virtual):
-   #:                       TYPE NAME                    SIZE       IDENTIFIER
-   0:                            Macintosh SSD          +248.8 GB   disk1
-                                 Logical Volume on disk0s2
-                                 C36692BE-8110-4E9E-AC14-4C9F3E5B57F9
-                                 Unencrypted
+   #:                   TYPE NAME            SIZE      IDENTIFIER
+   0:                        Macintosh SSD  +248.8 GB  disk1
 
 /dev/disk3 (internal, physical): (<<< Armbian OS SD Card Here)
-   #:                       TYPE NAME                    SIZE       IDENTIFIER
-   0:     FDisk_partition_scheme                        *15.9 GB    disk3
-   1:                      Linux                         15.6 GB    disk3s1
+   #:                   TYPE NAME       SIZE     IDENTIFIER
+   0: FDisk_partition_scheme           *15.9 GB  disk3
+   1:                  Linux            15.6 GB  disk3s1
 ```
 Let's unmount the SD card file system:
 ```bash
@@ -866,6 +901,14 @@ $ sudo nano /etc/hostname
 ```
 
 ![nano /etc/hostname](images/nano-hostname-2.png)
+
+#### Cluster Setup References
+1. [Clone Raspberry Pi SD Card](https://raspberrypi.stackexchange.com/questions/311/how-do-i-backup-my-raspberry-pi)
+1. [rdisk Access Protocol](https://superuser.com/questions/631592/why-is-dev-rdisk-about-20-times-faster-than-dev-disk-in-mac-os-x)
+
+
+--------
+
 ### Start Hadoop
 Now that we have configured Hadoop, cloned the OS (with Hadoop configuration) to each node, and set the hostnames, let's start this Hadoop cluster up!
 
@@ -882,6 +925,8 @@ Are you sure you want to continue connecting (yes/no)?
 ```
 Enter yes.
 
+It may ask you to trust the authenticity of host `(0.0.0.0)`, which is the machine itself. Enter yes for this too.
+
 Now, verify that all services are running:
 ```bash
 $ jps
@@ -895,6 +940,8 @@ If everything started correctly, you'll see these services on the **NameNode** (
 3387 DataNode
 4429 Jps
 ```
+*If you don't get a `SecondaryNameNode`, make sure you trusted `0.0.0.0` during the connection. `SecondaryNameNode` runs on the localhost (`0.0.0.0`) in this configuration.*
+
 And these on the **Slave Nodes** (hadoopnode2 for us):
 ```
 3108 DataNode
@@ -910,6 +957,9 @@ The `hdfs dfsadmin` command has lots of other administrative options besides `-r
 
 Let's take a moment to celebrate before we test out the hadoop cluster with the [Hadoop pi test program](http://www.informit.com/articles/article.aspx?p=2190194&seqNum=3) from informIT®!
 
+
+--------
+
 ### Test Hadoop
 Hadoop ships with a .jar of example MapReduce applications, located at `$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.3.jar`
 
@@ -920,6 +970,12 @@ $ yarn jar hadoop-mapreduce-examples-2.7.3.jar <APPLICATION_NAME> <OPTIONS>
 
 #Example
 $ yarn hadoop-mapreduce-examples-2.7.3.jar pi 16 100
+```
+To make this faster in the future, I exported the path to an alias:
+```bash
+$ export MAPRED_EXAMPLES=$HADOOP_HOME/share/hadoop/mapreduce
+
+# You can append this to ~/.bashrc to apply it on any shell
 ```
 Run the .jar with no parameters to see all the applications available.
 
@@ -945,6 +1001,8 @@ I'll shutdown the cluster and try again tomorrow.
 Now I get network-related errors. Something like **"Connection to the ResourceManager timed out."**
 
 At this point, I think I will just start over from scratch.
+
+
 ## Troubleshooting Hadoop
 At this point, I have no idea what is malfunctioning with this cluster. The reported cause of a MapReduce job failing seems to be different every time!
 
@@ -970,6 +1028,9 @@ This now works from my client machine:
 $ ssh hduser@hadoopnode1
 ```
 
+--------
+
+
 ### Check the Java version
 Check to see if the java version is correct:
 ```bash
@@ -980,6 +1041,9 @@ Java(TM) SE Runtime Environment (build 1.8.0_121-b13)
 Java HotSpot(TM) Client VM (build 25.121-b13, mixed mode)
 ```
 Java 1.8.0 seems to be the version I installed, so that looks right.
+
+
+--------
 
 ### Check Hostnames
 ```bash
@@ -998,9 +1062,11 @@ ff02::2     ip6-allrouters
 $ cat /etc/hostname
 
 hadoopnode1
-
 ```
 There was an extra newline after `hadoopnode1`, so I deleted that.
+
+
+--------
 
 ### SSH Access
 ```bash
@@ -1032,6 +1098,9 @@ $ exit
 
 *Update: Deleting the hostname after the public key in `id_rsa.pub` and in `authorized_keys` did not change the ability to SSH passwordless, so that is probably not the issue.*
 
+
+--------
+
 ### Hadoop Install Verification
 ```bash
 $ hadoop version
@@ -1044,6 +1113,9 @@ From source with checksum 2e4ce5f957ea4db193bce3734ff29ff4
 This command was run using /opt/hadoop-2.7.3/share/hadoop/common/hadoop-common-2.7.3.jar
 ```
 Seems to be Hadoop 2.7.3, so that's right.
+
+
+--------
 
 ### HDFS `fsck`
 
@@ -1074,6 +1146,9 @@ The filesystem under path '/' is HEALTHY
 ```
 It looks like corrupted blocks is not the issue. I'm guessing the 2 `under-replicated blocks` are due to failed jobs.
 
+
+--------
+
 ### Reformat HDFS
 I saved all the HDFS files to my client machine:
 ```bash
@@ -1092,9 +1167,7 @@ $ hdfs dfsadmin -report
 ```
 After starting the `dfs` and `yarn`, only `hadoopnode1` is connected. This may be due to a cluster ID conflict.
 
-I'll use the hdfs directory structure from [Jason Carter's blog](https://medium.com/@jasonicarter/how-to-hadoop-at-home-with-raspberry-pi-part-3-7d114d35fdf1) (parts 2 & 3 specifically).
-
-I'll remove all the files on both nodes and try again:
+I'll remove all the files on both nodes and try again, using the hdfs directory structure from [Jason Carter's blog](https://medium.com/@jasonicarter/how-to-hadoop-at-home-with-raspberry-pi-part-3-7d114d35fdf1) (parts 2 & 3 specifically):
 ```bash
 $ sudo rm -rf /hdfs # hadoopnode1 & 2
 $ sudo mkdir -p /hdfs/namenode # only hadoopnode1
@@ -1105,7 +1178,7 @@ $ ls -l / | grep hdfs # view directory
 
 drwxr-x---  4 hduser hadoop  4096 Apr 22 12:57 hdfs
 ```
-Change configuration to  new `/hdfs` directory structure:
+Change configuration to reflect new `/hdfs` directory structure:
 ```xml
 File: hdfs-site.xml
 
@@ -1196,81 +1269,89 @@ Last contact: Sat Apr 22 13:18:50 CDT 2017
 ```
 Both `datanodes` up!
 
-### Hadoop Configuration
-> A Hadoop cluster stands or falls with its configuration.
 
-This is by far the most complex and important part of a Hadoop cluster. It seems that a cluster's performance is entirely dependent on the efficiency of its configuration. I did not count on needing to understand the architecture of the Hadoop system to install and use a cluster. However, as it turns out, you must be familiar with it at a high-level before you can touch the first configuration file.
+--------
+
+### Hadoop Configuration
 
 #### Change Configuration Scheme
 I'm going to try the Hadoop configuration from [Jason Carter's blog](https://medium.com/@jasonicarter/how-to-hadoop-at-home-with-raspberry-pi-part-3-7d114d35fdf1) (parts 2 & 3 specifically), as we did above.
-1. `yarn-site.xml`
-```xml
-<configuration>
-<!-- Site specific YARN configuration properties -->
-  <property>
-    <name>yarn.resourcemanager.hostname</name>
-    <value>hadoopnode1</value>
-  </property>
-  <property>
-    <name>yarn.nodemanager.aux-services</name>
-    <value>mapreduce_shuffle</value>
-  </property>
-  <property>
-    <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
-    <value>org.apache.hadoop.mapred.ShuffleHandler</value>
-  </property>
-</configuration>
-```
-2. `hdfs-site.xml`
-```xml
-<configuration>
-  <property>
-    <name>dfs.replication</name>
-    <value>2</value>
-  </property>
-  <property>
-    <name>dfs.blocksize</name>
-    <value>5242880</value>
-  </property>
-  <property>
-    <name>dfs.namenode.name.dir</name>
-    <value>file:/hdfs/namenode</value>
-  </property>
-  <property>
-    <name>dfs.datanode.name.dir</name>
-    <value>file:/hdfs/datanode</value>
-  </property>
-</configuration>
-```
-3. `mapred-site.xml`
-```xml
-<configuration>
-  <property>
-    <name>mapreduce.framework.name</name>
-    <value>yarn</value>
-  </property>
-</configuration>
-```
-4. `core-site.xml`
-```xml
-<configuration>
- <property>
-    <name>fs.defaultFS</name>
-    <value>hdfs://hadoopnode1:53410</value>
-  </property>
-</configuration>
-```
->I noticed here that I left the following setting in `core-site.xml` when I reformatted the HDFS:
->```xml
-><property>
->  <name>hadoop.tmp.dir</name>
->  <value>/hdfs/tmp/</value>
-></property>
->```
-> I should probably reformat the HDFS again to make it comply with the new structure.
+
+1. `yarn-site.xml`:
+
+    ```xml
+    <configuration>
+    <!-- Site specific YARN configuration properties -->
+      <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>hadoopnode1</value>
+      </property>
+      <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+      </property>
+      <property>
+        <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+      </property>
+    </configuration>
+    ```
+
+2. `hdfs-site.xml`:
+
+    ```xml
+    <configuration>
+      <property>
+        <name>dfs.replication</name>
+        <value>2</value>
+      </property>
+      <property>
+        <name>dfs.blocksize</name>
+        <value>5242880</value>
+      </property>
+      <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>file:/hdfs/namenode</value>
+      </property>
+      <property>
+        <name>dfs.datanode.name.dir</name>
+        <value>file:/hdfs/datanode</value>
+      </property>
+    </configuration>
+    ```
+3. `mapred-site.xml`:
+
+    ```xml
+    <configuration>
+      <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+      </property>
+    </configuration>
+    ```
+
+4. `core-site.xml`:
+
+    ```xml
+    <configuration>
+     <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://hadoopnode1:53410</value>
+      </property>
+    </configuration>
+    ```
+
+    >I noticed here that I left the following setting in `core-site.xml` when I reformatted the HDFS:
+    >```xml
+    ><property>
+    >  <name>hadoop.tmp.dir</name>
+    >  <value>/hdfs/tmp/</value>
+    ></property>
+    >```
+    > I should probably reformat the HDFS again to make it comply with the new structure.
 
 5. `hadoop-env.sh`
-Uncomment the following `export` line and define the HADOOP_HEAPSIZE parameter.
+Uncomment the following `export` line to define the HADOOP_HEAPSIZE parameter.
 ```bash
 # The maximum amount of heap to use, in MB. Default is 1000.
 export HADOOP_HEAPSIZE=128
@@ -1323,6 +1404,9 @@ Both `datanodes` up, and no `/tmp` directory:
 $ ls /hdfs
 datanode  namenode
 ```
+
+
+--------
 
 ### Word Count Test
 Load a `.txt` file from the client machine and put it into HDFS:
@@ -1446,6 +1530,9 @@ Found 2 items
 -rw-r--r--   2 hduser supergroup     257189 2017-04-22 14:27 /IliadCount/part-r-00000
 ```
 
+
+--------
+
 ### Calculate π Test
 With the previous configurations, we tried the pi MapReduce example application. Let's try it again with the new configuration.
 
@@ -1476,69 +1563,80 @@ I think the resources of the Orange Pi are too small for the job  parameters. Th
 
 I'll try to reconfigure Hadoop to understand the resource limitations of the Orange Pi One.
 
+
+--------
+
 ### Optimize Configuration
 Now I will try combining configurations:
 * General cluster settings from [Jason Carter's blog](https://medium.com/@jasonicarter/how-to-hadoop-at-home-with-raspberry-pi-part-3-7d114d35fdf1)
 * Specific memory-management settings used above in section [Error!](#error) (from [Jonas Widriksson's Blog](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#YARN_and_MapReduce_memory_configuration_overview))
 
 #### Configuration #3
-1. `yarn-site.xml`
-```xml
-<configuration>
-  <property>
-    <name>yarn.resourcemanager.hostname</name>
-    <value>hadoopnode1</value>
-  </property>
-  <property>
-    <name>yarn.nodemanager.aux-services</name>
-    <value>mapreduce_shuffle</value>
-  </property>
-  <property>
-    <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
-    <value>org.apache.hadoop.mapred.ShuffleHandler</value>
-  </property>
-  <property>
-    <name>yarn.nodemanager.resource.memory-mb</name>
-    <value>384</value>
-  </property>
-  <property>
-    <name>yarn.scheduler.minimum-allocation-mb</name>
-    <value>128</value>
-  </property>
-  <property>
-    <name>yarn.scheduler.maximum-allocation-mb</name>
-    <value>384</value>
-  </property>
-  <property>
-    <name>yarn.nodemanager.vmem-check-enabled</name>
-    <value>false</value>
-    <description>Whether virtual memory limits will be enforced  for containers.</description>
-  </property>
-</configuration>
-```
-2. `mapred-site.xml`
-```xml
-<configuration>
-  <property>
-    <name>mapreduce.framework.name</name>
-    <value>yarn</value>
-  </property>
-  <property>
-    <name>mapreduce.map.memory.mb</name>
-     <value>256</value>
-  </property>
-  <property>
-     <name>mapreduce.reduce.memory.mb</name>
-     <value>384</value>
-  </property>
-  <property>
-    <name>yarn.app.mapreduce.am.resource.mb</name>
-    <value>128</value>
-  </property>
-</configuration>
-```
+
+1. `yarn-site.xml`:
+
+    ```xml
+    <configuration>
+    <property>
+      <name>yarn.resourcemanager.hostname</name>
+      <value>hadoopnode1</value>
+    </property>
+    <property>
+      <name>yarn.nodemanager.aux-services</name>
+      <value>mapreduce_shuffle</value>
+    </property>
+    <property>
+      <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+      <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+    </property>
+    <property>
+      <name>yarn.nodemanager.resource.memory-mb</name>
+      <value>384</value>
+    </property>
+    <property>
+      <name>yarn.scheduler.minimum-allocation-mb</name>
+      <value>128</value>
+    </property>
+    <property>
+      <name>yarn.scheduler.maximum-allocation-mb</name>
+      <value>384</value>
+    </property>
+    <property>
+      <name>yarn.nodemanager.vmem-check-enabled</name>
+      <value>false</value>
+      <description>Whether virtual memory limits will be enforced  for containers.</description>
+    </property>
+    </configuration>
+    ```
+
+2. `mapred-site.xml`:
+
+    ```xml
+    <configuration>
+      <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+      </property>
+      <property>
+        <name>mapreduce.map.memory.mb</name>
+         <value>256</value>
+      </property>
+      <property>
+         <name>mapreduce.reduce.memory.mb</name>
+         <value>384</value>
+      </property>
+      <property>
+        <name>yarn.app.mapreduce.am.resource.mb</name>
+        <value>128</value>
+      </property>
+    </configuration>
+    ```
+
 Propagate the changes with `rsync` as above.
 > The $HADOOP_HOME/sbin/start-dfs.sh script has started failing to start the DataNode service. Maybe reformatting the HDFS as above will correct the error.
+
+
+--------
 
 ### Test Again
 #### Calculate Pi
@@ -1646,6 +1744,120 @@ I am honestly not sure what caused the difference between this job's success and
 
 Whatever the cause, this time the job stayed within the memory allocation limits.
 
+#### Troubleshooting References
+1. [Rsync](https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories-on-a-vps)
+1. [Jason Carter's blog](https://medium.com/@jasonicarter/how-to-hadoop-at-home-with-raspberry-pi-part-3-7d114d35fdf1)
+1. [Understanding Hadoop Output](http://stackoverflow.com/questions/10666488/what-are-success-and-part-r-00000-files-in-hadoop/10666874#10666874)
+1. [HortonWorks Production Cluster Configuration](https://hortonworks.com/blog/how-to-plan-and-configure-yarn-in-hdp-2-0/)
+1. Wordcount test files: [Project Gutenberg](http://www.gutenberg.org/)
+
+## Final Configuration
+
+* `OS` Armbian 5.25 Orangepione Debian jessie default
+* `Hadoop Version` Apache Hadoop 2.7.3
+*  `$HADOOP_HOME=/opt/hadoop-2.7.3`
+
+#### Hadoop Configuration: `$HADOOP_CONF_DIR/`
+
+1. `hadoop-env.sh`:
+
+    ```bash
+    export JAVA_HOME=/opt/jdk1.8.0_121/
+    # The maximum amount of heap to use, in MB. Default is 1000.
+    export HADOOP_HEAPSIZE=128
+    ```
+1. `core-site.xml`:
+
+    ```xml
+    <configuration>
+     <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://hadoopnode1:53410</value>
+      </property>
+    </configuration>
+    ```
+
+1. `hdfs-site.xml`:
+
+    ```xml
+    <configuration>
+      <property>
+        <name>dfs.replication</name>
+        <value>2</value>
+      </property>
+      <property>
+        <name>dfs.blocksize</name>
+        <value>5242880</value>
+      </property>
+      <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>file:/hdfs/namenode</value>
+      </property>
+      <property>
+        <name>dfs.datanode.name.dir</name>
+        <value>file:/hdfs/datanode</value>
+      </property>
+    </configuration>
+    ```
+
+1. `yarn-site.xml`:
+
+    ```xml
+    <configuration>
+      <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>hadoopnode1</value>
+      </property>
+      <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+      </property>
+      <property>
+        <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+      </property>
+      <property>
+        <name>yarn.nodemanager.resource.memory-mb</name>
+        <value>384</value>
+      </property>
+      <property>
+        <name>yarn.scheduler.minimum-allocation-mb</name>
+        <value>128</value>
+      </property>
+      <property>
+        <name>yarn.scheduler.maximum-allocation-mb</name>
+        <value>384</value>
+      </property>
+      <property>
+        <name>yarn.nodemanager.vmem-check-enabled</name>
+        <value>false</value>
+        <description>Whether virtual memory limits will be enforced for container$
+      </property>
+    </configuration>
+    ```
+1. `mapred-site.xml`:
+
+    ```xml
+    <configuration>
+      <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+      </property>
+      <property>
+        <name>mapreduce.map.memory.mb</name>
+         <value>256</value>
+      </property>
+      <property>
+         <name>mapreduce.reduce.memory.mb</name>
+         <value>384</value>
+      </property>
+      <property>
+        <name>yarn.app.mapreduce.am.resource.mb</name>
+        <value>128</value>
+      </property>
+    </configuration>
+    ```
+
 ## Project Discussion
 
 *DISCLAIMER: I do not understand everything about physical and virtual memory management in operating systems, especially under Hadoop, YARN and MapReduce. However, I know that Hadoop was designed for large-scale analytics on machines with many times the resources available in my cluster. In some ways this project was a lost cause before it began. This cluster of Orange Pi Ones is not the environment Hadoop was designed for, indeed, the jobs that I ran in this tutorial could have been run easily on my client machine alone, even with an application written in an interpreted language. But this does not prevent us from improving the setup as much as we can!*
@@ -1670,6 +1882,9 @@ This heavy reliance on virtual memory usage caused nodes in use to become unresp
 
 The configuration resources I used as a guide were either designed for a [production system](https://hortonworks.com/blog/how-to-plan-and-configure-yarn-in-hdp-2-0/) with RAM on the order of 50 GB, or a [Raspberry Pi cluster](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#YARN_and_MapReduce_memory_configuration_overview) with about double the memory per machine. I attempted to scale down the YARN container allocation, JVM heap size, and Map & Reduce task allocations, but I now think that the extremely small allocations only contributed to the runaway virtual memory usage.
 
+
+--------
+
 ### Future Work
 Future work should address the node resource bottleneck. One concern is distributing the workload among the nodes. On jobs which used only a single task at a time, only one node at a time was involved in the processing at a time. It would certainly seem that Hadoop should be able to allocate smaller map and reduce tasks so that they fit within the memory of the cluster node.
 
@@ -1679,12 +1894,27 @@ Trying to spread out the file over the HDFS in a more even manner would seem to 
 #### Hadoop Memory Management Configuration
 A cluster of two Orange Pi Ones does not have the resources available to provide stable MapReduce performance. It seemed that as long as the container was successfully created by the ApplicationMaster, the job had a good chance of completing. But many map or reduce tasks just consumed more resources than a single node had available to give while still being responsive, crashing the job.
 
-With detailed analysis and tweaking of the YARN, MapReduce, and Operating system configuration, I believe that small jobs could run stably on my cluster. But the small pool of resources can only be stretched so thin before a node crashes and takes the cluster down with it.
+With detailed analysis and tweaking of the YARN, MapReduce, and Operating system configuration, I believe that small jobs could run stably on my cluster. But the small pool of resources can only be stretched so thin before a node thrashes and takes the cluster down with it.
 
-### Conclusion
-Adding more nodes (and therefore more memory) would be the best and most direct approach to stabilizing the performance of my Orange Pi One cluster. However, if directly increasing the cluster's memory resources is not possible, optimization of Hadoop's usage of existing resources is the best strategy. [Hadoop documentation](https://hadoop.apache.org/docs/r2.7.3/), here I come!
 
-##### References
-1. Hadoop 2.7.2 Cluster Raspbery Pi http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#InstallRaspbian_and_prepare_environment_for_Hadoop
-1. DCHP https://kb.iu.edu/d/adov
-1. Hostname https://debian-handbook.info/browse/stable/sect.hostname-name-service.html
+--------
+
+### Conclusions
+There are two main conclusions from this project.
+
+#### Configuration Must be Optimized
+
+> A Hadoop cluster stands or falls with its configuration.
+
+First, Hadoop configuration is the most complex part of setting up a Hadoop cluster, but it also seems to be the most important. A cluster's performance is entirely dependent on the efficiency of its configuration. In fact, calculating the optimal resource configuration will be required I did not count on needing to understand the software architecture of the Hadoop system to install and use a cluster. However, as it turns out, you must be at least familiar with it before you can touch the first configuration file.
+
+#### My Cluster Needs More Memory
+
+And second, this cluster needs more memory. Adding more nodes would be the one approach for increasing the memory resources of the cluster, but it would leave the memory per node at its present critically small value. Thus, for this approach, optimization of Hadoop's memory usage at the container, application, and node level is crucial for use of the Orange Pi One as a Hadoop cluster node. [Hadoop documentation](https://hadoop.apache.org/docs/r2.7.3/), here I come!
+
+Using machines with more onboard memory as nodes will increase the memory resources of the cluster. This approach is clearly more closely aligned with the design of Hadoop, and would most likely improve the stability of the cluster without much change in the configuration. From my reading in other tutorials, it seems that 1 GB, double the memory of the Orange Pi One (512 MB), is sufficient to run Hadoop 2 MapReduce Jobs with consistent success.
+
+#### References
+1. [Jason Carter's Blog](https://medium.com/@jasonicarter/how-to-hadoop-at-home-with-raspberry-pi-part-3-7d114d35fdf1)
+1. [Jonas Widriksson's Blog](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#YARN_and_MapReduce_memory_configuration_overview)
+1. [Jonas Widriksson's Original Hadoop v1 Tutorial](http://www.widriksson.com/raspberry-pi-hadoop-cluster/)

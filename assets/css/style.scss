@@ -7,6 +7,48 @@ h1, h2, h3, h4, h5, h6, body {
   letter-spacing: normal;
 }
 
+.container {
+  position: relative;
+  width: 100%;
+}
+
+.overlay h1 {
+  color: white;
+  background: rgb(0, 0, 0); /* fallback color */
+   background: rgba(0, 0, 0, 0.7);
+   text-align: center;
+
+}
+
+.overlay {
+  position: absolute;
+  top: 90px;
+  left: 6px;
+}
+//
+// h1 span {
+//   color: white;
+//   padding-top: 0;
+//   margin-top: 0;
+// }
+//
+// .overlay span.spacer {
+//   padding-left: 5px;
+// }
+
+
+#overlay {
+  position: absolute;
+  top: 100px;
+  left: 20px;
+  width: 100%;
+  margin: 0;
+  color: #fff;
+  font-size: 42px;
+  font-weight: 700;
+  text-shadow: #111 0px 0px 10px;
+}
+
 #project_tagline {
   margin: 0px;
 }

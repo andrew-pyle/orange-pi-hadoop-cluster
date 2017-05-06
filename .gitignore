@@ -8,3 +8,7 @@ Armbian_5.25_Orangepione_Debian_jessie_default_3.4.113/
 
 # Cloned HadoopNode OS Image Files
 HadoopNode.img
+
+# Folders
+/3MT
+_site
