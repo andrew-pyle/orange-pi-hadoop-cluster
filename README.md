@@ -1,4 +1,5 @@
-# Create a Hadoop 2 Cluster Using Raspberry Pi and Orange Pi!
+# Create a Hadoop 2 Cluster Using Orange Pi One!
 
-This journal will step through the process of creating a Hadoop 2 cluster from single-board computers running Debian-derived Linux distributions.
+This tutorial will step through my process of creating a Hadoop 2.7.3 cluster from Orange Pi One computers running Debian Linux distributions.
+
 Let's learn about Hadoop 2!
