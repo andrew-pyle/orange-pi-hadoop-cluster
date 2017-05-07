@@ -9,7 +9,14 @@ Armbian_5.25_Orangepione_Debian_jessie_default_3.4.113/
 # Cloned HadoopNode OS Image Files
 HadoopNode.img
 
+# Local Jekyll
+/_site
+.ruby-version
+Gemfile
+Gemfile.lock
+
 # Folders
 /3MT
 /JobOutput
 /terminal-output
+/_site
