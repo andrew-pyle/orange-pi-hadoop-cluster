@@ -1,0 +1,1357 @@
+Last login: Thu Apr 20 14:51:48 on ttys002
+ASPs-MacBook-Pro:~ asp$ source ~/flask_tutorial/env/bin/activate
+(env) ASPs-MacBook-Pro:~ asp$ ssh hduser@hadoopnode2
+The authenticity of host 'hadoopnode2 (192.168.0.111)' can't be established.
+ECDSA key fingerprint is SHA256:zo2m+c/wBV6q9RiH3wOMy1/8Nh4AC7JbP7Q4b1NPI8Q.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'hadoopnode2' (ECDSA) to the list of known hosts.
+hduser@hadoopnode2's password: 
+  ___                               ____  _    ___             
+ / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___ 
+| | | | '__/ _` | '_ \ / _` |/ _ \ | |_) | | | | | | '_ \ / _ \
+| |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
+ \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
+                       |___/                                   
+
+Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
+System load:   0.00            	Up time:       1 day		
+Memory usage:  11 % of 494Mb  	IP:            192.168.0.111
+CPU temp:      47°C           	
+Usage of /:    13% of 15G    	
+
+Last login: Thu Apr 20 14:48:14 2017 from hadoopnode1
+hduser@hadoopnode2:~$ ls .ssh
+authorized_keys  id_rsa  id_rsa.pub  known_hosts  testfile
+hduser@hadoopnode2:~$ ls -al
+total 40
+drwxr-xr-x 5 hduser hadoop 4096 Apr 16 10:21 .
+drwxr-xr-x 4 root   root   4096 Apr 14 20:29 ..
+-rw------- 1 hduser hadoop 5967 Apr 20 14:49 .bash_history
+-rw-r--r-- 1 hduser hadoop  220 Apr 14 20:29 .bash_logout
+-rw-r--r-- 1 hduser hadoop 3907 Apr 15 14:36 .bashrc
+drwxr-xr-x 2 hduser hadoop 4096 Apr 16 10:24 HadoopData
+drwxr-xr-x 2 hduser hadoop 4096 Apr 15 14:37 .oracle_jre_usage
+-rw-r--r-- 1 hduser hadoop  675 Apr 14 20:29 .profile
+drwxr-xr-x 2 hduser hadoop 4096 Apr 20 14:42 .ssh
+hduser@hadoopnode2:~$ rm .sshjps
+rm: cannot remove ‘.sshjps’: No such file or directory
+hduser@hadoopnode2:~$ jps
+3108 DataNode
+3434 Jps
+3290 NodeManager
+hduser@hadoopnode2:~$ $HADOOP_HOME/sbin/stop-yarn.sh
+stopping yarn daemons
+no resourcemanager to stop
+hduser@hadoopnode1's password: hadoopnode2: stopping nodemanager
+
+hadoopnode1: Connection closed by 192.168.0.110
+
+hduser@hadoopnode2:~$ jps
+3108 DataNode
+3751 Jps
+hduser@hadoopnode2:~$ $HADOOP_HOME/sbin/stop-dfs.sh
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/20 15:51:30 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Stopping namenodes on [hadoopnode1]
+hduser@hadoopnode1's password: 
+hadoopnode1: stopping namenode
+hduser@hadoopnode1's password: hadoopnode2: stopping datanode
+
+hduser@hadoopnode1's password: hadoopnode1: Permission denied, please try again.
+
+hduser@hadoopnode2:~$ 
+hadoopnode1: Permission denied, please try again.
+hduser@hadoopnode1's password: 
+hadoopnode1: Permission denied (publickey,password).
+jps
+3967 Jps
+hduser@hadoopnode2:~$ sudo poweroff
+[sudo] password for hduser: 
+Connection to hadoopnode2 closed by remote host.
+Connection to hadoopnode2 closed.
+(env) ASPs-MacBook-Pro:~ asp$ ssh hadoopnode2
+^C
+(env) ASPs-MacBook-Pro:~ asp$ ssh hadoopnode2
+ssh: connect to host hadoopnode2 port 22: Host is down
+(env) ASPs-MacBook-Pro:~ asp$ ssh hadoopnode2
+^C
+(env) ASPs-MacBook-Pro:~ asp$ ssh hduser@hadoopnode2
+hduser@hadoopnode2's password: 
+  ___                               ____  _    ___             
+ / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___ 
+| | | | '__/ _` | '_ \ / _` |/ _ \ | |_) | | | | | | '_ \ / _ \
+| |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
+ \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
+                       |___/                                   
+
+Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
+System load:   0.02            	Up time:       1 hour		
+Memory usage:  22 % of 494Mb  	IP:            192.168.0.111
+CPU temp:      47°C           	
+Usage of /:    13% of 15G    	
+
+Last login: Sat Apr 22 11:38:55 2017 from hadoopnode1
+hduser@hadoopnode2:~$ ls /hdfs
+tmp
+hduser@hadoopnode2:~$ ls /hdfs/tmp
+dfs  nm-local-dir
+hduser@hadoopnode2:~$ cd ..
+hduser@hadoopnode2:/home$ ls -l / | grep hdfs
+drwxr-xr-x  3 hduser hadoop  4096 Apr 15 21:49 hdfs
+hduser@hadoopnode2:/home$ ls /hdfs/tmp.dfs
+ls: cannot access /hdfs/tmp.dfs: No such file or directory
+hduser@hadoopnode2:/home$ ls /hdfs/tmp/dfs
+data
+hduser@hadoopnode2:/home$ ls /hdfs/tmp/dfs/data
+current
+hduser@hadoopnode2:/home$ ls /hdfs/tmp/dfs/data/current
+BP-1376451929-192.168.0.110-1492551039882  VERSION
+hduser@hadoopnode2:/home$ ls -l /hdfs/tmp/dfs/data/current
+total 8
+drwx------ 4 hduser hadoop 4096 Apr 22 11:42 BP-1376451929-192.168.0.110-1492551039882
+-rw-r--r-- 1 hduser hadoop  229 Apr 22 11:42 VERSION
+hduser@hadoopnode2:/home$ jps
+2214 Jps
+1979 NodeManager
+hduser@hadoopnode2:/home$ ls -l / | grep hdfs
+drwxr-xr-x  3 hduser hadoop  4096 Apr 15 21:49 hdfs
+hduser@hadoopnode2:/home$ rm -rf /hdfs
+rm: cannot remove ‘/hdfs’: Permission denied
+hduser@hadoopnode2:/home$ sudo rm -rf /hdfs
+[sudo] password for hduser: 
+hduser@hadoopnode2:/home$ ls -l / | grep hdfs
+hduser@hadoopnode2:/home$ ls -l / | grep hdf
+hduser@hadoopnode2:/home$ ls -l / | grep hd
+hduser@hadoopnode2:/home$ ls -l / | grep h
+drwxr-xr-x  4 root root  4096 Apr 14 20:29 home
+hduser@hadoopnode2:/home$ jps
+2441 Jps
+hduser@hadoopnode2:/home$ sudo mkdir -p /hdfs/datanode
+hduser@hadoopnode2:/home$ sudo chown hduser:hadoop /hdfs -R
+hduser@hadoopnode2:/home$ chmod 750 /hdfs
+hduser@hadoopnode2:/home$ ls -l / | grep hdfs
+drwxr-x---  3 hduser hadoop  4096 Apr 22 12:58 hdfs
+hduser@hadoopnode2:/home$ ls -l /hdfs
+total 4
+drwxr-xr-x 2 hduser hadoop 4096 Apr 22 12:58 datanode
+hduser@hadoopnode2:/home$ CD $HADOOP_CONF_DIR
+-bash: CD: command not found
+hduser@hadoopnode2:/home$ cd $HADOOP_CONF_DIR
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ ls
+capacity-scheduler.xml      httpfs-env.sh            mapred-env.sh
+configuration.xsl           httpfs-log4j.properties  mapred-queues.xml.template
+container-executor.cfg      httpfs-signature.secret  mapred-site.xml
+core-site.xml               httpfs-site.xml          mapred-site.xml.template
+hadoop-env.cmd              kms-acls.xml             slaves
+hadoop-env.sh               kms-env.sh               ssl-client.xml.example
+hadoop-metrics2.properties  kms-log4j.properties     ssl-server.xml.example
+hadoop-metrics.properties   kms-site.xml             yarn-env.cmd
+hadoop-policy.xml           log4j.properties         yarn-env.sh
+hdfs-site.xml               mapred-env.cmd           yarn-site.xml
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ nano hdfs-site.xml
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ jps
+3012 NodeManager
+3126 Jps
+2830 DataNode
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ ssh hadoopnode1
+  ___                               ____  _    ___             
+ / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___ 
+| | | | '__/ _` | '_ \ / _` |/ _ \ | |_) | | | | | | '_ \ / _ \
+| |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
+ \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
+                       |___/                                   
+
+Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
+System load:   0.69            	Up time:       2 hours		Local users:   2            	
+Memory usage:  82 % of 494Mb  	IP:            192.168.0.110
+CPU temp:      41°C           	
+Usage of /:    14% of 15G    	
+
+Last login: Sat Apr 22 12:11:16 2017 from 192.168.0.104
+hduser@hadoopnode1:~$ logout
+Connection to hadoopnode1 closed.
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ ls
+capacity-scheduler.xml      httpfs-env.sh            mapred-env.sh
+configuration.xsl           httpfs-log4j.properties  mapred-queues.xml.template
+container-executor.cfg      httpfs-signature.secret  mapred-site.xml
+core-site.xml               httpfs-site.xml          mapred-site.xml.template
+hadoop-env.cmd              kms-acls.xml             slaves
+hadoop-env.sh               kms-env.sh               ssl-client.xml.example
+hadoop-metrics2.properties  kms-log4j.properties     ssl-server.xml.example
+hadoop-metrics.properties   kms-site.xml             yarn-env.cmd
+hadoop-policy.xml           log4j.properties         yarn-env.sh
+hdfs-site.xml               mapred-env.cmd           yarn-site.xml
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ ls /hdfs
+datanode  tmp
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ ls tmp
+ls: cannot access tmp: No such file or directory
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ ls hdfs/tmp
+ls: cannot access hdfs/tmp: No such file or directory
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ ls /hdfs/tmp
+dfs  nm-local-dir
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ ls /hdfs/datanode
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ ls
+capacity-scheduler.xml      httpfs-env.sh            mapred-env.sh
+configuration.xsl           httpfs-log4j.properties  mapred-queues.xml.template
+container-executor.cfg      httpfs-signature.secret  mapred-site.xml
+core-site.xml               httpfs-site.xml          mapred-site.xml.template
+hadoop-env.cmd              kms-acls.xml             slaves
+hadoop-env.sh               kms-env.sh               ssl-client.xml.example
+hadoop-metrics2.properties  kms-log4j.properties     ssl-server.xml.example
+hadoop-metrics.properties   kms-site.xml             yarn-env.cmd
+hadoop-policy.xml           log4j.properties         yarn-env.sh
+hdfs-site.xml               mapred-env.cmd           yarn-site.xml
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ nano hadoop-env.sh
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ jps
+3538 Jps
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ sudo rm -rf /hdfs
+[sudo] password for hduser: 
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ ls / | grep hd
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ sudo mkdir -p /hdfs/datanode
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ sudo chown hduser:hadoop /hdfs/ -R
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ chmod 750 /hdfs
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ ls -l / | grep hdfs
+drwxr-x---  3 hduser hadoop  4096 Apr 22 14:08 hdfs
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ jps
+3842 NodeManager
+3892 Jps
+3660 DataNode
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ ls -l /hdfs
+total 4
+drwxr-xr-x 2 hduser hadoop 4096 Apr 22 14:08 datanode
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ ls /hdfs
+datanode
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ top
+
+top - 14:51:09 up  3:15,  1 user,  load average: 0.00, 0.01, 0.07
+Tasks:  80 total,   1 running,  79 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.2 sy,  0.0 ni, 99.8 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem:    506756 total,   251092 used,   255664 free,      988 buffers
+KiB Swap:   131068 total,        0 used,   131068 free.    58788 cached Mem
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND    
+ 3660 hduser    20   0  256368  63184   4484 S   0.7 12.5   0:55.34 java       
+ 4545 hduser    20   0    4548   1128    812 R   0.7  0.2   0:00.07 top        
+   24 root      20   0       0      0      0 S   0.3  0.0   0:41.08 kworker/0:1
+  138 root      20   0       0      0      0 S   0.3  0.0   0:02.63 kworker/1:3
+ 3842 hduser    20   0 1177752  81880   5148 S   0.3 16.2   1:46.57 java       
+    1 root      20   0    4440   1248    312 S   0.0  0.2   0:02.86 systemd    
+    2 root      -2   0       0      0      0 S   0.0  0.0   0:00.00 kthreadd   
+    3 root      20   0       0      0      0 S   0.0  0.0   0:00.59 ksoftirqd/0
+    5 root      20   0       0      0      0 S   0.0  0.0   0:00.01 kworker/u:0
+    6 root      rt   0       0      0      0 S   0.0  0.0   0:00.02 migration/0
+    7 root      rt   0       0      0      0 S   0.0  0.0   0:00.15 watchdog/0 
+    8 root      rt   0       0      0      0 S   0.0  0.0   0:00.03 migration/1
+   10 root      20   0       0      0      0 S   0.0  0.0   0:00.09 ksoftirqd/1
+   11 root      rt   0       0      0      0 S   0.0  0.0   0:00.19 watchdog/1 
+   12 root      rt   0       0      0      0 S   0.0  0.0   0:00.03 migration/2
+   13 root      20   0       0      0      0 S   0.0  0.0   0:00.00 kworker/2:0
+   14 root      20   0       0      0      0 S   0.0  0.0   0:00.02 ksoftirqd/2
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ ssh hadoopnode1
+^C
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ nmon
+-bash: nmon: command not found
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ hdfs dfsadmin
+Usage: hdfs dfsadmin
+Note: Administrative commands can only be run as the HDFS superuser.
+	[-report [-live] [-dead] [-decommissioning]]
+	[-safemode <enter | leave | get | wait>]
+	[-saveNamespace]
+	[-rollEdits]
+	[-restoreFailedStorage true|false|check]
+	[-refreshNodes]
+	[-setQuota <quota> <dirname>...<dirname>]
+	[-clrQuota <dirname>...<dirname>]
+	[-setSpaceQuota <quota> [-storageType <storagetype>] <dirname>...<dirname>]
+	[-clrSpaceQuota [-storageType <storagetype>] <dirname>...<dirname>]
+	[-finalizeUpgrade]
+	[-rollingUpgrade [<query|prepare|finalize>]]
+	[-refreshServiceAcl]
+	[-refreshUserToGroupsMappings]
+	[-refreshSuperUserGroupsConfiguration]
+	[-refreshCallQueue]
+	[-refresh <host:ipc_port> <key> [arg1..argn]
+	[-reconfig <datanode|...> <host:ipc_port> <start|status>]
+	[-printTopology]
+	[-refreshNamenodes datanode_host:ipc_port]
+	[-deleteBlockPool datanode_host:ipc_port blockpoolId [force]]
+	[-setBalancerBandwidth <bandwidth in bytes per second>]
+	[-fetchImage <local directory>]
+	[-allowSnapshot <snapshotDir>]
+	[-disallowSnapshot <snapshotDir>]
+	[-shutdownDatanode <datanode_host:ipc_port> [upgrade]]
+	[-getDatanodeInfo <datanode_host:ipc_port>]
+	[-metasave filename]
+	[-triggerBlockReport [-incremental] <datanode_host:ipc_port>]
+	[-help [cmd]]
+
+Generic options supported are
+-conf <configuration file>     specify an application configuration file
+-D <property=value>            use value for given property
+-fs <local|namenode:port>      specify a namenode
+-jt <local|resourcemanager:port>    specify a ResourceManager
+-files <comma separated list of files>    specify comma separated files to be copied to the map reduce cluster
+-libjars <comma separated list of jars>    specify comma separated jar files to include in the classpath.
+-archives <comma separated list of archives>    specify comma separated archives to be unarchived on the compute machines.
+
+The general command line syntax is
+bin/hadoop command [genericOptions] [commandOptions]
+
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ hdfs dfsadmin -report
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/22 14:59:49 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Configured Capacity: 518914048 (494.88 MB)
+Present Capacity: 517054464 (493.10 MB)
+DFS Remaining: 512802816 (489.05 MB)
+DFS Used: 4251648 (4.05 MB)
+DFS Used%: 0.82%
+Under replicated blocks: 2
+Blocks with corrupt replicas: 0
+Missing blocks: 0
+Missing blocks (with replication factor 1): 0
+
+-------------------------------------------------
+Live datanodes (2):
+
+Name: 192.168.0.110:50010 (hadoopnode1)
+Hostname: hadoopnode1
+Decommission Status : Normal
+Configured Capacity: 259457024 (247.44 MB)
+DFS Used: 2125824 (2.03 MB)
+Non DFS Used: 1744896 (1.66 MB)
+DFS Remaining: 255586304 (243.75 MB)
+DFS Used%: 0.82%
+DFS Remaining%: 98.51%
+Configured Cache Capacity: 0 (0 B)
+Cache Used: 0 (0 B)
+Cache Remaining: 0 (0 B)
+Cache Used%: 100.00%
+Cache Remaining%: 0.00%
+Xceivers: 1
+Last contact: Sat Apr 22 15:00:16 CDT 2017
+
+
+Name: 192.168.0.111:50010 (hadoopnode2)
+Hostname: hadoopnode2
+Decommission Status : Normal
+Configured Capacity: 259457024 (247.44 MB)
+DFS Used: 2125824 (2.03 MB)
+Non DFS Used: 114688 (112 KB)
+DFS Remaining: 257216512 (245.30 MB)
+DFS Used%: 0.82%
+DFS Remaining%: 99.14%
+Configured Cache Capacity: 0 (0 B)
+Cache Used: 0 (0 B)
+Cache Remaining: 0 (0 B)
+Cache Used%: 100.00%
+Cache Remaining%: 0.00%
+Xceivers: 1
+Last contact: Sat Apr 22 15:00:17 CDT 2017
+
+
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ ssh hadoopnode1
+^C
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ top
+
+top - 15:16:40 up  3:41,  1 user,  load average: 0.01, 0.02, 0.05
+Tasks:  80 total,   1 running,  79 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.4 us,  0.2 sy,  0.0 ni, 99.3 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem:    506756 total,   250700 used,   256056 free,      488 buffers
+KiB Swap:   131068 total,        0 used,   131068 free.    57432 cached Mem
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND    
+ 3842 hduser    20   0 1177908  83268   5272 S   0.7 16.4   2:00.03 java       
+ 4734 hduser    20   0    4548   1128    812 R   0.7  0.2   0:00.08 top        
+   24 root      20   0       0      0      0 S   0.3  0.0   0:46.40 kworker/0:1
+   67 root      rt   0       0      0      0 S   0.3  0.0   0:02.99 cfinteract+
+ 3660 hduser    20   0  256368  63356   4616 S   0.3 12.5   1:03.10 java       
+    1 root      20   0    4440   1248    312 S   0.0  0.2   0:02.91 systemd    
+    2 root      -2   0       0      0      0 S   0.0  0.0   0:00.00 kthreadd   
+    3 root      20   0       0      0      0 S   0.0  0.0   0:00.61 ksoftirqd/0
+    5 root      20   0       0      0      0 S   0.0  0.0   0:00.01 kworker/u:0
+    6 root      rt   0       0      0      0 S   0.0  0.0   0:00.02 migration/0
+    7 root      rt   0       0      0      0 S   0.0  0.0   0:00.16 watchdog/0 
+    8 root      rt   0       0      0      0 S   0.0  0.0   0:00.03 migration/1
+   10 root      20   0       0      0      0 S   0.0  0.0   0:00.11 ksoftirqd/1
+   11 root      rt   0       0      0      0 S   0.0  0.0   0:00.21 watchdog/1 
+   12 root      rt   0       0      0      0 S   0.0  0.0   0:00.03 migration/2
+   13 root      20   0       0      0      0 S   0.0  0.0   0:00.00 kworker/2:0
+   14 root      20   0       0      0      0 S   0.0  0.0   0:00.03 ksoftirqd/2
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ $HADOOP_HOME/sbin/stop-yarn.sh
+stopping yarn daemons
+no resourcemanager to stop
+hadoopnode2: stopping nodemanager
+hadoopnode2: nodemanager did not stop gracefully after 5 seconds: killing with kill -9
+^C
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ jps
+4946 Jps
+3660 DataNode
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ sudo poweroff
+[sudo] password for hduser: 
+Connection to hadoopnode2 closed by remote host.
+Connection to hadoopnode2 closed.
+(env) ASPs-MacBook-Pro:~ asp$ ssh hduser@hadoopnode2
+hduser@hadoopnode2's password: 
+  ___                               ____  _    ___             
+ / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___ 
+| | | | '__/ _` | '_ \ / _` |/ _ \ | |_) | | | | | | '_ \ / _ \
+| |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
+ \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
+                       |___/                                   
+
+Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
+System load:   0.28            	Up time:       23 sec		
+Memory usage:  10 % of 494Mb  	IP:            192.168.0.111
+CPU temp:      40°C           	
+Usage of /:    13% of 15G    	
+
+Last login: Sat Apr 22 12:45:09 2017 from 192.168.0.104
+hduser@hadoopnode2:~$ jps
+1028 Jps
+950 DataNode
+hduser@hadoopnode2:~$ jps
+950 DataNode
+1176 Jps
+1144 NodeManager
+hduser@hadoopnode2:~$ hdfs dfs -ls -r /
+-ls: Illegal option -r
+Usage: hadoop fs [generic options] -ls [-d] [-h] [-R] [<path> ...]
+hduser@hadoopnode2:~$ hdfs dfs -ls -R /
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/22 15:27:35 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+-rw-r--r--   2 hduser supergroup    1111193 2017-04-22 14:18 /Iliad.txt
+drwxr-xr-x   - hduser supergroup          0 2017-04-22 14:27 /IliadCount
+-rw-r--r--   2 hduser supergroup          0 2017-04-22 14:27 /IliadCount/_SUCCESS
+-rw-r--r--   2 hduser supergroup     257189 2017-04-22 14:27 /IliadCount/part-r-00000
+drwx------   - hduser supergroup          0 2017-04-22 14:25 /tmp
+drwx------   - hduser supergroup          0 2017-04-22 14:25 /tmp/hadoop-yarn
+drwx------   - hduser supergroup          0 2017-04-22 14:26 /tmp/hadoop-yarn/staging
+drwx------   - hduser supergroup          0 2017-04-22 14:25 /tmp/hadoop-yarn/staging/hduser
+drwx------   - hduser supergroup          0 2017-04-22 14:46 /tmp/hadoop-yarn/staging/hduser/.staging
+drwx------   - hduser supergroup          0 2017-04-22 14:46 /tmp/hadoop-yarn/staging/hduser/.staging/job_1492888277723_0002
+-rw-r--r--  10 hduser supergroup     295812 2017-04-22 14:46 /tmp/hadoop-yarn/staging/hduser/.staging/job_1492888277723_0002/job.jar
+-rw-r--r--  10 hduser supergroup       2429 2017-04-22 14:46 /tmp/hadoop-yarn/staging/hduser/.staging/job_1492888277723_0002/job.split
+-rw-r--r--   2 hduser supergroup        471 2017-04-22 14:46 /tmp/hadoop-yarn/staging/hduser/.staging/job_1492888277723_0002/job.splitmetainfo
+-rw-r--r--   2 hduser supergroup      98993 2017-04-22 14:46 /tmp/hadoop-yarn/staging/hduser/.staging/job_1492888277723_0002/job.xml
+drwxr-xr-x   - hduser supergroup          0 2017-04-22 14:26 /tmp/hadoop-yarn/staging/history
+drwxrwxrwt   - hduser supergroup          0 2017-04-22 14:26 /tmp/hadoop-yarn/staging/history/done_intermediate
+drwxrwx---   - hduser supergroup          0 2017-04-22 14:27 /tmp/hadoop-yarn/staging/history/done_intermediate/hduser
+-rwxrwx---   2 hduser supergroup      33907 2017-04-22 14:27 /tmp/hadoop-yarn/staging/history/done_intermediate/hduser/job_1492888277723_0001-1492889158936-hduser-word+count-1492889254198-1-1-SUCCEEDED-default-1492889198297.jhist
+-rwxrwx---   2 hduser supergroup        351 2017-04-22 14:27 /tmp/hadoop-yarn/staging/history/done_intermediate/hduser/job_1492888277723_0001.summary
+-rwxrwx---   2 hduser supergroup     117357 2017-04-22 14:27 /tmp/hadoop-yarn/staging/history/done_intermediate/hduser/job_1492888277723_0001_conf.xml
+drwxr-xr-x   - hduser supergroup          0 2017-04-22 14:46 /user
+drwxr-xr-x   - hduser supergroup          0 2017-04-22 14:46 /user/hduser
+drwxr-xr-x   - hduser supergroup          0 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842
+drwxr-xr-x   - hduser supergroup          0 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in
+-rw-r--r--   2 hduser supergroup        118 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in/part0
+-rw-r--r--   2 hduser supergroup        118 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in/part1
+-rw-r--r--   2 hduser supergroup        118 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in/part10
+-rw-r--r--   2 hduser supergroup        118 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in/part11
+-rw-r--r--   2 hduser supergroup        118 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in/part12
+-rw-r--r--   2 hduser supergroup        118 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in/part13
+-rw-r--r--   2 hduser supergroup        118 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in/part14
+-rw-r--r--   2 hduser supergroup        118 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in/part15
+-rw-r--r--   2 hduser supergroup        118 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in/part2
+-rw-r--r--   2 hduser supergroup        118 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in/part3
+-rw-r--r--   2 hduser supergroup        118 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in/part4
+-rw-r--r--   2 hduser supergroup        118 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in/part5
+-rw-r--r--   2 hduser supergroup        118 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in/part6
+-rw-r--r--   2 hduser supergroup        118 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in/part7
+-rw-r--r--   2 hduser supergroup        118 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in/part8
+-rw-r--r--   2 hduser supergroup        118 2017-04-22 14:46 /user/hduser/QuasiMonteCarlo_1492890386053_1904946842/in/part9
+hduser@hadoopnode2:~$ sudo rm -rf /hdfs
+[sudo] password for hduser: 
+hduser@hadoopnode2:~$ sudo mkdir -p /hdfs/datanode
+hduser@hadoopnode2:~$ sudo chown hduser:hadoop /hdfs/ -R
+hduser@hadoopnode2:~$ chmod 750 /hdfs
+hduser@hadoopnode2:~$ ls -l / | grep hdfs
+drwxr-x---  3 hduser hadoop  4096 Apr 22 15:30 hdfs
+hduser@hadoopnode2:~$ ls -R /hdfs
+/hdfs:
+datanode
+
+/hdfs/datanode:
+hduser@hadoopnode2:~$ hdfs dfs -ls /
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/22 15:50:48 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Found 1 items
+-rw-r--r--   2 hduser supergroup    1111193 2017-04-22 15:50 /Iliad.txt
+hduser@hadoopnode2:~$ ssh hadoopnode1
+^C
+hduser@hadoopnode2:~$ jps
+2544 Jps
+2515 NodeManager
+hduser@hadoopnode2:~$ jps
+2515 NodeManager
+2557 Jps
+hduser@hadoopnode2:~$ jps
+2515 NodeManager
+2772 DataNode
+2821 Jps
+hduser@hadoopnode2:~$ jps
+3523 Jps
+3491 NodeManager
+hduser@hadoopnode2:~$ jps
+3491 NodeManager
+3534 Jps
+hduser@hadoopnode2:~$ jps
+3491 NodeManager
+3812 Jps
+hduser@hadoopnode2:~$ sudo rm -rf /hdfs
+[sudo] password for hduser: 
+hduser@hadoopnode2:~$ sudo mkdir -p /hdfs/datanode
+hduser@hadoopnode2:~$ sudo chown hduser:hadoop /hdfs/ -R
+hduser@hadoopnode2:~$ chmod 750 /hdfs
+hduser@hadoopnode2:~$ ls -l / | grep hdfs
+drwxr-x---  3 hduser hadoop  4096 Apr 22 16:43 hdfs
+hduser@hadoopnode2:~$ jps
+4206 Jps
+hduser@hadoopnode2:~$ jps
+4354 Jps
+4322 NodeManager
+hduser@hadoopnode2:~$ ls /hdfs
+datanode
+hduser@hadoopnode2:~$ ls /hdfs/datanode
+hduser@hadoopnode2:~$ cat $HADOOP_CONF_DIR/hdfs-site.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+  <property>
+    <name>dfs.replication</name>
+    <value>2</value>
+  </property>
+  <property>
+    <name>dfs.blocksize</name>
+    <value>5242880</value>
+  </property>
+  <property>
+    <name>dfs.namenode.name.dir</name>
+    <value>file:/hdfs/namenode</value>
+  </property>
+  <property>
+    <name>dfs.datanode.name.dir</name>
+    <value>file:/hdfs/datanode</value>
+  </property>
+</configuration>
+hduser@hadoopnode2:~$ ls /hdfs
+datanode
+hduser@hadoopnode2:~$ ls /hdfs/datanode
+hduser@hadoopnode2:~$ ls -a /hdfs/datanode
+.  ..
+hduser@hadoopnode2:~$ sudo reboot
+[sudo] password for hduser: 
+Sorry, try again.
+[sudo] password for hduser: 
+Connection to hadoopnode2 closed by remote host.
+Connection to hadoopnode2 closed.
+(env) ASPs-MacBook-Pro:~ asp$ ssh hduser@hadoopnode2
+hduser@hadoopnode2's password: 
+  ___                               ____  _    ___             
+ / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___ 
+| | | | '__/ _` | '_ \ / _` |/ _ \ | |_) | | | | | | '_ \ / _ \
+| |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
+ \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
+                       |___/                                   
+
+Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
+System load:   0.21            	Up time:       38 sec		
+Memory usage:  10 % of 494Mb  	IP:            192.168.0.111
+CPU temp:      45°C           	
+Usage of /:    13% of 15G    	
+
+Last login: Sat Apr 22 15:23:20 2017 from 192.168.0.104
+hduser@hadoopnode2:~$ ls /hdfs/
+datanode
+hduser@hadoopnode2:~$ ls /hdfs/datanode
+hduser@hadoopnode2:~$ ls -a /hdfs/datanode
+.  ..
+hduser@hadoopnode2:~$ jps
+948 DataNode
+1130 NodeManager
+1243 Jps
+hduser@hadoopnode2:~$ hdfs dfs -ls /
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/22 17:06:54 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+hduser@hadoopnode2:~$ ls
+HadoopData
+hduser@hadoopnode2:~$ hdfs dfs -put HadoopData/Iliad_Homer_1873.txt /Iliad.txt
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/22 17:07:44 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+hduser@hadoopnode2:~$ cd $MAPRED_EXAMPLES
+hduser@hadoopnode2:~$ cd /opt/hadoop-2.7.3/share/hadoop/mapreduce
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ ls
+hadoop-mapreduce-client-app-2.7.3.jar
+hadoop-mapreduce-client-common-2.7.3.jar
+hadoop-mapreduce-client-core-2.7.3.jar
+hadoop-mapreduce-client-hs-2.7.3.jar
+hadoop-mapreduce-client-hs-plugins-2.7.3.jar
+hadoop-mapreduce-client-jobclient-2.7.3.jar
+hadoop-mapreduce-client-jobclient-2.7.3-tests.jar
+hadoop-mapreduce-client-shuffle-2.7.3.jar
+hadoop-mapreduce-examples-2.7.3.jar
+lib
+lib-examples
+sources
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ yarn jar hadoop-mapreduce-examples-2.7.3.jar wordcount /Iliad.txt
+Usage: wordcount <in> [<in>...] <out>
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ yarn jar hadoop-mapreduce-examples-2.7.3.jar wordcount /Iliad.txt /IliadCounts
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/22 17:10:30 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/04/22 17:10:35 INFO client.RMProxy: Connecting to ResourceManager at hadoopnode1/192.168.0.110:8032
+17/04/22 17:10:40 INFO input.FileInputFormat: Total input paths to process : 1
+17/04/22 17:10:40 INFO mapreduce.JobSubmitter: number of splits:1
+17/04/22 17:10:41 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1492898710031_0001
+17/04/22 17:10:43 INFO mapreduce.JobSubmitter: Cleaning up the staging area /tmp/hadoop-yarn/staging/hduser/.staging/job_1492898710031_0001
+java.io.IOException: org.apache.hadoop.yarn.exceptions.InvalidResourceRequestException: Invalid resource request, requested memory < 0, or requested memory > max configured, requestedMemory=1536, maxMemory=384
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.validateResourceRequest(SchedulerUtils.java:268)
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.normalizeAndValidateRequest(SchedulerUtils.java:228)
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.normalizeAndValidateRequest(SchedulerUtils.java:236)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.validateAndCreateResourceRequest(RMAppManager.java:385)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.createAndPopulateNewRMApp(RMAppManager.java:329)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.submitApplication(RMAppManager.java:281)
+	at org.apache.hadoop.yarn.server.resourcemanager.ClientRMService.submitApplication(ClientRMService.java:580)
+	at org.apache.hadoop.yarn.api.impl.pb.service.ApplicationClientProtocolPBServiceImpl.submitApplication(ApplicationClientProtocolPBServiceImpl.java:218)
+	at org.apache.hadoop.yarn.proto.ApplicationClientProtocol$ApplicationClientProtocolService$2.callBlockingMethod(ApplicationClientProtocol.java:419)
+	at org.apache.hadoop.ipc.ProtobufRpcEngine$Server$ProtoBufRpcInvoker.call(ProtobufRpcEngine.java:616)
+	at org.apache.hadoop.ipc.RPC$Server.call(RPC.java:982)
+	at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:2049)
+	at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:2045)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at javax.security.auth.Subject.doAs(Subject.java:422)
+	at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1698)
+	at org.apache.hadoop.ipc.Server$Handler.run(Server.java:2043)
+
+	at org.apache.hadoop.mapred.YARNRunner.submitJob(YARNRunner.java:306)
+	at org.apache.hadoop.mapreduce.JobSubmitter.submitJobInternal(JobSubmitter.java:240)
+	at org.apache.hadoop.mapreduce.Job$10.run(Job.java:1290)
+	at org.apache.hadoop.mapreduce.Job$10.run(Job.java:1287)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at javax.security.auth.Subject.doAs(Subject.java:422)
+	at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1698)
+	at org.apache.hadoop.mapreduce.Job.submit(Job.java:1287)
+	at org.apache.hadoop.mapreduce.Job.waitForCompletion(Job.java:1308)
+	at org.apache.hadoop.examples.WordCount.main(WordCount.java:87)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.hadoop.util.ProgramDriver$ProgramDescription.invoke(ProgramDriver.java:71)
+	at org.apache.hadoop.util.ProgramDriver.run(ProgramDriver.java:144)
+	at org.apache.hadoop.examples.ExampleDriver.main(ExampleDriver.java:74)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.hadoop.util.RunJar.run(RunJar.java:221)
+	at org.apache.hadoop.util.RunJar.main(RunJar.java:136)
+Caused by: org.apache.hadoop.yarn.exceptions.InvalidResourceRequestException: Invalid resource request, requested memory < 0, or requested memory > max configured, requestedMemory=1536, maxMemory=384
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.validateResourceRequest(SchedulerUtils.java:268)
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.normalizeAndValidateRequest(SchedulerUtils.java:228)
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.normalizeAndValidateRequest(SchedulerUtils.java:236)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.validateAndCreateResourceRequest(RMAppManager.java:385)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.createAndPopulateNewRMApp(RMAppManager.java:329)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.submitApplication(RMAppManager.java:281)
+	at org.apache.hadoop.yarn.server.resourcemanager.ClientRMService.submitApplication(ClientRMService.java:580)
+	at org.apache.hadoop.yarn.api.impl.pb.service.ApplicationClientProtocolPBServiceImpl.submitApplication(ApplicationClientProtocolPBServiceImpl.java:218)
+	at org.apache.hadoop.yarn.proto.ApplicationClientProtocol$ApplicationClientProtocolService$2.callBlockingMethod(ApplicationClientProtocol.java:419)
+	at org.apache.hadoop.ipc.ProtobufRpcEngine$Server$ProtoBufRpcInvoker.call(ProtobufRpcEngine.java:616)
+	at org.apache.hadoop.ipc.RPC$Server.call(RPC.java:982)
+	at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:2049)
+	at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:2045)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at javax.security.auth.Subject.doAs(Subject.java:422)
+	at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1698)
+	at org.apache.hadoop.ipc.Server$Handler.run(Server.java:2043)
+
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.apache.hadoop.yarn.ipc.RPCUtil.instantiateException(RPCUtil.java:53)
+	at org.apache.hadoop.yarn.ipc.RPCUtil.unwrapAndThrowException(RPCUtil.java:101)
+	at org.apache.hadoop.yarn.api.impl.pb.client.ApplicationClientProtocolPBClientImpl.submitApplication(ApplicationClientProtocolPBClientImpl.java:239)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.hadoop.io.retry.RetryInvocationHandler.invokeMethod(RetryInvocationHandler.java:191)
+	at org.apache.hadoop.io.retry.RetryInvocationHandler.invoke(RetryInvocationHandler.java:102)
+	at com.sun.proxy.$Proxy14.submitApplication(Unknown Source)
+	at org.apache.hadoop.yarn.client.api.impl.YarnClientImpl.submitApplication(YarnClientImpl.java:253)
+	at org.apache.hadoop.mapred.ResourceMgrDelegate.submitApplication(ResourceMgrDelegate.java:290)
+	at org.apache.hadoop.mapred.YARNRunner.submitJob(YARNRunner.java:290)
+	... 22 more
+Caused by: org.apache.hadoop.ipc.RemoteException(org.apache.hadoop.yarn.exceptions.InvalidResourceRequestException): Invalid resource request, requested memory < 0, or requested memory > max configured, requestedMemory=1536, maxMemory=384
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.validateResourceRequest(SchedulerUtils.java:268)
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.normalizeAndValidateRequest(SchedulerUtils.java:228)
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.normalizeAndValidateRequest(SchedulerUtils.java:236)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.validateAndCreateResourceRequest(RMAppManager.java:385)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.createAndPopulateNewRMApp(RMAppManager.java:329)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.submitApplication(RMAppManager.java:281)
+	at org.apache.hadoop.yarn.server.resourcemanager.ClientRMService.submitApplication(ClientRMService.java:580)
+	at org.apache.hadoop.yarn.api.impl.pb.service.ApplicationClientProtocolPBServiceImpl.submitApplication(ApplicationClientProtocolPBServiceImpl.java:218)
+	at org.apache.hadoop.yarn.proto.ApplicationClientProtocol$ApplicationClientProtocolService$2.callBlockingMethod(ApplicationClientProtocol.java:419)
+	at org.apache.hadoop.ipc.ProtobufRpcEngine$Server$ProtoBufRpcInvoker.call(ProtobufRpcEngine.java:616)
+	at org.apache.hadoop.ipc.RPC$Server.call(RPC.java:982)
+	at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:2049)
+	at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:2045)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at javax.security.auth.Subject.doAs(Subject.java:422)
+	at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1698)
+	at org.apache.hadoop.ipc.Server$Handler.run(Server.java:2043)
+
+	at org.apache.hadoop.ipc.Client.call(Client.java:1475)
+	at org.apache.hadoop.ipc.Client.call(Client.java:1412)
+	at org.apache.hadoop.ipc.ProtobufRpcEngine$Invoker.invoke(ProtobufRpcEngine.java:229)
+	at com.sun.proxy.$Proxy13.submitApplication(Unknown Source)
+	at org.apache.hadoop.yarn.api.impl.pb.client.ApplicationClientProtocolPBClientImpl.submitApplication(ApplicationClientProtocolPBClientImpl.java:236)
+	... 32 more
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ yarn jar hadoop-mapreduce-examples-2.7.3.jar wordcount /Iliad.txt /IliadCounts
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/22 17:17:20 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/04/22 17:17:25 INFO client.RMProxy: Connecting to ResourceManager at hadoopnode1/192.168.0.110:8032
+17/04/22 17:17:29 INFO input.FileInputFormat: Total input paths to process : 1
+17/04/22 17:17:30 INFO mapreduce.JobSubmitter: number of splits:1
+17/04/22 17:17:30 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1492898710031_0002
+17/04/22 17:17:31 INFO mapreduce.JobSubmitter: Cleaning up the staging area /tmp/hadoop-yarn/staging/hduser/.staging/job_1492898710031_0002
+java.io.IOException: org.apache.hadoop.yarn.exceptions.InvalidResourceRequestException: Invalid resource request, requested memory < 0, or requested memory > max configured, requestedMemory=1536, maxMemory=384
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.validateResourceRequest(SchedulerUtils.java:268)
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.normalizeAndValidateRequest(SchedulerUtils.java:228)
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.normalizeAndValidateRequest(SchedulerUtils.java:236)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.validateAndCreateResourceRequest(RMAppManager.java:385)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.createAndPopulateNewRMApp(RMAppManager.java:329)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.submitApplication(RMAppManager.java:281)
+	at org.apache.hadoop.yarn.server.resourcemanager.ClientRMService.submitApplication(ClientRMService.java:580)
+	at org.apache.hadoop.yarn.api.impl.pb.service.ApplicationClientProtocolPBServiceImpl.submitApplication(ApplicationClientProtocolPBServiceImpl.java:218)
+	at org.apache.hadoop.yarn.proto.ApplicationClientProtocol$ApplicationClientProtocolService$2.callBlockingMethod(ApplicationClientProtocol.java:419)
+	at org.apache.hadoop.ipc.ProtobufRpcEngine$Server$ProtoBufRpcInvoker.call(ProtobufRpcEngine.java:616)
+	at org.apache.hadoop.ipc.RPC$Server.call(RPC.java:982)
+	at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:2049)
+	at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:2045)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at javax.security.auth.Subject.doAs(Subject.java:422)
+	at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1698)
+	at org.apache.hadoop.ipc.Server$Handler.run(Server.java:2043)
+
+	at org.apache.hadoop.mapred.YARNRunner.submitJob(YARNRunner.java:306)
+	at org.apache.hadoop.mapreduce.JobSubmitter.submitJobInternal(JobSubmitter.java:240)
+	at org.apache.hadoop.mapreduce.Job$10.run(Job.java:1290)
+	at org.apache.hadoop.mapreduce.Job$10.run(Job.java:1287)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at javax.security.auth.Subject.doAs(Subject.java:422)
+	at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1698)
+	at org.apache.hadoop.mapreduce.Job.submit(Job.java:1287)
+	at org.apache.hadoop.mapreduce.Job.waitForCompletion(Job.java:1308)
+	at org.apache.hadoop.examples.WordCount.main(WordCount.java:87)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.hadoop.util.ProgramDriver$ProgramDescription.invoke(ProgramDriver.java:71)
+	at org.apache.hadoop.util.ProgramDriver.run(ProgramDriver.java:144)
+	at org.apache.hadoop.examples.ExampleDriver.main(ExampleDriver.java:74)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.hadoop.util.RunJar.run(RunJar.java:221)
+	at org.apache.hadoop.util.RunJar.main(RunJar.java:136)
+Caused by: org.apache.hadoop.yarn.exceptions.InvalidResourceRequestException: Invalid resource request, requested memory < 0, or requested memory > max configured, requestedMemory=1536, maxMemory=384
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.validateResourceRequest(SchedulerUtils.java:268)
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.normalizeAndValidateRequest(SchedulerUtils.java:228)
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.normalizeAndValidateRequest(SchedulerUtils.java:236)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.validateAndCreateResourceRequest(RMAppManager.java:385)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.createAndPopulateNewRMApp(RMAppManager.java:329)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.submitApplication(RMAppManager.java:281)
+	at org.apache.hadoop.yarn.server.resourcemanager.ClientRMService.submitApplication(ClientRMService.java:580)
+	at org.apache.hadoop.yarn.api.impl.pb.service.ApplicationClientProtocolPBServiceImpl.submitApplication(ApplicationClientProtocolPBServiceImpl.java:218)
+	at org.apache.hadoop.yarn.proto.ApplicationClientProtocol$ApplicationClientProtocolService$2.callBlockingMethod(ApplicationClientProtocol.java:419)
+	at org.apache.hadoop.ipc.ProtobufRpcEngine$Server$ProtoBufRpcInvoker.call(ProtobufRpcEngine.java:616)
+	at org.apache.hadoop.ipc.RPC$Server.call(RPC.java:982)
+	at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:2049)
+	at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:2045)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at javax.security.auth.Subject.doAs(Subject.java:422)
+	at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1698)
+	at org.apache.hadoop.ipc.Server$Handler.run(Server.java:2043)
+
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.apache.hadoop.yarn.ipc.RPCUtil.instantiateException(RPCUtil.java:53)
+	at org.apache.hadoop.yarn.ipc.RPCUtil.unwrapAndThrowException(RPCUtil.java:101)
+	at org.apache.hadoop.yarn.api.impl.pb.client.ApplicationClientProtocolPBClientImpl.submitApplication(ApplicationClientProtocolPBClientImpl.java:239)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.hadoop.io.retry.RetryInvocationHandler.invokeMethod(RetryInvocationHandler.java:191)
+	at org.apache.hadoop.io.retry.RetryInvocationHandler.invoke(RetryInvocationHandler.java:102)
+	at com.sun.proxy.$Proxy14.submitApplication(Unknown Source)
+	at org.apache.hadoop.yarn.client.api.impl.YarnClientImpl.submitApplication(YarnClientImpl.java:253)
+	at org.apache.hadoop.mapred.ResourceMgrDelegate.submitApplication(ResourceMgrDelegate.java:290)
+	at org.apache.hadoop.mapred.YARNRunner.submitJob(YARNRunner.java:290)
+	... 22 more
+Caused by: org.apache.hadoop.ipc.RemoteException(org.apache.hadoop.yarn.exceptions.InvalidResourceRequestException): Invalid resource request, requested memory < 0, or requested memory > max configured, requestedMemory=1536, maxMemory=384
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.validateResourceRequest(SchedulerUtils.java:268)
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.normalizeAndValidateRequest(SchedulerUtils.java:228)
+	at org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerUtils.normalizeAndValidateRequest(SchedulerUtils.java:236)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.validateAndCreateResourceRequest(RMAppManager.java:385)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.createAndPopulateNewRMApp(RMAppManager.java:329)
+	at org.apache.hadoop.yarn.server.resourcemanager.RMAppManager.submitApplication(RMAppManager.java:281)
+	at org.apache.hadoop.yarn.server.resourcemanager.ClientRMService.submitApplication(ClientRMService.java:580)
+	at org.apache.hadoop.yarn.api.impl.pb.service.ApplicationClientProtocolPBServiceImpl.submitApplication(ApplicationClientProtocolPBServiceImpl.java:218)
+	at org.apache.hadoop.yarn.proto.ApplicationClientProtocol$ApplicationClientProtocolService$2.callBlockingMethod(ApplicationClientProtocol.java:419)
+	at org.apache.hadoop.ipc.ProtobufRpcEngine$Server$ProtoBufRpcInvoker.call(ProtobufRpcEngine.java:616)
+	at org.apache.hadoop.ipc.RPC$Server.call(RPC.java:982)
+	at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:2049)
+	at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:2045)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at javax.security.auth.Subject.doAs(Subject.java:422)
+	at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1698)
+	at org.apache.hadoop.ipc.Server$Handler.run(Server.java:2043)
+
+	at org.apache.hadoop.ipc.Client.call(Client.java:1475)
+	at org.apache.hadoop.ipc.Client.call(Client.java:1412)
+	at org.apache.hadoop.ipc.ProtobufRpcEngine$Invoker.invoke(ProtobufRpcEngine.java:229)
+	at com.sun.proxy.$Proxy13.submitApplication(Unknown Source)
+	at org.apache.hadoop.yarn.api.impl.pb.client.ApplicationClientProtocolPBClientImpl.submitApplication(ApplicationClientProtocolPBClientImpl.java:236)
+	... 32 more
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ yarn jar hadoop-mapreduce-examples-2.7.3.jar wordcount /Iliad.txt /IliadCounts
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/22 17:19:20 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/04/22 17:19:25 INFO client.RMProxy: Connecting to ResourceManager at hadoopnode1/192.168.0.110:8032
+17/04/22 17:19:30 INFO input.FileInputFormat: Total input paths to process : 1
+17/04/22 17:19:30 INFO mapreduce.JobSubmitter: number of splits:1
+17/04/22 17:19:31 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1492898710031_0003
+17/04/22 17:19:33 INFO impl.YarnClientImpl: Submitted application application_1492898710031_0003
+17/04/22 17:19:33 INFO mapreduce.Job: The url to track the job: http://hadoopnode1:8088/proxy/application_1492898710031_0003/
+17/04/22 17:19:33 INFO mapreduce.Job: Running job: job_1492898710031_0003
+17/04/22 17:19:58 INFO mapreduce.Job: Job job_1492898710031_0003 running in uber mode : false
+17/04/22 17:19:58 INFO mapreduce.Job:  map 0% reduce 0%
+17/04/22 17:19:58 INFO mapreduce.Job: Job job_1492898710031_0003 failed with state FAILED due to: Application application_1492898710031_0003 failed 2 times due to AM Container for appattempt_1492898710031_0003_000002 exited with  exitCode: -103
+For more detailed output, check application tracking page:http://hadoopnode1:8088/cluster/app/application_1492898710031_0003Then, click on links to logs of each attempt.
+Diagnostics: Container [pid=1857,containerID=container_1492898710031_0003_02_000001] is running beyond virtual memory limits. Current usage: 9.5 MB of 128 MB physical memory used; 1.1 GB of 268.8 MB virtual memory used. Killing container.
+Dump of the process-tree for container_1492898710031_0003_02_000001 :
+	|- PID PPID PGRPID SESSID CMD_NAME USER_MODE_TIME(MILLIS) SYSTEM_TIME(MILLIS) VMEM_USAGE(BYTES) RSSMEM_USAGE(PAGES) FULL_CMD_LINE
+	|- 1865 1857 1857 1857 (java) 19 10 1138401280 2181 /opt/jdk1.8.0_121//bin/java -Djava.io.tmpdir=/tmp/hadoop-hduser/nm-local-dir/usercache/hduser/appcache/application_1492898710031_0003/container_1492898710031_0003_02_000001/tmp -Dlog4j.configuration=container-log4j.properties -Dyarn.app.container.log.dir=/opt/hadoop-2.7.3/logs/userlogs/application_1492898710031_0003/container_1492898710031_0003_02_000001 -Dyarn.app.container.log.filesize=0 -Dhadoop.root.logger=INFO,CLA -Dhadoop.root.logfile=syslog -Xmx1024m org.apache.hadoop.mapreduce.v2.app.MRAppMaster 
+	|- 1857 1855 1857 1857 (bash) 1 3 4071424 252 /bin/bash -c /opt/jdk1.8.0_121//bin/java -Djava.io.tmpdir=/tmp/hadoop-hduser/nm-local-dir/usercache/hduser/appcache/application_1492898710031_0003/container_1492898710031_0003_02_000001/tmp -Dlog4j.configuration=container-log4j.properties -Dyarn.app.container.log.dir=/opt/hadoop-2.7.3/logs/userlogs/application_1492898710031_0003/container_1492898710031_0003_02_000001 -Dyarn.app.container.log.filesize=0 -Dhadoop.root.logger=INFO,CLA -Dhadoop.root.logfile=syslog  -Xmx1024m org.apache.hadoop.mapreduce.v2.app.MRAppMaster 1>/opt/hadoop-2.7.3/logs/userlogs/application_1492898710031_0003/container_1492898710031_0003_02_000001/stdout 2>/opt/hadoop-2.7.3/logs/userlogs/application_1492898710031_0003/container_1492898710031_0003_02_000001/stderr  
+
+Container killed on request. Exit code is 143
+Container exited with a non-zero exit code 143
+Failing this attempt. Failing the application.
+17/04/22 17:19:58 INFO mapreduce.Job: Counters: 0
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ yarn jar hadoop-mapreduce-examples-2.7.3.jar pi 1 1
+Number of Maps  = 1
+Samples per Map = 1
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/22 17:25:13 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Wrote input for Map #0
+Starting Job
+17/04/22 17:25:20 INFO client.RMProxy: Connecting to ResourceManager at hadoopnode1/192.168.0.110:8032
+17/04/22 17:25:23 INFO input.FileInputFormat: Total input paths to process : 1
+17/04/22 17:25:23 INFO mapreduce.JobSubmitter: number of splits:1
+17/04/22 17:25:23 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1492898710031_0004
+17/04/22 17:25:25 INFO impl.YarnClientImpl: Submitted application application_1492898710031_0004
+17/04/22 17:25:25 INFO mapreduce.Job: The url to track the job: http://hadoopnode1:8088/proxy/application_1492898710031_0004/
+17/04/22 17:25:25 INFO mapreduce.Job: Running job: job_1492898710031_0004
+17/04/22 17:25:32 INFO mapreduce.Job: Job job_1492898710031_0004 running in uber mode : false
+17/04/22 17:25:32 INFO mapreduce.Job:  map 0% reduce 0%
+17/04/22 17:25:32 INFO mapreduce.Job: Job job_1492898710031_0004 failed with state FAILED due to: Application application_1492898710031_0004 failed 2 times due to AM Container for appattempt_1492898710031_0004_000002 exited with  exitCode: -103
+For more detailed output, check application tracking page:http://hadoopnode1:8088/cluster/app/application_1492898710031_0004Then, click on links to logs of each attempt.
+Diagnostics: Container [pid=2633,containerID=container_1492898710031_0004_02_000001] is running beyond virtual memory limits. Current usage: 23.0 MB of 128 MB physical memory used; 1.1 GB of 268.8 MB virtual memory used. Killing container.
+Dump of the process-tree for container_1492898710031_0004_02_000001 :
+	|- PID PPID PGRPID SESSID CMD_NAME USER_MODE_TIME(MILLIS) SYSTEM_TIME(MILLIS) VMEM_USAGE(BYTES) RSSMEM_USAGE(PAGES) FULL_CMD_LINE
+	|- 2633 2631 2633 2633 (bash) 0 4 4071424 252 /bin/bash -c /opt/jdk1.8.0_121//bin/java -Djava.io.tmpdir=/tmp/hadoop-hduser/nm-local-dir/usercache/hduser/appcache/application_1492898710031_0004/container_1492898710031_0004_02_000001/tmp -Dlog4j.configuration=container-log4j.properties -Dyarn.app.container.log.dir=/opt/hadoop-2.7.3/logs/userlogs/application_1492898710031_0004/container_1492898710031_0004_02_000001 -Dyarn.app.container.log.filesize=0 -Dhadoop.root.logger=INFO,CLA -Dhadoop.root.logfile=syslog  -Xmx1024m org.apache.hadoop.mapreduce.v2.app.MRAppMaster 1>/opt/hadoop-2.7.3/logs/userlogs/application_1492898710031_0004/container_1492898710031_0004_02_000001/stdout 2>/opt/hadoop-2.7.3/logs/userlogs/application_1492898710031_0004/container_1492898710031_0004_02_000001/stderr  
+	|- 2641 2633 2633 2633 (java) 86 25 1152720896 5637 /opt/jdk1.8.0_121//bin/java -Djava.io.tmpdir=/tmp/hadoop-hduser/nm-local-dir/usercache/hduser/appcache/application_1492898710031_0004/container_1492898710031_0004_02_000001/tmp -Dlog4j.configuration=container-log4j.properties -Dyarn.app.container.log.dir=/opt/hadoop-2.7.3/logs/userlogs/application_1492898710031_0004/container_1492898710031_0004_02_000001 -Dyarn.app.container.log.filesize=0 -Dhadoop.root.logger=INFO,CLA -Dhadoop.root.logfile=syslog -Xmx1024m org.apache.hadoop.mapreduce.v2.app.MRAppMaster 
+
+Container killed on request. Exit code is 143
+Container exited with a non-zero exit code 143
+Failing this attempt. Failing the application.
+17/04/22 17:25:32 INFO mapreduce.Job: Counters: 0
+Job Finished in 12.996 seconds
+java.io.FileNotFoundException: File does not exist: hdfs://hadoopnode1:53410/user/hduser/QuasiMonteCarlo_1492899911806_2076174077/out/reduce-out
+	at org.apache.hadoop.hdfs.DistributedFileSystem$22.doCall(DistributedFileSystem.java:1309)
+	at org.apache.hadoop.hdfs.DistributedFileSystem$22.doCall(DistributedFileSystem.java:1301)
+	at org.apache.hadoop.fs.FileSystemLinkResolver.resolve(FileSystemLinkResolver.java:81)
+	at org.apache.hadoop.hdfs.DistributedFileSystem.getFileStatus(DistributedFileSystem.java:1301)
+	at org.apache.hadoop.io.SequenceFile$Reader.<init>(SequenceFile.java:1819)
+	at org.apache.hadoop.io.SequenceFile$Reader.<init>(SequenceFile.java:1843)
+	at org.apache.hadoop.examples.QuasiMonteCarlo.estimatePi(QuasiMonteCarlo.java:314)
+	at org.apache.hadoop.examples.QuasiMonteCarlo.run(QuasiMonteCarlo.java:354)
+	at org.apache.hadoop.util.ToolRunner.run(ToolRunner.java:70)
+	at org.apache.hadoop.examples.QuasiMonteCarlo.main(QuasiMonteCarlo.java:363)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.hadoop.util.ProgramDriver$ProgramDescription.invoke(ProgramDriver.java:71)
+	at org.apache.hadoop.util.ProgramDriver.run(ProgramDriver.java:144)
+	at org.apache.hadoop.examples.ExampleDriver.main(ExampleDriver.java:74)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.hadoop.util.RunJar.run(RunJar.java:221)
+	at org.apache.hadoop.util.RunJar.main(RunJar.java:136)
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ yarn jar hadoop-mapreduce-examples-2.7.3.jar pi 100 1
+Number of Maps  = 100
+Samples per Map = 1
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/22 17:26:12 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Wrote input for Map #0
+Wrote input for Map #1
+Wrote input for Map #2
+Wrote input for Map #3
+Wrote input for Map #4
+Wrote input for Map #5
+Wrote input for Map #6
+Wrote input for Map #7
+Wrote input for Map #8
+Wrote input for Map #9
+Wrote input for Map #10
+Wrote input for Map #11
+Wrote input for Map #12
+Wrote input for Map #13
+Wrote input for Map #14
+Wrote input for Map #15
+Wrote input for Map #16
+Wrote input for Map #17
+Wrote input for Map #18
+Wrote input for Map #19
+Wrote input for Map #20
+Wrote input for Map #21
+Wrote input for Map #22
+Wrote input for Map #23
+Wrote input for Map #24
+Wrote input for Map #25
+Wrote input for Map #26
+Wrote input for Map #27
+Wrote input for Map #28
+Wrote input for Map #29
+Wrote input for Map #30
+Wrote input for Map #31
+Wrote input for Map #32
+Wrote input for Map #33
+Wrote input for Map #34
+Wrote input for Map #35
+Wrote input for Map #36
+Wrote input for Map #37
+Wrote input for Map #38
+Wrote input for Map #39
+Wrote input for Map #40
+Wrote input for Map #41
+Wrote input for Map #42
+Wrote input for Map #43
+Wrote input for Map #44
+Wrote input for Map #45
+Wrote input for Map #46
+Wrote input for Map #47
+Wrote input for Map #48
+Wrote input for Map #49
+Wrote input for Map #50
+Wrote input for Map #51
+Wrote input for Map #52
+Wrote input for Map #53
+Wrote input for Map #54
+Wrote input for Map #55
+Wrote input for Map #56
+Wrote input for Map #57
+Wrote input for Map #58
+Wrote input for Map #59
+Wrote input for Map #60
+Wrote input for Map #61
+Wrote input for Map #62
+Wrote input for Map #63
+Wrote input for Map #64
+Wrote input for Map #65
+Wrote input for Map #66
+Wrote input for Map #67
+Wrote input for Map #68
+Wrote input for Map #69
+Wrote input for Map #70
+Wrote input for Map #71
+Wrote input for Map #72
+Wrote input for Map #73
+Wrote input for Map #74
+Wrote input for Map #75
+Wrote input for Map #76
+Wrote input for Map #77
+Wrote input for Map #78
+Wrote input for Map #79
+Wrote input for Map #80
+Wrote input for Map #81
+Wrote input for Map #82
+Wrote input for Map #83
+Wrote input for Map #84
+Wrote input for Map #85
+Wrote input for Map #86
+Wrote input for Map #87
+Wrote input for Map #88
+Wrote input for Map #89
+Wrote input for Map #90
+Wrote input for Map #91
+Wrote input for Map #92
+Wrote input for Map #93
+Wrote input for Map #94
+Wrote input for Map #95
+Wrote input for Map #96
+Wrote input for Map #97
+Wrote input for Map #98
+Wrote input for Map #99
+Starting Job
+17/04/22 17:26:29 INFO client.RMProxy: Connecting to ResourceManager at hadoopnode1/192.168.0.110:8032
+17/04/22 17:26:32 INFO input.FileInputFormat: Total input paths to process : 100
+17/04/22 17:26:32 INFO mapreduce.JobSubmitter: number of splits:100
+17/04/22 17:26:33 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1492898710031_0005
+17/04/22 17:26:34 INFO impl.YarnClientImpl: Submitted application application_1492898710031_0005
+17/04/22 17:26:34 INFO mapreduce.Job: The url to track the job: http://hadoopnode1:8088/proxy/application_1492898710031_0005/
+17/04/22 17:26:34 INFO mapreduce.Job: Running job: job_1492898710031_0005
+17/04/22 17:26:43 INFO mapreduce.Job: Job job_1492898710031_0005 running in uber mode : false
+17/04/22 17:26:43 INFO mapreduce.Job:  map 0% reduce 0%
+17/04/22 17:26:44 INFO mapreduce.Job: Job job_1492898710031_0005 failed with state FAILED due to: Application application_1492898710031_0005 failed 2 times due to AM Container for appattempt_1492898710031_0005_000002 exited with  exitCode: -103
+For more detailed output, check application tracking page:http://hadoopnode1:8088/cluster/app/application_1492898710031_0005Then, click on links to logs of each attempt.
+Diagnostics: Container [pid=2728,containerID=container_1492898710031_0005_02_000001] is running beyond virtual memory limits. Current usage: 28.8 MB of 128 MB physical memory used; 1.1 GB of 268.8 MB virtual memory used. Killing container.
+Dump of the process-tree for container_1492898710031_0005_02_000001 :
+	|- PID PPID PGRPID SESSID CMD_NAME USER_MODE_TIME(MILLIS) SYSTEM_TIME(MILLIS) VMEM_USAGE(BYTES) RSSMEM_USAGE(PAGES) FULL_CMD_LINE
+	|- 2728 2726 2728 2728 (bash) 1 3 4071424 252 /bin/bash -c /opt/jdk1.8.0_121//bin/java -Djava.io.tmpdir=/tmp/hadoop-hduser/nm-local-dir/usercache/hduser/appcache/application_1492898710031_0005/container_1492898710031_0005_02_000001/tmp -Dlog4j.configuration=container-log4j.properties -Dyarn.app.container.log.dir=/opt/hadoop-2.7.3/logs/userlogs/application_1492898710031_0005/container_1492898710031_0005_02_000001 -Dyarn.app.container.log.filesize=0 -Dhadoop.root.logger=INFO,CLA -Dhadoop.root.logfile=syslog  -Xmx1024m org.apache.hadoop.mapreduce.v2.app.MRAppMaster 1>/opt/hadoop-2.7.3/logs/userlogs/application_1492898710031_0005/container_1492898710031_0005_02_000001/stdout 2>/opt/hadoop-2.7.3/logs/userlogs/application_1492898710031_0005/container_1492898710031_0005_02_000001/stderr  
+	|- 2736 2728 2728 2728 (java) 234 31 1155727360 7130 /opt/jdk1.8.0_121//bin/java -Djava.io.tmpdir=/tmp/hadoop-hduser/nm-local-dir/usercache/hduser/appcache/application_1492898710031_0005/container_1492898710031_0005_02_000001/tmp -Dlog4j.configuration=container-log4j.properties -Dyarn.app.container.log.dir=/opt/hadoop-2.7.3/logs/userlogs/application_1492898710031_0005/container_1492898710031_0005_02_000001 -Dyarn.app.container.log.filesize=0 -Dhadoop.root.logger=INFO,CLA -Dhadoop.root.logfile=syslog -Xmx1024m org.apache.hadoop.mapreduce.v2.app.MRAppMaster 
+
+Container killed on request. Exit code is 143
+Container exited with a non-zero exit code 143
+Failing this attempt. Failing the application.
+17/04/22 17:26:44 INFO mapreduce.Job: Counters: 0
+Job Finished in 15.317 seconds
+java.io.FileNotFoundException: File does not exist: hdfs://hadoopnode1:53410/user/hduser/QuasiMonteCarlo_1492899971216_565407536/out/reduce-out
+	at org.apache.hadoop.hdfs.DistributedFileSystem$22.doCall(DistributedFileSystem.java:1309)
+	at org.apache.hadoop.hdfs.DistributedFileSystem$22.doCall(DistributedFileSystem.java:1301)
+	at org.apache.hadoop.fs.FileSystemLinkResolver.resolve(FileSystemLinkResolver.java:81)
+	at org.apache.hadoop.hdfs.DistributedFileSystem.getFileStatus(DistributedFileSystem.java:1301)
+	at org.apache.hadoop.io.SequenceFile$Reader.<init>(SequenceFile.java:1819)
+	at org.apache.hadoop.io.SequenceFile$Reader.<init>(SequenceFile.java:1843)
+	at org.apache.hadoop.examples.QuasiMonteCarlo.estimatePi(QuasiMonteCarlo.java:314)
+	at org.apache.hadoop.examples.QuasiMonteCarlo.run(QuasiMonteCarlo.java:354)
+	at org.apache.hadoop.util.ToolRunner.run(ToolRunner.java:70)
+	at org.apache.hadoop.examples.QuasiMonteCarlo.main(QuasiMonteCarlo.java:363)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.hadoop.util.ProgramDriver$ProgramDescription.invoke(ProgramDriver.java:71)
+	at org.apache.hadoop.util.ProgramDriver.run(ProgramDriver.java:144)
+	at org.apache.hadoop.examples.ExampleDriver.main(ExampleDriver.java:74)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.hadoop.util.RunJar.run(RunJar.java:221)
+	at org.apache.hadoop.util.RunJar.main(RunJar.java:136)
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ yarn jar hadoop-mapreduce-examples-2.7.3.jar pi 1 1
+Number of Maps  = 1
+Samples per Map = 1
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/22 17:32:58 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Wrote input for Map #0
+Starting Job
+17/04/22 17:33:07 INFO client.RMProxy: Connecting to ResourceManager at hadoopnode1/192.168.0.110:8032
+17/04/22 17:33:11 INFO input.FileInputFormat: Total input paths to process : 1
+17/04/22 17:33:11 INFO mapreduce.JobSubmitter: number of splits:1
+17/04/22 17:33:12 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1492900369478_0001
+17/04/22 17:33:14 INFO impl.YarnClientImpl: Submitted application application_1492900369478_0001
+17/04/22 17:33:15 INFO mapreduce.Job: The url to track the job: http://hadoopnode1:8088/proxy/application_1492900369478_0001/
+17/04/22 17:33:15 INFO mapreduce.Job: Running job: job_1492900369478_0001
+17/04/22 17:33:43 INFO mapreduce.Job: Job job_1492900369478_0001 running in uber mode : false
+17/04/22 17:33:43 INFO mapreduce.Job:  map 0% reduce 0%
+17/04/22 17:33:43 INFO mapreduce.Job: Job job_1492900369478_0001 failed with state FAILED due to: Application application_1492900369478_0001 failed 2 times due to AM Container for appattempt_1492900369478_0001_000002 exited with  exitCode: -103
+For more detailed output, check application tracking page:http://hadoopnode1:8088/cluster/app/application_1492900369478_0001Then, click on links to logs of each attempt.
+Diagnostics: Container [pid=4001,containerID=container_1492900369478_0001_02_000001] is running beyond virtual memory limits. Current usage: 17.4 MB of 128 MB physical memory used; 1.1 GB of 268.8 MB virtual memory used. Killing container.
+Dump of the process-tree for container_1492900369478_0001_02_000001 :
+	|- PID PPID PGRPID SESSID CMD_NAME USER_MODE_TIME(MILLIS) SYSTEM_TIME(MILLIS) VMEM_USAGE(BYTES) RSSMEM_USAGE(PAGES) FULL_CMD_LINE
+	|- 4001 3999 4001 4001 (bash) 3 1 4071424 252 /bin/bash -c /opt/jdk1.8.0_121//bin/java -Djava.io.tmpdir=/tmp/hadoop-hduser/nm-local-dir/usercache/hduser/appcache/application_1492900369478_0001/container_1492900369478_0001_02_000001/tmp -Dlog4j.configuration=container-log4j.properties -Dyarn.app.container.log.dir=/opt/hadoop-2.7.3/logs/userlogs/application_1492900369478_0001/container_1492900369478_0001_02_000001 -Dyarn.app.container.log.filesize=0 -Dhadoop.root.logger=INFO,CLA -Dhadoop.root.logfile=syslog  -Xmx1024m org.apache.hadoop.mapreduce.v2.app.MRAppMaster 1>/opt/hadoop-2.7.3/logs/userlogs/application_1492900369478_0001/container_1492900369478_0001_02_000001/stdout 2>/opt/hadoop-2.7.3/logs/userlogs/application_1492900369478_0001/container_1492900369478_0001_02_000001/stderr  
+	|- 4009 4001 4001 4001 (java) 61 23 1146146816 4198 /opt/jdk1.8.0_121//bin/java -Djava.io.tmpdir=/tmp/hadoop-hduser/nm-local-dir/usercache/hduser/appcache/application_1492900369478_0001/container_1492900369478_0001_02_000001/tmp -Dlog4j.configuration=container-log4j.properties -Dyarn.app.container.log.dir=/opt/hadoop-2.7.3/logs/userlogs/application_1492900369478_0001/container_1492900369478_0001_02_000001 -Dyarn.app.container.log.filesize=0 -Dhadoop.root.logger=INFO,CLA -Dhadoop.root.logfile=syslog -Xmx1024m org.apache.hadoop.mapreduce.v2.app.MRAppMaster 
+
+Container killed on request. Exit code is 143
+Container exited with a non-zero exit code 143
+Failing this attempt. Failing the application.
+17/04/22 17:33:43 INFO mapreduce.Job: Counters: 0
+Job Finished in 37.357 seconds
+java.io.FileNotFoundException: File does not exist: hdfs://hadoopnode1:53410/user/hduser/QuasiMonteCarlo_1492900376465_1211453904/out/reduce-out
+	at org.apache.hadoop.hdfs.DistributedFileSystem$22.doCall(DistributedFileSystem.java:1309)
+	at org.apache.hadoop.hdfs.DistributedFileSystem$22.doCall(DistributedFileSystem.java:1301)
+	at org.apache.hadoop.fs.FileSystemLinkResolver.resolve(FileSystemLinkResolver.java:81)
+	at org.apache.hadoop.hdfs.DistributedFileSystem.getFileStatus(DistributedFileSystem.java:1301)
+	at org.apache.hadoop.io.SequenceFile$Reader.<init>(SequenceFile.java:1819)
+	at org.apache.hadoop.io.SequenceFile$Reader.<init>(SequenceFile.java:1843)
+	at org.apache.hadoop.examples.QuasiMonteCarlo.estimatePi(QuasiMonteCarlo.java:314)
+	at org.apache.hadoop.examples.QuasiMonteCarlo.run(QuasiMonteCarlo.java:354)
+	at org.apache.hadoop.util.ToolRunner.run(ToolRunner.java:70)
+	at org.apache.hadoop.examples.QuasiMonteCarlo.main(QuasiMonteCarlo.java:363)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.hadoop.util.ProgramDriver$ProgramDescription.invoke(ProgramDriver.java:71)
+	at org.apache.hadoop.util.ProgramDriver.run(ProgramDriver.java:144)
+	at org.apache.hadoop.examples.ExampleDriver.main(ExampleDriver.java:74)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.hadoop.util.RunJar.run(RunJar.java:221)
+	at org.apache.hadoop.util.RunJar.main(RunJar.java:136)
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ yarn jar hadoop-mapreduce-examples-2.7.3.jar pi 1 1
+Number of Maps  = 1
+Samples per Map = 1
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/22 17:36:35 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Wrote input for Map #0
+Starting Job
+17/04/22 17:36:43 INFO client.RMProxy: Connecting to ResourceManager at hadoopnode1/192.168.0.110:8032
+17/04/22 17:36:48 INFO input.FileInputFormat: Total input paths to process : 1
+17/04/22 17:36:48 INFO mapreduce.JobSubmitter: number of splits:1
+17/04/22 17:36:50 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1492900593461_0001
+17/04/22 17:36:53 INFO impl.YarnClientImpl: Submitted application application_1492900593461_0001
+17/04/22 17:36:53 INFO mapreduce.Job: The url to track the job: http://hadoopnode1:8088/proxy/application_1492900593461_0001/
+17/04/22 17:36:53 INFO mapreduce.Job: Running job: job_1492900593461_0001
+17/04/22 17:37:52 INFO mapreduce.Job: Job job_1492900593461_0001 running in uber mode : false
+17/04/22 17:37:52 INFO mapreduce.Job:  map 0% reduce 0%
+17/04/22 17:59:30 INFO mapreduce.Job:  map 100% reduce 0%
+17/04/22 18:15:42 INFO mapreduce.Job: Task Id : attempt_1492900593461_0001_m_000000_1000, Status : FAILED
+AttemptID:attempt_1492900593461_0001_m_000000_1000 Timed out after 600 secs
+17/04/22 18:15:44 INFO mapreduce.Job:  map 0% reduce 0%
+17/04/22 18:15:44 INFO mapreduce.Job: Job job_1492900593461_0001 failed with state FAILED due to: Application application_1492900593461_0001 failed 2 times due to ApplicationMaster for attempt appattempt_1492900593461_0001_000002 timed out. Failing the application.
+17/04/22 18:15:44 INFO mapreduce.Job: Counters: 0
+Job Finished in 2340.863 seconds
+java.io.FileNotFoundException: File does not exist: hdfs://hadoopnode1:53410/user/hduser/QuasiMonteCarlo_1492900593459_649290851/out/reduce-out
+	at org.apache.hadoop.hdfs.DistributedFileSystem$22.doCall(DistributedFileSystem.java:1309)
+	at org.apache.hadoop.hdfs.DistributedFileSystem$22.doCall(DistributedFileSystem.java:1301)
+	at org.apache.hadoop.fs.FileSystemLinkResolver.resolve(FileSystemLinkResolver.java:81)
+	at org.apache.hadoop.hdfs.DistributedFileSystem.getFileStatus(DistributedFileSystem.java:1301)
+	at org.apache.hadoop.io.SequenceFile$Reader.<init>(SequenceFile.java:1819)
+	at org.apache.hadoop.io.SequenceFile$Reader.<init>(SequenceFile.java:1843)
+	at org.apache.hadoop.examples.QuasiMonteCarlo.estimatePi(QuasiMonteCarlo.java:314)
+	at org.apache.hadoop.examples.QuasiMonteCarlo.run(QuasiMonteCarlo.java:354)
+	at org.apache.hadoop.util.ToolRunner.run(ToolRunner.java:70)
+	at org.apache.hadoop.examples.QuasiMonteCarlo.main(QuasiMonteCarlo.java:363)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.hadoop.util.ProgramDriver$ProgramDescription.invoke(ProgramDriver.java:71)
+	at org.apache.hadoop.util.ProgramDriver.run(ProgramDriver.java:144)
+	at org.apache.hadoop.examples.ExampleDriver.main(ExampleDriver.java:74)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.apache.hadoop.util.RunJar.run(RunJar.java:221)
+	at org.apache.hadoop.util.RunJar.main(RunJar.java:136)
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ jps
+948 DataNode
+4489 Jps
+3564 NodeManager
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ ls
+hadoop-mapreduce-client-app-2.7.3.jar
+hadoop-mapreduce-client-common-2.7.3.jar
+hadoop-mapreduce-client-core-2.7.3.jar
+hadoop-mapreduce-client-hs-2.7.3.jar
+hadoop-mapreduce-client-hs-plugins-2.7.3.jar
+hadoop-mapreduce-client-jobclient-2.7.3.jar
+hadoop-mapreduce-client-jobclient-2.7.3-tests.jar
+hadoop-mapreduce-client-shuffle-2.7.3.jar
+hadoop-mapreduce-examples-2.7.3.jar
+lib
+lib-examples
+sources
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ cd $HADOOP_CONF_DIRhduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ ls
+capacity-scheduler.xml      httpfs-env.sh            mapred-env.sh
+configuration.xsl           httpfs-log4j.properties  mapred-queues.xml.template
+container-executor.cfg      httpfs-signature.secret  mapred-site.xml
+core-site.xml               httpfs-site.xml          mapred-site.xml.template
+hadoop-env.cmd              kms-acls.xml             slaves
+hadoop-env.sh               kms-env.sh               ssl-client.xml.example
+hadoop-metrics2.properties  kms-log4j.properties     ssl-server.xml.example
+hadoop-metrics.properties   kms-site.xml             yarn-env.cmd
+hadoop-policy.xml           log4j.properties         yarn-env.sh
+hdfs-site.xml               mapred-env.cmd           yarn-site.xml
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ nano yarn-site.xml
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ nano yarn-site.xml
+hduser@hadoopnode2:/opt/hadoop-2.7.3/etc/hadoop$ cd /opt/hadoop-2.7.3/share/hadoop/mapreduce
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ yarn jar hadoop-mapreduce-examples-2.7.3.jar wordcount /Iliad.txt /IliadCount2
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/22 22:54:55 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/04/22 22:55:01 INFO client.RMProxy: Connecting to ResourceManager at hadoopnode1/192.168.0.110:8032
+17/04/22 22:55:05 INFO input.FileInputFormat: Total input paths to process : 1
+17/04/22 22:55:06 INFO mapreduce.JobSubmitter: number of splits:1
+17/04/22 22:55:07 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1492900593461_0002
+17/04/22 22:55:08 INFO impl.YarnClientImpl: Submitted application application_1492900593461_0002
+17/04/22 22:55:08 INFO mapreduce.Job: The url to track the job: http://hadoopnode1:8088/proxy/application_1492900593461_0002/
+17/04/22 22:55:08 INFO mapreduce.Job: Running job: job_1492900593461_0002
+17/04/22 22:55:42 INFO mapreduce.Job: Job job_1492900593461_0002 running in uber mode : false
+17/04/22 22:55:42 INFO mapreduce.Job:  map 0% reduce 0%
+17/04/22 23:13:48 INFO mapreduce.Job:  map 100% reduce 0%
+17/04/23 00:10:17 INFO mapreduce.Job:  map 0% reduce 0%
+17/04/23 00:10:39 INFO mapreduce.Job: Job job_1492900593461_0002 failed with state FAILED due to: Application application_1492900593461_0002 failed 2 times due to Error launching appattempt_1492900593461_0002_000002. Got exception: org.apache.hadoop.yarn.exceptions.YarnException: Unauthorized request to start container. 
+This token is expired. current time is 1492924198807 found 1492922355508
+Note: System times on machines may be out of sync. Check system time and time zones.
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.apache.hadoop.yarn.api.records.impl.pb.SerializedExceptionPBImpl.instantiateException(SerializedExceptionPBImpl.java:168)
+	at org.apache.hadoop.yarn.api.records.impl.pb.SerializedExceptionPBImpl.deSerialize(SerializedExceptionPBImpl.java:106)
+	at org.apache.hadoop.yarn.server.resourcemanager.amlauncher.AMLauncher.launch(AMLauncher.java:122)
+	at org.apache.hadoop.yarn.server.resourcemanager.amlauncher.AMLauncher.run(AMLauncher.java:250)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+. Failing the application.
+17/04/23 00:10:39 INFO mapreduce.Job: Counters: 0
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ hdfs dfs -ls /
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/23 07:37:43 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Found 4 items
+-rw-r--r--   2 hduser supergroup    1111193 2017-04-22 17:07 /Iliad.txt
+drwxr-xr-x   - hduser supergroup          0 2017-04-22 22:55 /IliadCount2
+drwx------   - hduser supergroup          0 2017-04-22 17:10 /tmp
+drwxr-xr-x   - hduser supergroup          0 2017-04-22 17:25 /user
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ hdfs dfs -ls /IliadCount2
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/23 07:38:05 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Found 1 items
+drwxr-xr-x   - hduser supergroup          0 2017-04-22 22:55 /IliadCount2/_temporary
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ yarn jar hadoop-mapreduce-examples-2.7.3.jar wordcount /Iliad.txt /IliadCount
+Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
+It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
+17/04/23 07:38:26 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/04/23 07:38:31 INFO client.RMProxy: Connecting to ResourceManager at hadoopnode1/192.168.0.110:8032
+17/04/23 07:38:35 INFO input.FileInputFormat: Total input paths to process : 1
+17/04/23 07:38:36 INFO mapreduce.JobSubmitter: number of splits:1
+17/04/23 07:38:36 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1492900593461_0003
+17/04/23 07:38:38 INFO impl.YarnClientImpl: Submitted application application_1492900593461_0003
+17/04/23 07:38:38 INFO mapreduce.Job: The url to track the job: http://hadoopnode1:8088/proxy/application_1492900593461_0003/
+17/04/23 07:38:38 INFO mapreduce.Job: Running job: job_1492900593461_0003
+17/04/23 07:39:18 INFO mapreduce.Job: Job job_1492900593461_0003 running in uber mode : false
+17/04/23 07:39:18 INFO mapreduce.Job:  map 0% reduce 0%
+17/04/23 07:39:41 INFO mapreduce.Job:  map 67% reduce 0%
+17/04/23 07:39:44 INFO mapreduce.Job:  map 100% reduce 0%
+17/04/23 07:40:09 INFO mapreduce.Job:  map 100% reduce 100%
+17/04/23 07:40:10 INFO mapreduce.Job: Job job_1492900593461_0003 completed successfully
+17/04/23 07:40:11 INFO mapreduce.Job: Counters: 49
+	File System Counters
+		FILE: Number of bytes read=349637
+		FILE: Number of bytes written=937165
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=1111292
+		HDFS: Number of bytes written=257189
+		HDFS: Number of read operations=6
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=2
+	Job Counters 
+		Launched map tasks=1
+		Launched reduce tasks=1
+		Data-local map tasks=1
+		Total time spent by all maps in occupied slots (ms)=45734
+		Total time spent by all reduces in occupied slots (ms)=62559
+		Total time spent by all map tasks (ms)=22867
+		Total time spent by all reduce tasks (ms)=20853
+		Total vcore-milliseconds taken by all map tasks=22867
+		Total vcore-milliseconds taken by all reduce tasks=20853
+		Total megabyte-milliseconds taken by all map tasks=5853952
+		Total megabyte-milliseconds taken by all reduce tasks=8007552
+	Map-Reduce Framework
+		Map input records=19150
+		Map output records=184794
+		Map output bytes=1819171
+		Map output materialized bytes=349637
+		Input split bytes=99
+		Combine input records=184794
+		Combine output records=23648
+		Reduce input groups=23648
+		Reduce shuffle bytes=349637
+		Reduce input records=23648
+		Reduce output records=23648
+		Spilled Records=47296
+		Shuffled Maps =1
+		Failed Shuffles=0
+		Merged Map outputs=1
+		GC time elapsed (ms)=1192
+		CPU time spent (ms)=13260
+		Physical memory (bytes) snapshot=220286976
+		Virtual memory (bytes) snapshot=641531904
+		Total committed heap usage (bytes)=132689920
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=1111193
+	File Output Format Counters 
+		Bytes Written=257189
+hduser@hadoopnode2:/opt/hadoop-2.7.3/share/hadoop/mapreduce$ packet_write_wait: Connection to 192.168.0.111 port 22: Broken pipe
+(env) ASPs-MacBook-Pro:~ asp$ ssh hduser@hadoopnode2
+hduser@hadoopnode2's password: 
+  ___                               ____  _    ___             
+ / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___ 
+| | | | '__/ _` | '_ \ / _` |/ _ \ | |_) | | | | | | '_ \ / _ \
+| |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
+ \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
+                       |___/                                   
+
+Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
+System load:   0.00            	Up time:       1 day		
+Memory usage:  23 % of 494Mb  	IP:            192.168.0.111
+CPU temp:      47°C           	
+Usage of /:    13% of 15G    	
+
+Last login: Sat Apr 22 22:52:13 2017 from 192.168.0.104
+hduser@hadoopnode2:~$ jps
+7407 Jps
+hduser@hadoopnode2:~$ logout
+Connection to hadoopnode2 closed.
+(env) ASPs-MacBook-Pro:~ asp$ logout
+Saving session...
+...copying shared history...
+...saving history...truncating history files...
+...completed.
+
+[Process completed]
+
