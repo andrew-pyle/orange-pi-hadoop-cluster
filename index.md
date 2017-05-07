@@ -1,11 +1,15 @@
----
+<!-- ---
 layout: default
 title: Orange Pi Hadoop Cluster
----
+--- -->
 
 ![Orange Pi One Cluster](images/3MT-Andrew-Pyle.png)
+See the online, interactive version at https://andrew-pyle.github.io/orange-pi-hadoop-cluster/
 
 # Big Data, Small Scale
+
+ANDREW PYLE | MS-Information Science | UA Little Rock
+
 [Hadoop](http://hadoop.apache.org/) is an open-source distributed computing framework from the [Apache Software Foundation](http://www.apache.org/). It is primarily aimed at Big Data analytics and has become the de-facto standard for Distributed analytics. It runs on Linux, and (lucky for us data students) the [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) is a very affordable machine to learn about distributed computing, albeit with very limited resources.
 
 So let's set up a fully distributed, physical Hadoop 2 cluster with single-board Linux computers! I will be using two [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of two single-board computers. This setup will not be powerful enough for production use, but it will demonstrate a simple implementation of the Hadoop 2 ecosystem for learning purposes.
@@ -17,6 +21,7 @@ So let's set up a fully distributed, physical Hadoop 2 cluster with single-board
 2. [Orange Pi Setup](#orange-pi-setup)   
 &emsp;2.1. [Install the Operating System](#install-the-operating-system)   
 &emsp;2.2. [Operate the Operating System](#operate-the-operating-system)   
+&emsp;2.3. [References](#references)   
 3. [Hadoop 2.7.3](#hadoop-273)   
 &emsp;3.1. [Hadoop 2 Architecture](#hadoop-2-architecture)   
 &emsp;3.2. [Install Oracle Java](#install-oracle-java)   
@@ -40,10 +45,11 @@ So let's set up a fully distributed, physical Hadoop 2 cluster with single-board
 &emsp;4.10. [Calculate π Test](#calculate-π-test)   
 &emsp;4.11. [Optimize Configuration](#optimize-configuration)   
 &emsp;4.12. [Test Again](#test-again)   
-5. [Project Discussion](#project-discussion)   
-&emsp;5.1. [Hadoop Application Failure Analysis](#hadoop-application-failure-analysis)   
-&emsp;5.2. [Future Work](#future-work)   
-&emsp;5.3. [Conclusion](#conclusion)   
+5. [Final Configuration](#final-configuration)   
+6. [Project Discussion](#project-discussion)   
+&emsp;6.1. [Hadoop Application Failure Analysis](#hadoop-application-failure-analysis)   
+&emsp;6.2. [Future Work](#future-work)   
+&emsp;6.3. [Conclusions](#conclusions)   
 
 <!-- /MDTOC -->
 
@@ -84,17 +90,21 @@ Download and unzip the program, then compile it for your system.
 $ cd f3-6.0
 
 $ ls
-LICENSE		f3fix.c		f3write.h2w	libutils.c	version.h
+LICENSE		f3fix.c		f3write.h2w	libutils.c
+  version.h
 Makefile	f3probe.c	libdevs.c	libutils.h
 README.md	f3read.1	libdevs.h	log-f3wr
 changelog	f3read.c	libprobe.c	utils.c
 f3brew.c	f3write.c	libprobe.h	utils.h
 
 $ make
-cc -std=c99 -Wall -Wextra -pedantic -MMD -ggdb   -c -o utils.o utils.c
-cc -std=c99 -Wall -Wextra -pedantic -MMD -ggdb   -c -o f3write.o f3write.c
+cc -std=c99 -Wall -Wextra -pedantic -MMD -ggdb   -c -o
+  utils.o utils.c
+cc -std=c99 -Wall -Wextra -pedantic -MMD -ggdb   -c -o
+  f3write.o f3write.c
 cc -o f3write utils.o f3write.o -lm
-cc -std=c99 -Wall -Wextra -pedantic -MMD -ggdb   -c -o f3read.o f3read.c
+cc -std=c99 -Wall -Wextra -pedantic -MMD -ggdb   -c -o
+  f3read.o f3read.c
 cc -o f3read utils.o f3read.o
 ```
 
@@ -129,28 +139,29 @@ Average writing speed: 9.79 MB/s
 >Free space: 14.83 GB
 >Creating file 1.h2w ... 0.29% -- 10.00 MB/s
 >
->f3write: Write to file /Volumes/NO NAME/1.h2w failed: Input/output error
+>f3write: Write to file /Volumes/NO NAME/1.h2w failed:
+  Input/output error
 >```
 
 And run f3read to verify the data written.
 ```bash
 $ ./f3read /Volumes/"NO NAME"
-                  SECTORS      ok/corrupted/changed/overwritten
-Validating file 1.h2w ... 2097152/        0/      0/      0
-Validating file 2.h2w ... 2097152/        0/      0/      0
-Validating file 3.h2w ... 2097152/        0/      0/      0
-Validating file 4.h2w ... 2097152/        0/      0/      0
-Validating file 5.h2w ... 2097152/        0/      0/      0
-Validating file 6.h2w ... 2097152/        0/      0/      0
-Validating file 7.h2w ... 2097152/        0/      0/      0
-Validating file 8.h2w ... 2097152/        0/      0/      0
-Validating file 9.h2w ... 2097152/        0/      0/      0
-Validating file 10.h2w ... 2097152/        0/      0/      0
-Validating file 11.h2w ... 2097152/        0/      0/      0
-Validating file 12.h2w ... 2097152/        0/      0/      0
-Validating file 13.h2w ... 2097152/        0/      0/      0
-Validating file 14.h2w ... 2097152/        0/      0/      0
-Validating file 15.h2w ... 1733888/        0/      0/      0
+                  SECTORS   ok/corrupted/changed/overwritten
+Validating file 1.h2w ... 2097152/     0/      0/      0
+Validating file 2.h2w ... 2097152/     0/      0/      0
+Validating file 3.h2w ... 2097152/     0/      0/      0
+Validating file 4.h2w ... 2097152/     0/      0/      0
+Validating file 5.h2w ... 2097152/     0/      0/      0
+Validating file 6.h2w ... 2097152/     0/      0/      0
+Validating file 7.h2w ... 2097152/     0/      0/      0
+Validating file 8.h2w ... 2097152/     0/      0/      0
+Validating file 9.h2w ... 2097152/     0/      0/      0
+Validating file 10.h2w ... 2097152/    0/      0/      0
+Validating file 11.h2w ... 2097152/    0/      0/      0
+Validating file 12.h2w ... 2097152/    0/      0/      0
+Validating file 13.h2w ... 2097152/    0/      0/      0
+Validating file 14.h2w ... 2097152/    0/      0/      0
+Validating file 15.h2w ... 1733888/    0/      0/      0
 
   Data OK: 14.83 GB (31094016 sectors)
 Data LOST: 0.00 Byte (0 sectors)
@@ -241,9 +252,10 @@ A nice login screen is displayed upon SSH connection.
  \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
                        |___/                                   
 
-Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
-System load:   0.01            	Up time:       11 min		
-Memory usage:  10 % of 494Mb  	IP:            192.168.0.108
+Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie)
+  3.4.113-sun8i   
+System load:   0.01            	Up time:     11 min		
+Memory usage:  10 % of 494Mb  	IP:          192.168.0.108
 CPU temp:      39°C           	
 Usage of /:    13% of 15G    	
 
@@ -260,15 +272,16 @@ The h3disp program is provided to set the display settings.
 root@orangepione:$ sudo h3disp
 Usage: h3disp [-h/-H] -m [video mode] [-d] [-c [0-2]]
 
-############################################################################
+###########################################################
 
  This is a tool to set the display resolution of your Orange
  Pi by patching script.bin.
 
- In case you use an HDMI-to-DVI converter please use the -d switch.
+ In case you use an HDMI-to-DVI converter please use the -d
+  switch.
 
- The resolution can be set using the -m switch. The following resolutions
- are currently supported:
+ The resolution can be set using the -m switch. The following
+  resolutions are currently supported:
 
     480i    use "-m 480i" or "-m 0"
     576i	use "-m 576i" or "-m 1"
@@ -305,7 +318,8 @@ Usage: h3disp [-h/-H] -m [video mode] [-d] [-c [0-2]]
 'h3disp -m 1080p60 -d' (1920x1080@60Hz DVI)
     'h3disp -m 720i' (1280x720@30Hz HDMI)
 
- You can also specify the colour-range for your HDMI-display with the -c switch.
+ You can also specify the colour-range for your HDMI-display
+  with the -c switch.
 
  The following values for -c are currently supported:
 
@@ -313,7 +327,7 @@ Usage: h3disp [-h/-H] -m [video mode] [-d] [-c [0-2]]
     1 -- RGB range 0-255 (Full range, use "-c 1")
     2 -- RGB range 16-235 (Limited video, "-c 2")
 
-############################################################################
+###########################################################
 ```
 My monitor is 1280x1024 @ 60 hz with a DVI adapter. I am not sure why the DVI adapter makes a difference, but it has its own '-d' flag. I will use the following command:
 ```bash
@@ -331,7 +345,8 @@ Run the following commands to check.
 ```bash
 asp@orangepione:$ fdisk -l
 
-Disk /dev/mmcblk0: 14.9 GiB, 15931539456 bytes, 31116288 sectors
+Disk /dev/mmcblk0: 14.9 GiB, 15931539456 bytes,
+  31116288 sectors
 Units: sectors of 1 * 512 = 512 bytes
 Sector size (logical/physical): 512 bytes / 512 bytes
 I/O size (minimum/optimal): 512 bytes / 512 bytes
@@ -381,9 +396,10 @@ And lastly, I am getting a notification below the login screen that there are up
  \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
                        |___/                                   
 
-Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie) 3.4.113-sun8i   
-System load:   0.03            	Up time:       3 min		
-Memory usage:  10 % of 494Mb  	IP:            192.168.0.108
+Welcome to ARMBIAN 5.25 stable Debian GNU/Linux 8 (jessie)
+  3.4.113-sun8i   
+System load:   0.03            	Up time:    3 min		
+Memory usage:  10 % of 494Mb  	IP:         192.168.0.108
 CPU temp:      35°C           	
 Usage of /:    7% of 15G   
 
@@ -491,9 +507,11 @@ sudo tar xzvf jdk-8u121-linux-arm32-vfp-hflt.tar.gz -C /opt
 ```
 Next, we will setup the Java installation with the following commands from [Pi Projects](http://www.piprojects.xyz/install-hadoop-java-orange-pi/). I do not entirely understand this process, but these commands set up Oracle Java 8 JDK as the default `java` and `javac` for our environment by creating `symlinks` from our installation to `/usr/bin/java` and `/usr/bin/java`.
 ```bash
-$ sudo update-alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_121/bin/javac 1
+$ sudo update-alternatives --install /usr/bin/javac javac \
+  /opt/jdk1.8.0_121/bin/javac 1
 
-$ sudo update-alternatives --install /usr/bin/java java /opt/jdk1.8.0_121/bin/java 1
+$ sudo update-alternatives --install /usr/bin/java java \
+  /opt/jdk1.8.0_121/bin/java 1
 
 # Allows interactive selection of default java location
 $ sudo update-alternatives --config javac
@@ -504,8 +522,10 @@ We can see that the symlinks have been made.
 $ ls /usr/bin/java
 /usr/bin/java
 asp@orangepione:~$ ls -l  /usr/bin/ | grep java
-lrwxrwxrwx 1 root root   22 Apr 14 20:17 java -> /etc/alternatives/java
-lrwxrwxrwx 1 root root   23 Apr 14 20:17 javac -> /etc/alternatives/javac
+lrwxrwxrwx 1 root root   22 Apr 14 20:17 java -> /etc/ \
+  alternatives/java
+lrwxrwxrwx 1 root root   23 Apr 14 20:17 javac -> /etc/ \
+  alternatives/javac
 ```
 #### Installing Java References
 1. [Oracle Java JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
@@ -533,7 +553,8 @@ Now we will download Hadoop!
 
 Go to http://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz and `wget` the Hadoop binary from the suggested mirror for the download.
 ```bash
-$ wget http://www.namesdir.com/mirrors/apache/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
+$ wget http://www.namesdir.com/mirrors/apache/hadoop/ \
+  common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
 
 $ sudo tar xzvf hadoop-2.7.3.tar.gz -C /opt
 ```
@@ -581,7 +602,8 @@ export HADOOP_HDFS_HOME=$HADOOP_HOME
 export YARN_HOME=$HADOOP_HOME
 export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 export YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop
-export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$JAVA_HOME/bin
+export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin: \
+  $JAVA_HOME/bin
 ```
 Press `Ctrl-o` to write-out (it's like save) and `Crtl-x` to exit `nano` after writing-out.
 
@@ -608,9 +630,10 @@ It seems that hard coding the link is helpful for a distributed cluster, as we a
 >```bash
 ># Set Hadoop-specific environment variables here.
 >
-># The only required environment variable is JAVA_HOME.  All others are
-># optional.  When running a distributed configuration it is best to
-># set JAVA_HOME in this file, so that it is correctly defined on
+># The only required environment variable is JAVA_HOME.  
+># All others are optional.  When running a distributed
+># configuration it is best to set JAVA_HOME in this
+># file, so that it is correctly defined on
 ># remote nodes.
 >
 ># The java implementation to use.
@@ -625,11 +648,13 @@ Ensure the environment variables reference Hadoop properly
 $ hadoop version
 
 Hadoop 2.7.3
-Subversion https://git-wip-us.apache.org/repos/asf/hadoop.git -r baa91f7c6bc9cb92be5982de4719c1c8af91ccff
+Subversion https://git-wip-us.apache.org/repos/ \
+  asf/hadoop.git -r baa91f7c6bc9cb92be5982de4719c1c8af91ccff
 Compiled by root on 2016-08-18T01:41Z
 Compiled with protoc 2.5.0
 From source with checksum 2e4ce5f957ea4db193bce3734ff29ff4
-This command was run using /opt/hadoop-2.7.3/share/hadoop/common/hadoop-common-2.7.3.jar
+This command was run using /opt/hadoop-2.7.3/share/hadoop/ \
+  common/hadoop-common-2.7.3.jar
 ```
 If you get an error, one of the environment variables is not properly set.
 
@@ -690,8 +715,9 @@ Create the SSH key pair with blank password:
 $ mkdir ~/.ssh
 $ ssh-keygen -t rsa -P "" # -t rsa specifies key type
                           # -P "" specifies blank password
-$ cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys # Copies public (.pub) key into the publicly
-                                                 # accessible directory for authorized login keys
+$ cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
+# Copies public (.pub) key into the publicly
+# accessible directory for authorized login keys
 ```
 Now login to this machine to add the machine's certificate to the `~/.ssh/known_hosts` directory:
 
@@ -765,7 +791,8 @@ Now we will setup the Hadoop system itself. There are 5 relevant setting files t
 
     ```bash
     # Creates the .xml file from the template by copying
-    $ cp $HADOOP_CONF_DIR/mapred-site.xml.template $HADOOP_CONF_DIR/mapred-site.xml
+    $ cp $HADOOP_CONF_DIR/mapred-site.xml.template \
+      $HADOOP_CONF_DIR/mapred-site.xml
     $ nano mapred-site.xml
     ```
     Add the following property:
@@ -781,7 +808,9 @@ Now we will setup the Hadoop system itself. There are 5 relevant setting files t
     ```xml
     <configuration>
       <property>
-        <name>yarn.resourcemanager.resource-tracker.address</name>
+        <name>
+          yarn.resourcemanager.resource-tracker.address
+        </name>
         <value>hadoopnode1:8025</value>
       </property>
       <property>
@@ -844,7 +873,7 @@ Open a CLI (Terminal on macOS) and run the following commands:
 ```bash
 $ diskutil list
 ```
-Here is my output:
+<!-- Here is my output:
 ```
 /dev/disk0 (internal, physical):
    #:                   TYPE NAME            SIZE      IDENTIFIER
@@ -861,7 +890,7 @@ Here is my output:
    #:                   TYPE NAME       SIZE     IDENTIFIER
    0: FDisk_partition_scheme           *15.9 GB  disk3
    1:                  Linux            15.6 GB  disk3s1
-```
+``` -->
 Let's unmount the SD card file system:
 ```bash
 $ diskutil unmountDisk /dev/disk3
@@ -883,7 +912,8 @@ It took about 6 min for me. Output:
 ```
 15193+1 records in
 15193+1 records out
-15931539456 bytes transferred in 355.982354 secs (44753734 bytes/sec)
+15931539456 bytes transferred in 355.982354 secs
+  (44753734 bytes/sec)
 ```
 
 ##### Flash the OS Image
@@ -918,8 +948,10 @@ $ $HADOOP_HOME/sbin/start-yarn.sh
 ```
 If you haven't logged into one or more of the nodes as we did above in [SSH Acess](#ssh-access), it will ask whether to trust the Host Key.
 ```
-The authenticity of host 'namenode2 (192.168.0.110)' can't be established.
-ECDSA key fingerprint is xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx.
+The authenticity of host 'namenode2 (192.168.0.110)' \
+  can't be established.
+ECDSA key fingerprint is xx:xx:xx:xx:xx:xx:xx:xx:
+  xx:xx:xx:xx:xx:xx:xx:xx.
 Are you sure you want to continue connecting (yes/no)?
 ```
 Enter yes.
@@ -965,7 +997,8 @@ Hadoop ships with a .jar of example MapReduce applications, located at `$HADOOP_
 You can run these with this command:
 ```bash
 $ cd $HADOOP_HOME/share/hadoop/mapreduce
-$ yarn jar hadoop-mapreduce-examples-2.7.3.jar <APPLICATION_NAME> <OPTIONS>
+$ yarn jar hadoop-mapreduce-examples-2.7.3.jar \
+  <APPLICATION_NAME> <OPTIONS>
 
 #Example
 $ yarn hadoop-mapreduce-examples-2.7.3.jar pi 16 100
@@ -1086,7 +1119,9 @@ Copying the `id_rsa.pub` (public key) into the `authorized_keys` file allows any
 
 [Rsync](https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories-on-a-vps) is a great way to clone the folder to the home folder of the other nodes:
 ```bash
-$ rsync -av ~/.ssh hduser@hadoopnode2:~ # sync the .ssh folder to the ~ directory of the other node.
+# sync the .ssh folder to the ~ directory
+# of the other node.
+$ rsync -av ~/.ssh hduser@hadoopnode2:~
 ```
 
 Ensure the SSH key allows passwordless login:
@@ -1105,11 +1140,13 @@ $ exit
 $ hadoop version
 
 Hadoop 2.7.3
-Subversion https://git-wip-us.apache.org/repos/asf/hadoop.git -r baa91f7c6bc9cb92be5982de4719c1c8af91ccff
+Subversion https://git-wip-us.apache.org/repos/
+  asf/hadoop.git -r baa91f7c6bc9cb92be5982de4719c1c8af91ccff
 Compiled by root on 2016-08-18T01:41Z
 Compiled with protoc 2.5.0
 From source with checksum 2e4ce5f957ea4db193bce3734ff29ff4
-This command was run using /opt/hadoop-2.7.3/share/hadoop/common/hadoop-common-2.7.3.jar
+This command was run using /opt/hadoop-2.7.3/share/hadoop/
+  common/hadoop-common-2.7.3.jar
 ```
 Seems to be Hadoop 2.7.3, so that's right.
 
@@ -1171,7 +1208,8 @@ I'll remove all the files on both nodes and try again, using the hdfs directory 
 $ sudo rm -rf /hdfs # hadoopnode1 & 2
 $ sudo mkdir -p /hdfs/namenode # only hadoopnode1
 $ sudo mkdir -p /hdfs/datanode # hadoopnode1 & 2
-$ sudo chown hduser:hadoop /hdfs/ -R # change directory ownership
+# change directory ownership
+$ sudo chown hduser:hadoop /hdfs/ -R
 $ chmod 750 /hdfs # change directory permissions
 $ ls -l / | grep hdfs # view directory
 
@@ -1202,9 +1240,10 @@ File: hdfs-site.xml
 ```
 Sync to `hadoopnode2`:
 ```bash
-$ rsync -av $HADOOP_CONF_DIR/ hduser@hadoopnode2:$HADOOP_CONF_DIR
-# rsync -anv will do a dry-run so you can see the specific files
-# to be sent before you actually send anything.
+$ rsync -av $HADOOP_CONF_DIR/ hduser@hadoopnode2:$HADOOP
+  _CONF_DIR
+# rsync -anv will do a dry-run so you can see the specific
+# files to be sent before you actually send anything.
 ```
 Create HDFS again:
 ```bash
@@ -1290,8 +1329,13 @@ I'm going to try the Hadoop configuration from [Jason Carter's blog](https://med
         <value>mapreduce_shuffle</value>
       </property>
       <property>
-        <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
-        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+        <name>
+          yarn.nodemanager.aux-services.mapreduce.
+            shuffle.class
+        </name>
+        <value>
+          org.apache.hadoop.mapred.ShuffleHandler
+        </value>
       </property>
     </configuration>
     ```
@@ -1352,14 +1396,17 @@ I'm going to try the Hadoop configuration from [Jason Carter's blog](https://med
 5. `hadoop-env.sh`
 Uncomment the following `export` line to define the HADOOP_HEAPSIZE parameter.
 ```bash
-# The maximum amount of heap to use, in MB. Default is 1000.
+# The maximum amount of heap to use, in MB.
+# Default is 1000.
 export HADOOP_HEAPSIZE=128
 ```
 Sync to `hadoopnode2`:
 
 ```bash
-$ rsync -av $HADOOP_CONF_DIR/ hduser@hadoopnode2:$HADOOP_CONF_DIR
-# hdfs-site.xml won't be sent because we didn't make any new changes since the HDFS reformat ones.
+$ rsync -av $HADOOP_CONF_DIR/ hduser@hadoopnode2:$HADOOP
+  _CONF_DIR
+# hdfs-site.xml won't be sent because we didn't make
+# any new changes since the HDFS reformat ones.
 
 sending incremental file list
 core-site.xml
@@ -1379,7 +1426,8 @@ $ $HADOOP_HOME/sbin/stop-yarn.sh
 $ sudo rm -rf /hdfs
 $ sudo mkdir -p /hdfs/namenode # only hadoopnode1
 $ sudo mkdir -p /hdfs/datanode # hadoopnode1 & 2
-$ sudo chown hduser:hadoop /hdfs/ -R # change directory ownership
+ # change directory ownership
+$ sudo chown hduser:hadoop /hdfs/ -R
 $ chmod 750 /hdfs # change directory permissions
 $ ls -l / | grep hdfs # view directory
 
@@ -1432,10 +1480,11 @@ sources
 
 # Output directory in command must not exist! The job will
 # fail if the specified directory exists already.
-$ yarn jar hadoop-mapreduce-examples-2.7.3.jar wordcount /path/to/hdfs/file.txt /path/to/output/directory
+$ yarn jar hadoop-mapreduce-examples-2.7.3.jar
+  wordcount /path/to/hdfs/file.txt /path/to/output/directory
 ```
 #### SUCCESS!
-**Whoop!** CLI Output of first successful Job:
+**Whoop!** CLI Output of first successful Job (lines truncated):
 ```
 Java HotSpot(TM) Client VM warning: You have loaded library /opt/hadoop-2.7.3/lib/native/libhadoop.so.1.0.0 which might have disabled stack guard. The VM will try to fix the stack guard now.
 It's highly recommended that you fix the library with 'execstack -c <libfile>', or link it with '-z noexecstack'.
@@ -1523,10 +1572,12 @@ $ hdfs dfs -ls IliadOutput
 
 Found 2 items
 # Signifies successful job
--rw-r--r--   2 hduser supergroup          0 2017-04-22 14:27 /IliadCount/_SUCCESS
+-rw-r--r--   2 hduser supergroup   0 2017-04-22 14:27
+  /IliadCount/_SUCCESS
 
 # Wordcount output file of the only reduce task
--rw-r--r--   2 hduser supergroup     257189 2017-04-22 14:27 /IliadCount/part-r-00000
+-rw-r--r--   2 hduser supergroup   257189 2017-04-22 14:27
+  /IliadCount/part-r-00000
 ```
 
 
@@ -1585,8 +1636,13 @@ Now I will try combining configurations:
       <value>mapreduce_shuffle</value>
     </property>
     <property>
-      <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
-      <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+      <name>
+        yarn.nodemanager.aux-services.mapreduce
+        .shuffle.class
+      </name>
+      <value>
+        org.apache.hadoop.mapred.ShuffleHandler
+      </value>
     </property>
     <property>
       <name>yarn.nodemanager.resource.memory-mb</name>
@@ -1603,7 +1659,10 @@ Now I will try combining configurations:
     <property>
       <name>yarn.nodemanager.vmem-check-enabled</name>
       <value>false</value>
-      <description>Whether virtual memory limits will be enforced  for containers.</description>
+      <description>
+        Whether virtual memory limits will be
+        enforced  for containers.
+      </description>
     </property>
     </configuration>
     ```
@@ -1644,11 +1703,17 @@ The application failed with the following messages:
 
 `hadoopnode2`
 ```
-Diagnostics: Container [pid=3907,containerID=container_1492900593461_0001_01_000001] is running beyond virtual memory limits. Current usage: 16.7 MB of 128 MB physical memory used; 1.1 GB of 268.8 MB virtual memory used. Killing container.
+Diagnostics: Container [pid=3907,
+containerID=container_1492900593461_0001_01_000001]
+is running beyond virtual memory limits.
+Current usage: 16.7 MB of 128 MB physical memory used;
+1.1 GB of 268.8 MB virtual memory used.
+Killing container.
 ```
 `hadoopnode1`
 ```
-ApplicationMaster for attempt appattempt_1492900593461_0001_000002 timed out
+ApplicationMaster for attempt
+appattempt_1492900593461_0001_000002 timed out
 ```
 It seems that removing the virtual memory limit enforcement setting was not properly synced to `hadoopnode2`, and the container was killed for exceeding the allotment, which is (2.1 *  physical memory allotment). It also seems that the retry attempt on `hadoopnode1` timed out because the ApplicationMaster could not start a container. This seems to indicate insufficient memory settings.
 
@@ -1662,12 +1727,13 @@ YarnException: Unauthorized request to start container
 ```
 `hadoopnode1`
 ```
-ApplicationMaster for attempt appattempt_1492900593461_0002_000001 timed out
+ApplicationMaster for attempt
+appattempt_1492900593461_0002_000001 timed out
 ```
 Once again, it seems that insufficient resources are to blame. The container could not start properly.
 
 ##### Test Job 2:
-Success! The job only took 1 min 30 sec.
+Success! The job only took 1 min 30 sec (lines truncated).
 ```
 17/04/23 07:38:31 INFO client.RMProxy: Connecting to ResourceManager at hadoopnode1/192.168.0.110:8032
 17/04/23 07:38:35 INFO input.FileInputFormat: Total input paths to process : 1
@@ -1762,7 +1828,8 @@ Whatever the cause, this time the job stayed within the memory allocation limits
 
     ```bash
     export JAVA_HOME=/opt/jdk1.8.0_121/
-    # The maximum amount of heap to use, in MB. Default is 1000.
+    # The maximum amount of heap to use, in MB.
+    # Default is 1000.
     export HADOOP_HEAPSIZE=128
     ```
 1. `core-site.xml`:
@@ -1812,8 +1879,13 @@ Whatever the cause, this time the job stayed within the memory allocation limits
         <value>mapreduce_shuffle</value>
       </property>
       <property>
-        <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
-        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+        <name>
+          yarn.nodemanager.aux-services.mapreduce
+          .shuffle.class
+        </name>
+        <value>
+          org.apache.hadoop.mapred.ShuffleHandler
+        </value>
       </property>
       <property>
         <name>yarn.nodemanager.resource.memory-mb</name>
@@ -1830,7 +1902,9 @@ Whatever the cause, this time the job stayed within the memory allocation limits
       <property>
         <name>yarn.nodemanager.vmem-check-enabled</name>
         <value>false</value>
-        <description>Whether virtual memory limits will be enforced for container$
+        <description>Whether virtual memory limits will be
+          enforced for containers.
+        </description>
       </property>
     </configuration>
     ```
