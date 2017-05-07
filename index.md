@@ -3,10 +3,10 @@ layout: default
 title: Orange Pi Hadoop Cluster
 ---
 
-![Orange Pi One](images/3MT-Andrew-Pyle.png)
+![Orange Pi One Cluster](images/3MT-Andrew-Pyle.png)
 
-# Small Scale, Big Data
-[Hadoop](http://hadoop.apache.org/) is an open-source distributed computing framework from the [Apache Software Foundation](http://www.apache.org/). It is primarily aimed at Big Data analytics and has become the de-facto standard for Distributed analytics. It runs on Linux, and (lucky for us students of data) the [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) is a very affordable machine to learn about distributed computing, albeit with very limited resources.
+# Big Data, Small Scale
+[Hadoop](http://hadoop.apache.org/) is an open-source distributed computing framework from the [Apache Software Foundation](http://www.apache.org/). It is primarily aimed at Big Data analytics and has become the de-facto standard for Distributed analytics. It runs on Linux, and (lucky for us data students) the [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) is a very affordable machine to learn about distributed computing, albeit with very limited resources.
 
 So let's set up a fully distributed, physical Hadoop 2 cluster with single-board Linux computers! I will be using two [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) boards. By the end of this journal, we will have a ethernet connected Hadoop 2 cluster of two single-board computers. This setup will not be powerful enough for production use, but it will demonstrate a simple implementation of the Hadoop 2 ecosystem for learning purposes.
 
@@ -74,11 +74,11 @@ Each Orange Pi One requires a 5V 2A power supply with a DC barrel plug ([4.0mm/1
 
 #### SD Card Integrity
 First, we need to ensure the integrity of the SD cards.
-> Many scam artists try to market small flash disks as large ones by changing the appearance of the disk. We will use a software test to verify the size of the disk we have. I am using [F3 by Digirati](http://oss.digirati.com.br/f3/) (GPL v3). It runs on Windows, OS X, Linux, and other operating systems. The website includes a very straightforward instructions regarding it's use.
-
-_(Note: I am using MacOS Sierra for the following commands, so if you are using a non-Unix-based OS, note that your commands will be different.)_
+> Many scam artists try to market small flash disks as large ones by changing the appearance of the disk. We will use a software test to verify the size of the disk we have. I am using [F3 by Digirati](http://oss.digirati.com.br/f3/) (GPL v3). It runs on Windows, macOS, Linux, and other operating systems. The website includes a very straightforward instructions regarding it's use.
 
 Download and unzip the program, then compile it for your system.
+
+>I am using MacOS Sierra for the following commands, so if you are using a non-Unix-based OS, note that your commands will be different.
 
 ```bash
 $ cd f3-6.0
@@ -123,7 +123,7 @@ Free space: 0.00 Byte
 Average writing speed: 9.79 MB/s
 ```
 
->_Note: I received the following error when executing f3write the first time. I just retried the f3write command, and execution was successful. I am not sure what caused the error, and a quick Google search did not return any help. I will just keep the info in mind._
+>_I received the following error when executing f3write the first time. I just retried the f3write command, and execution was successful. I am not sure what caused the error, and a quick Google search did not return any help. I will just keep the info in mind._
 >```bash
 >$ ./f3write /Volumes/"NO NAME"
 >Free space: 14.83 GB
@@ -164,7 +164,7 @@ Great! no files are listed in the 'corrupted' column above, so the microSD cards
 If your disk shows files in the 'corrupted' category or a much smaller capacity than advertised, ask for your money back. See F3's website for more specifics on the program's use and functionality.
 
 #### Flash the OS
-The next step is to write the operating system for the orange pi to a microSD card, called "flashing" the card.
+The next step is to write the operating system for the Orange Pi to a microSD card, called "flashing" the card.
 
 We will be installing the [Armbian distribution](https://www.armbian.com/orange-pi-one/) of Debian Jessie. It is a solely CLI image, which means that it uses a text-based command-line interface. They host a Ubuntu Xenial image with CLI only and GUI desktop interface versions as well.
 
@@ -201,7 +201,6 @@ Let's connect the Orange Pi as above, and try to boot!
 
 #### Boot Up
 LIGHTS! It does seem as if the cable was bad. (I'll try to get my money back.) I am getting a green light and blinking red light. The DVI monitor showed an error message and then a blank screen.
-> I wish I'd gotten a video here of the light sequence during the boot process, but I didn't have the camera ready.
 
 This all means the resolution coming from the Orange Pi is unusable by the monitor. This also means that I currently have no idea what is going on with the Orange Pi Boot process. A quick Google search didn't turn up anything specific, so I will try to boot with another power supply.
 
@@ -217,15 +216,15 @@ It works! I got a brief look at the boot process before the monitor went blank d
 --------
 
 ### Operate the Operating System
-Now that the boot process has begun successfully, let's login and configure the opartating system.
+Now that the boot process has begun successfully, let's login and configure the operating system.
 
 #### Login with Secure Shell (SSH)
 Since the monitor is blank, it's not helping us complete the initial boot process. Thankfully SSH is enabled by default on the Orange Pi! SSH is a method of remotely logging in to a Unix-based (e.g. Linux) operating system. [SSH Wikipedia link](https://en.wikipedia.org/wiki/Secure_Shell).
 
 Since the Orange Pi booted up while connected to the network, it received an IP Address by DHCP. I can check that at my router's homepage.
->(There are other methods to ascertain the IP address of the devices on your home network, like [Fing](https://www.fing.io/) for iOS and Android).
+>There are other methods to ascertain the IP address of the devices on your home network, like [Fing](https://www.fing.io/) for iOS and Android.
 
-SSH into the Orange Pi One. The default password for root on Armbian is '1234'. Add the RSA fingerprint to the list of known hosts if asked. This registers the Orange Pi hardware with your computer.
+Log into the Orange Pi One with SSH. The default password for root on Armbian is '1234'. Add the RSA fingerprint to the list of known hosts if asked. This registers the Orange Pi hardware with your computer.
 
 ```bash
 $ ssh root@[ip_address]   # Replace [ip_address] with the IP
@@ -391,7 +390,7 @@ Usage of /:    7% of 15G
 
 [ 3 updates to install: apt-get upgrade ]
 ```
->Linux Debian Note: apt-get is a package manager for the Debian OS. It handles installing programs on the CLI (which is a good thing, because I'd have trouble installing programs from the Internet without it!)
+>Linux Debian: apt-get is a package manager for the Debian OS. It handles installing programs on the CLI (which is a good thing, because I'd have trouble installing programs from the Internet without it!)
 > Run this command for more information.
 >```bash
 >$ man apt-get
@@ -804,7 +803,7 @@ Now we will setup the Hadoop system itself. There are 5 relevant setting files t
 YARN is the resource negotiator for Hadoop. It allocates the memory and CPU resources for each Hadoop job. In addition to the basic settings below, we can also configure how YARN distributes the system resources in this file. Understanding and configuring all these settings is out of the scope of this journal, however. See the [Apache Hadoop 2.7.3 YARN Docs](https://hadoop.apache.org/docs/r2.7.3/hadoop-yarn/hadoop-yarn-site/YARN.html) for the complete details.
 
 #### Create HDFS
-The Hadoop distributed filesystem (hdfs) is one of the foundations of the Hadoop framework. It allows files to be saves across nodes in the cluster, and replicates data to safeguard against data loss. It is separate from the filesystem of each node, and files can be placed into the hdfs from the normal filesystem using commmands to the namenode.
+The Hadoop distributed filesystem (hdfs) is one of the foundations of the Hadoop framework. It allows files to be saved across nodes in the cluster, and replicates data to safeguard against data loss. It is separate from the filesystem of each node, and files can be placed into the hdfs from the normal filesystem using commmands to the namenode.
 Create hdfs:
 ```bash
 $ sudo mkdir -p /hdfs/tmp
@@ -1004,11 +1003,11 @@ At this point, I think I will just start over from scratch.
 
 
 ## Troubleshooting Hadoop
-At this point, I have no idea what is malfunctioning with this cluster. The reported cause of a MapReduce job failing seems to be different every time!
+Currently, I have no idea what is malfunctioning with this cluster. The reported cause of a MapReduce job failing seems to be different every time!
 
 I'll try to collect all the logs I can for analysis, gather some more tutorials, and troubleshoot the namenode. Then I'll clone the OS and restart the cluster.
 
-> NOTE: The Hadoop logging protocol is very complicated, and after several hours of attempting to find the cause of the job failure, I decided that it is not worth spending even more time to discover the root cause of the failure. I'll just troubleshoot "from the ground up"
+>The Hadoop logging protocol is very complicated, and after several hours of attempting to find the cause of the job failure, I decided that it is not worth spending even more time to discover the root cause of the failure. I'll just troubleshoot "from the ground up"
 
 Here's what I tried:
 
@@ -1918,3 +1917,5 @@ Using machines with more onboard memory as nodes will increase the memory resour
 1. [Jason Carter's Blog](https://medium.com/@jasonicarter/how-to-hadoop-at-home-with-raspberry-pi-part-3-7d114d35fdf1)
 1. [Jonas Widriksson's Blog](http://www.widriksson.com/raspberry-pi-2-hadoop-2-cluster/#YARN_and_MapReduce_memory_configuration_overview)
 1. [Jonas Widriksson's Original Hadoop v1 Tutorial](http://www.widriksson.com/raspberry-pi-hadoop-cluster/)
+
+![Orange Pi One](./images/orange-cover.JPG)

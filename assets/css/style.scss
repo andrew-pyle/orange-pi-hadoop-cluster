@@ -7,6 +7,10 @@ h1, h2, h3, h4, h5, h6, body {
   letter-spacing: normal;
 }
 
+pre, code {
+  font-family: Fira Mono, Menlo, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+}
+
 .container {
   position: relative;
   width: 100%;
