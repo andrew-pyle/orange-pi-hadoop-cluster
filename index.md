@@ -1,10 +1,10 @@
-<!-- ---
+---
 layout: default
 title: Orange Pi Hadoop Cluster
---- -->
+---
 
 ![Orange Pi One Cluster](images/3MT-Andrew-Pyle.png)
-See the online, interactive version at https://andrew-pyle.github.io/orange-pi-hadoop-cluster/
+<!-- See the online, interactive version at https://andrew-pyle.github.io/orange-pi-hadoop-cluster/ -->
 
 # Big Data, Small Scale
 
