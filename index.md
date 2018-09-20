@@ -8,7 +8,7 @@ title: Orange Pi Hadoop Cluster
 
 # Big Data, Small Scale
 
-ANDREW PYLE | MS-Information Science | UA Little Rock
+ANDREW PYLE \| MS-Information Science \| UA Little Rock
 
 [Hadoop](http://hadoop.apache.org/) is an open-source distributed computing framework from the [Apache Software Foundation](http://www.apache.org/). It is primarily aimed at Big Data analytics and has become the de-facto standard for Distributed analytics. It runs on Linux, and (lucky for us data students) the [Orange Pi One](http://linux-sunxi.org/Orange_Pi_One) is a very affordable machine to learn about distributed computing, albeit with very limited resources.
 
